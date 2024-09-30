@@ -5,17 +5,17 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/manszamore/proteoDeconv/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/manszamore/proteoDeconv/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/ComputationalProteomics/proteoDeconv/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ComputationalProteomics/proteoDeconv/actions/workflows/R-CMD-check.yaml)
 
 <!-- badges: end -->
 
-proteoDeconv is an R package designed to facilitate the deconvolution of
-proteomics data.
+proteoDeconv is an R package that facilitates deconvolution of bulk
+sample proteomic data to estimate proportions of cell types.
 
 ## Installation
 
-You can install the development version of proteoDeconv from
-[GitHub](https://github.com/) with:
+You can install the development version of proteoDeconv from GitHub
+with:
 
 ``` r
 # install.packages("devtools")
@@ -25,6 +25,9 @@ devtools::install_github("ComputationalProteomics/proteoDeconv")
 ## Usage Example
 
 The following example demonstrates a basic workflow using proteoDeconv.
+The input file report.pg_matrix.tsv in this case is from DIA-NN, and the
+LM7c.txt signature matrix was downloaded from the [Decomprolute
+repository](https://github.com/PNNL-CompBio/decomprolute/tree/main/signature_matrices).
 
 ``` r
 library(proteoDeconv)
