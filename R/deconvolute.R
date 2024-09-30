@@ -17,7 +17,7 @@
 #'   \item Other algorithms supported by the `immunedeconv` package.
 #' }
 #'
-#' @importFrom dplyr column_to_rownames
+#' @importFrom tibble column_to_rownames
 #' @importFrom immunedeconv deconvolute
 #' @export
 deconvolute <- function(algorithm, data, signature_matrix = NULL, ...) {
@@ -29,7 +29,7 @@ deconvolute <- function(algorithm, data, signature_matrix = NULL, ...) {
         return(deconvolute_cibersort(data, signature_matrix))
     }
 
-    data <- data |> column_to_rownames("Genes")
+    data <- data |> tibble::column_to_rownames("Genes")
 
     if (algorithm == "epic") {
         return(deconvolute_epic(data, signature_matrix, ...))
@@ -135,8 +135,8 @@ deconvolute_cibersortx <- function(data, signature_matrix, perm = 1, rmbatch_S_m
 
 deconvolute_cibersort <- function(data, signature_matrix, ...) {
     cibersort_result <- immunedeconv::deconvolute_cibersort_custom(
-        data |> column_to_rownames(colnames(data)[1]),
-        signature_matrix |> column_to_rownames(colnames(signature_matrix)[1])
+        data |> tibble::column_to_rownames(colnames(data)[1]),
+        signature_matrix |> tibble::column_to_rownames(colnames(signature_matrix)[1])
     )
     tibble::as_tibble(cibersort_result |> t(), rownames = "Mixture") |> convert_cibersortx_output()
 }
