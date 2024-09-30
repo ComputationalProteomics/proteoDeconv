@@ -22,10 +22,3 @@ This function updates gene symbols in a given dataset using a predefined gene sy
 \details{
 The function uses the \code{HGNChelper} package to check and update gene symbols based on a predefined gene symbols map. If \code{verbose} is TRUE, the function prints detailed messages about the number of approved, not approved, and NA gene symbols.
 }
-\examples{
-\dontrun{
-data <- data.frame(Genes = c("BRCA1", "TP53", "EGFR"))
-updated_data <- update_gene_symbols(data, verbose = TRUE)
-}
-
-}

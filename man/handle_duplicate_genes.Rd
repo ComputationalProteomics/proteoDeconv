@@ -22,10 +22,3 @@ This function handles duplicate genes in a data frame using specified modes.
 \details{
 The function handles duplicate genes by either slicing to keep the row with the maximum median value or merging duplicates by taking the median of numeric columns.
 }
-\examples{
-\dontrun{
-data <- data.frame(Genes = c("Gene1", "Gene1", "Gene2"), Value1 = c(1, 2, 3), Value2 = c(4, 5, 6))
-result <- handle_duplicate_genes(data, gene_column = "Genes", duplicate_mode = "slice")
-}
-
-}

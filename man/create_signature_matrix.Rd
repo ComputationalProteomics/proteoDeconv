@@ -48,13 +48,5 @@ A data frame containing the signature matrix.
 This function generates a signature matrix from a reference sample and phenoclasses using the CIBERSORTx tool.
 }
 \details{
-This function uses the CIBERSORTx Docker image to generate a signature matrix. It writes the input data to temporary files, constructs a Docker command, and executes it. The resulting signature matrix is read from the output directory and returned as a data frame.
-}
-\examples{
-\dontrun{
-refsample <- data.frame(...) # Your reference sample data
-phenoclasses <- data.frame(...) # Your phenoclasses data
-signature_matrix <- create_signature_matrix(refsample, phenoclasses)
-}
-
+This function uses the CIBERSORTx Docker image to generate a signature matrix.
 }

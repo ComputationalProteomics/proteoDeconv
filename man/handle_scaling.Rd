@@ -2,12 +2,12 @@
 % Please edit documentation in R/handle_scaling.R
 \name{handle_scaling}
 \alias{handle_scaling}
-\title{Handle Scaling of Gene Expression Data}
+\title{Handle Scaling of Protein Data}
 \usage{
 handle_scaling(data, gene_column = "Genes", unlog = TRUE, tpm = TRUE)
 }
 \arguments{
-\item{data}{A data frame containing gene expression data. The first column should contain gene identifiers.}
+\item{data}{A data frame containing protein data. The first column should contain gene identifiers.}
 
 \item{gene_column}{A string specifying the name of the column containing gene identifiers. Default is "Genes".}
 
@@ -16,18 +16,8 @@ handle_scaling(data, gene_column = "Genes", unlog = TRUE, tpm = TRUE)
 \item{tpm}{A logical value indicating whether to convert the data to TPM (Transcripts Per Million). Default is TRUE.}
 }
 \value{
-A data frame with the scaled gene expression data, with the gene identifiers column relocated to the first position.
+A data frame with the scaled protein data.
 }
 \description{
-This function handles the scaling of gene expression data by optionally unlogging and converting to TPM (Transcripts Per Million).
-}
-\details{
-The function first checks if the specified gene column exists in the data. It then selects all numeric columns (excluding the gene column) and applies the specified transformations: unlogging (if \code{unlog} is TRUE) and converting to TPM (if \code{tpm} is TRUE). The gene column is then added back to the data frame and relocated to the first position.
-}
-\examples{
-\dontrun{
-data <- data.frame(Genes = c("Gene1", "Gene2", "Gene3"), Sample1 = c(1, 2, 3), Sample2 = c(4, 5, 6))
-scaled_data <- handle_scaling(data, gene_column = "Genes", unlog = TRUE, tpm = TRUE)
-}
-
+This function handles the scaling of protein data by optionally unlogging and converting to TPM (Transcripts Per Million).
 }

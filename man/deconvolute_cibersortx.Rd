@@ -45,13 +45,5 @@ A data frame containing the deconvolution results.
 This function performs deconvolution using the CIBERSORTx Docker image.
 }
 \details{
-This function requires the CIBERSORTx Docker image to be installed and accessible. It also requires the user to set the \code{CIBERSORTX_EMAIL} and \code{CIBERSORTX_TOKEN} environment variables with their CIBERSORTx credentials.
-}
-\examples{
-\dontrun{
-data <- readr::read_tsv("path/to/mixture_data.tsv")
-signature_matrix <- readr::read_tsv("path/to/signature_matrix.tsv")
-result <- deconvolute_cibersortx(data, signature_matrix)
-}
-
+This function requires the CIBERSORTx Docker image to be installed. It also requires the user to set the \code{CIBERSORTX_EMAIL} and \code{CIBERSORTX_TOKEN} environment variables with their CIBERSORTx credentials.
 }

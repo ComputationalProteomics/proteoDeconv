@@ -2,37 +2,23 @@
 % Please edit documentation in R/handle_gene_groups.R
 \name{handle_gene_groups}
 \alias{handle_gene_groups}
-\title{Handle Gene Groups}
+\title{Handle Protein/Gene Groups}
 \usage{
-handle_gene_groups(
-  data,
-  gene_column = "Genes",
-  separator = ";",
-  mode = "pick_first"
-)
+handle_gene_groups(data, gene_column = "Genes", separator = ";")
 }
 \arguments{
-\item{data}{A data frame containing gene expression data. The specified gene column should contain gene groups separated by a specified separator.}
+\item{data}{A data frame containing protein data. The specified gene column should contain protein/gene groups separated by a specified separator.}
 
 \item{gene_column}{A string specifying the name of the column containing gene groups. Default is "Genes".}
 
-\item{separator}{A string specifying the separator used to split gene groups. Default is ";".}
-
-\item{mode}{A string specifying the mode of handling gene groups. Currently, only "pick_first" is supported. Default is "pick_first".}
+\item{separator}{A string specifying the separator used to split protein/gene groups. Default is ";".}
 }
 \value{
-A data frame with the first gene in each group.
+A data frame with the first protein/gene in each group.
 }
 \description{
-This function handles gene groups by picking the first gene in each group.
+This function handles protein/gene groups by picking the first protein/gene in each group.
 }
 \details{
-The function splits the gene groups in the specified column using the provided separator and picks the first gene in each group.
-}
-\examples{
-\dontrun{
-data <- data.frame(Genes = c("Gene1;Gene2", "Gene3;Gene4", "Gene5"), Sample1 = c(1, 2, 3))
-result <- handle_gene_groups(data, gene_column = "Genes", separator = ";")
-}
-
+The function splits the protein/gene groups in the specified column using the provided separator and picks the first protein/gene in each group.
 }
