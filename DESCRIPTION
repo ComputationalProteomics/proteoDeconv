@@ -1,0 +1,38 @@
+Package: proteoDeconv
+Title: Enabling Cell Type Deconvolution of Proteomics Data
+Version: 0.0.0.9000
+Authors@R: 
+    person("Måns", "Zamore", , "mans.zamore@immun.lth.se", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-8108-1097"))
+Description: Tools for deconvoluting proteomics data to identify and quantify cell types (e.g., immune cell types) and their functional states in complex biological samples.
+License: MIT + file LICENSE
+URL: https://github.com/ComputationalProteomics/proteoDeconv
+BugReports: https://github.com/ComputationalProteomics/proteoDeconv/issues
+Depends: 
+    R (>= 4.1.0)
+Imports: 
+    dplyr,
+    EPIC,
+    glue,
+    HGNChelper,
+    immunedeconv,
+    impute,
+    memoise,
+    MsCoreUtils,
+    readr,
+    rlang,
+    stats,
+    tibble,
+    tidyr,
+    tidyselect,
+    uuid,
+    withr
+Suggests: 
+    testthat (>= 3.0.0)
+Remotes:
+    omnideconv/immunedeconv
+Config/testthat/edition: 3
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.1.9000
