@@ -27,10 +27,19 @@ handle_missing_values <- function(data, gene_column = "Genes", imputation_mode =
             numeric_data <- replace(numeric_data, is.na(numeric_data), lowest_value)
             numeric_data |> dplyr::mutate({{ gene_column }} := data[[gene_column]])
         },
+        median = {
+            median_value <- median(as.matrix(numeric_data), na.rm = TRUE)
+            numeric_data <- replace(numeric_data, is.na(numeric_data), median_value)
+            numeric_data |> dplyr::mutate({{ gene_column }} := data[[gene_column]])
+        },
         knn = {
             m <- as.matrix(numeric_data)
             m <- MsCoreUtils::impute_matrix(m, method = "knn") |> tibble::as_tibble()
             m |> dplyr::mutate({{ gene_column }} := data[[gene_column]])
+        },
+        zero = {
+            numeric_data[is.na(numeric_data)] <- 0
+            numeric_data |> dplyr::mutate({{ gene_column }} := data[[gene_column]])
         },
         stop(glue::glue("Unsupported imputation mode: {imputation_mode}"))
     )

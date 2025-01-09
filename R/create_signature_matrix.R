@@ -53,7 +53,7 @@ create_signature_matrix <- function(
     readr::write_tsv(phenoclasses, phenoclasses_file)
 
     docker_command <- glue::glue(
-      "docker run -v {input_dir}:/src/data:z -v {output_dir}:/src/outdir:z cibersortx/fractions ",
+      "docker run --rm -v {input_dir}:/src/data:z -v {output_dir}:/src/outdir:z cibersortx/fractions ",
       "--verbose {ifelse(verbose, 'TRUE', 'FALSE')} ",
       "--username {username} ",
       "--token {token} ",
