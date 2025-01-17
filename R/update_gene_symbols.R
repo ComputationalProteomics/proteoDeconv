@@ -15,7 +15,6 @@
 #' @importFrom HGNChelper checkGeneSymbols
 #' @export
 update_gene_symbols <- function(data, filepath = "", verbose = FALSE) {
-  load(system.file("data", "gene_symbols_map.rda", package = "proteoDeconv"))
 
   if (!is.vector(data)) {
     first_column_name <- colnames(data)[1]
