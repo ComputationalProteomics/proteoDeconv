@@ -73,11 +73,8 @@ create_signature_matrix <- function(
       cat("Docker command:\n", docker_command, "\n")
     }
 
-    command_output <- system(docker_command)
+    command_output <- system(docker_command, intern = TRUE)
 
-    if (command_output != 0) {
-      stop(glue::glue("CIBERSORTx failed. Error code: {command_output}"))
-    }
 
     if (str_detect(command_output, "IP address has changed")) {
       stop("CIBERSORTx failed. A likely reason is that the CIBERSORTx server is down.")
