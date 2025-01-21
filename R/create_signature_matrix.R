@@ -79,6 +79,10 @@ create_signature_matrix <- function(
       stop(glue::glue("CIBERSORTx failed. Error code: {command_output}"))
     }
 
+    if (str_detect(command_output, "IP address has changed")) {
+      stop("CIBERSORTx failed. A likely reason is that the CIBERSORTx server is down.")
+    }
+
     signature_matrix_file <- grep(basename(refsample_file), list.files(output_dir, pattern = "\\.txt$", full.names = TRUE), value = TRUE)
     if (length(signature_matrix_file) == 0) {
       stop("No signature matrix file found in the output directory.")
