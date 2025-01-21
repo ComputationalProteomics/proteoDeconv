@@ -76,7 +76,7 @@ create_signature_matrix <- function(
     command_output <- system(docker_command)
 
     if (command_output != 0) {
-      stop(glue::glue("CIBERSORTx failed. Error code: {command_output}"))
+      stop(glue::glue("CIBERSORTx failed. Error code: {command_output}."))
     }
 
     signature_matrix_file <- grep(basename(refsample_file), list.files(output_dir, pattern = "\\.txt$", full.names = TRUE), value = TRUE)
