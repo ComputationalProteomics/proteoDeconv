@@ -73,7 +73,7 @@ create_signature_matrix <- function(
       cat("Docker command:\n", docker_command, "\n")
     }
 
-    command_output <- system(docker_command, intern = TRUE)
+    command_output <- system(docker_command)
 
 
     if (command_output != 0) {
