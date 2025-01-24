@@ -15,6 +15,7 @@
 #' @importFrom glue glue
 #' @export
 handle_duplicate_genes <- function(data, gene_column = "Genes", duplicate_mode) {
+    data <- handle_input_data(data, gene_column)
     if (!gene_column %in% colnames(data)) {
         stop(glue::glue("Column '{gene_column}' not found in the data."))
     }

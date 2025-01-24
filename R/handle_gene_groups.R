@@ -13,6 +13,7 @@
 #' @importFrom glue glue
 #' @export
 handle_gene_groups <- function(data, gene_column = "Genes", separator = ";") {
+    data <- handle_input_data(data, gene_column)
     if (!gene_column %in% colnames(data)) {
         stop(glue::glue("Column '{gene_column}' not found in the data."))
     }

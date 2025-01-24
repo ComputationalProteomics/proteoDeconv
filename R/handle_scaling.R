@@ -13,6 +13,8 @@
 #' @importFrom glue glue
 #' @export
 handle_scaling <- function(data, gene_column = "Genes", unlog = TRUE, tpm = TRUE) {
+    data <- handle_input_data(data, gene_column)
+
     if (!gene_column %in% colnames(data)) {
         stop(glue::glue("Column '{gene_column}' not found in the data."))
     }

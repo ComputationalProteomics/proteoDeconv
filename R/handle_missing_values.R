@@ -15,6 +15,8 @@
 #' @importFrom tibble as_tibble
 #' @export
 handle_missing_values <- function(data, gene_column = "Genes", imputation_mode = "lowest_value") {
+    data <- handle_input_data(data, gene_column)
+
     if (!gene_column %in% colnames(data)) {
         stop(glue::glue("Column '{gene_column}' not found in the data."))
     }
