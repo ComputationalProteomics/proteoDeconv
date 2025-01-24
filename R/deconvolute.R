@@ -135,6 +135,7 @@ deconvolute_cibersortx <- function(data, signature_matrix, perm = 1, rmbatch_S_m
     })
 }
 
+#' @export
 deconvolute_cibersort <- function(data, signature_matrix, ...) {
     data <- handle_input_data(data, as_tibble = FALSE)
     signature_matrix <- handle_input_data(signature_matrix, as_tibble = FALSE)
@@ -142,6 +143,7 @@ deconvolute_cibersort <- function(data, signature_matrix, ...) {
     tibble::as_tibble(cibersort_result |> t(), rownames = "Mixture") |> convert_cibersortx_output()
 }
 
+#' @export
 deconvolute_epic <- function(data, signature_matrix, signature_matrix_variance, signature_genes, default_reference = EPIC::TRef, ...) {
     result <- immunedeconv::deconvolute_epic_custom(
         data,
