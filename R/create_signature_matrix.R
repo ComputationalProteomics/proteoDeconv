@@ -53,7 +53,7 @@ create_signature_matrix <- function(
     readr::write_tsv(phenoclasses, phenoclasses_file)
 
     docker_command <- glue::glue(
-      "docker run --rm -v {input_dir}:/src/data:z -v {output_dir}:/src/outdir:z cibersortx/fractions ",
+      "sudo docker run --rm -v {input_dir}:/src/data:z -v {output_dir}:/src/outdir:z cibersortx/fractions ",
       "--verbose {ifelse(verbose, 'TRUE', 'FALSE')} ",
       "--username {username} ",
       "--token {token} ",
@@ -75,8 +75,9 @@ create_signature_matrix <- function(
 
     command_output <- system(docker_command)
 
+
     if (command_output != 0) {
-      stop(glue::glue("CIBERSORTx failed. Error code: {command_output}"))
+      stop(glue::glue("CIBERSORTx failed. Error code: {command_output}."))
     }
 
     signature_matrix_file <- grep(basename(refsample_file), list.files(output_dir, pattern = "\\.txt$", full.names = TRUE), value = TRUE)
