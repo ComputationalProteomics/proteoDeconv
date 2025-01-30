@@ -100,8 +100,8 @@ deconvolute_cibersortx <- function(data, signature_matrix, perm = 1, rmbatch_S_m
 
         label <- uuid::UUIDgenerate(TRUE)
 
-        docker_command <- glue::glue(
-            "sudo docker run --rm -v {input_dir}:/src/data:z -v {output_dir}:/src/outdir:z cibersortx/fractions ",
+        docker_command <- glue::glue( # TODO: remove the sudo part
+            "{if (Sys.info()[['sysname']] == 'Linux') 'sudo ' else ''}docker run --rm -v {input_dir}:/src/data:z -v {output_dir}:/src/outdir:z cibersortx/fractions ",
             "--verbose TRUE ",
             "--username {username} ",
             "--token {token} ",
