@@ -1,36 +1,60 @@
-#' Handle Input Data
+#' Handle input data
 #'
-#' This function handles various input data types and normalizes them into a common format with a "Genes" column.
+#' This function processes input data, automatically identifying the gene column
+#' if not specified. It supports matrices, data frames, and SummarizedExperiment objects.
 #'
-#' @param x An input data object. Supported types are SummarizedExperiment, tibble, or data frame.
-#' @param gene_column A string specifying the name of the column containing gene identifiers. Default is "Genes".
-#' @param as_tibble A logical value indicating whether to return a tibble with the first column being Genes (TRUE) or a data frame with the Genes column as rownames (FALSE). Default is TRUE.
+#' @param x A matrix, data frame, or SummarizedExperiment object.
+#' @param gene_column Optional. Name of the column containing gene identifiers.
+#' @param as_tibble Logical. If FALSE, moves the gene column to row names.
 #'
-#' @return A data frame or tibble with the input data normalized to have a "Genes" column.
-#'
-#' @importFrom SummarizedExperiment assay
-#' @importFrom tibble rownames_to_column column_to_rownames
+#' @return A processed data frame or tibble.
 #' @export
-handle_input_data <- function(x, gene_column = "Genes", as_tibble = TRUE) {
+handle_input_data <- function(x, gene_column = NULL, as_tibble = TRUE) {
+    guess_gene_col <- function(df) {
+        char_cols <- sapply(df, is.character)
+        if (!any(char_cols)) {
+            return(NULL)
+        }
+        names(df)[which(char_cols)[1]]
+    }
+
     if (inherits(x, "SummarizedExperiment")) {
         df <- as.data.frame(SummarizedExperiment::assay(x))
-        if (!is.null(rownames(df))) {
-            df <- tibble::rownames_to_column(df, var = gene_column)
-        }
-        if (!as_tibble) {
-            df <- tibble::column_to_rownames(df, var = gene_column)
-        }
-        return(df)
+    } else if (is.matrix(x)) {
+        df <- as.data.frame(x, stringsAsFactors = FALSE)
+    } else if (is.data.frame(x)) {
+        df <- x
+    } else {
+        stop("Unsupported input type. Provide a matrix, data.frame, or SummarizedExperiment.")
     }
-    if (is.data.frame(x)) {
-        # If rownames are present, turn them into a column
-        if (!gene_column %in% colnames(x) && !is.null(rownames(x))) {
-            x <- tibble::rownames_to_column(x, var = gene_column)
+
+    if (!is.null(gene_column)) {
+        if (!gene_column %in% names(df)) {
+            guessed_col <- guess_gene_col(df)
+            if (!is.null(guessed_col)) {
+                colnames(df)[colnames(df) == guessed_col] <- gene_column
+            } else if (!is.null(rownames(df)) && any(nzchar(rownames(df)))) {
+                df <- tibble::rownames_to_column(df, var = gene_column)
+            } else {
+                message("No suitable gene column found.")
+            }
         }
-        if (!as_tibble) {
-            x <- tibble::column_to_rownames(x, var = gene_column)
+    } else {
+        guessed_col <- guess_gene_col(df)
+        if (!is.null(guessed_col)) {
+            colnames(df)[colnames(df) == guessed_col] <- "Genes"
+            gene_column <- "Genes"
+        } else if (!is.null(rownames(df)) && any(nzchar(rownames(df)))) {
+            df <- tibble::rownames_to_column(df, var = "Genes")
+            gene_column <- "Genes"
+        } else {
+            message("Could not identify a gene column.")
         }
-        return(x)
     }
-    stop("Unsupported input type.")
+
+    if (!as_tibble && !is.null(gene_column) && gene_column %in% names(df)) {
+        df <- tibble::column_to_rownames(df, var = gene_column)
+    }
+
+    df
 }
