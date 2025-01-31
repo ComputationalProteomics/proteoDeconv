@@ -50,7 +50,7 @@ create_signature_matrix <- function(
     phenoclasses_file <- tempfile(tmpdir = input_dir)
 
     readr::write_tsv(refsample, refsample_file)
-    readr::write_tsv(phenoclasses, phenoclasses_file)
+    readr::write_tsv(phenoclasses, phenoclasses_file, colnames = FALSE)
 
     docker_command <- glue::glue(
       "{if (Sys.info()[['sysname']] == 'Linux') 'sudo ' else ''}docker run --rm -v {input_dir}:/src/data:z -v {output_dir}:/src/outdir:z cibersortx/fractions ",
