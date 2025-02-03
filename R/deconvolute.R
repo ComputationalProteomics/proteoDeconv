@@ -31,13 +31,9 @@ deconvolute <- function(algorithm, data, signature_matrix = NULL, ...) {
         return(deconvolute_cibersort(data, signature_matrix))
     }
 
-    data <- data |> tibble::column_to_rownames("Genes")
+    data <- data |> handle_input_data(gene_column = "Genes", as_tibble = FALSE)
 
-    if (algorithm == "epic") {
-        return(deconvolute_epic(data, signature_matrix, ...))
-    }
-
-    result <- immunedeconv::deconvolute(data, algorithm)
+    result <- immunedeconv::deconvolute(data, algorithm, scale_mrna = FALSE, ...)
 }
 
 
@@ -144,12 +140,14 @@ deconvolute_cibersort <- function(data, signature_matrix, ...) {
 }
 
 #' @export
-deconvolute_epic <- function(data, signature_matrix, signature_matrix_variance, signature_genes, default_reference = EPIC::TRef, ...) {
+deconvolute_epic <- function(data, signature_matrix, signature_matrix_variance, signature_genes, ...) {
+    data <- handle_input_data(data, as_tibble = FALSE)
     result <- immunedeconv::deconvolute_epic_custom(
         data,
         signature_matrix = signature_matrix,
         genes_var = signature_matrix_variance,
-        signature_genes = signature_genes
+        signature_genes = signature_genes,
+        ...
     )
     tibble::as_tibble(result, rownames = "cell_type")
 }
