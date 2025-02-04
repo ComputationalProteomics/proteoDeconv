@@ -15,7 +15,7 @@
 #' @importFrom tibble as_tibble
 #' @export
 handle_missing_values <- function(data, gene_column = "Genes", imputation_mode = "lowest_value") {
-    data <- handle_input_data(data, gene_column)
+    data <- proteoDeconv::handle_input_data(data, gene_column)
 
     if (!gene_column %in% colnames(data)) {
         stop(glue::glue("Column '{gene_column}' not found in the data."))
@@ -23,33 +23,33 @@ handle_missing_values <- function(data, gene_column = "Genes", imputation_mode =
 
     numeric_data <- data |> dplyr::select(-{{ gene_column }})
 
-    data <- switch(imputation_mode,
-        lowest_value = {
+    out_data <- switch(imputation_mode,
+        "lowest_value" = {
             lowest_value <- min_nonzero(numeric_data)
             numeric_data <- replace(numeric_data, is.na(numeric_data), lowest_value)
             numeric_data |> dplyr::mutate({{ gene_column }} := data[[gene_column]])
         },
-        median = {
-            median_value <- median(as.matrix(numeric_data), na.rm = TRUE)
-            numeric_data <- replace(numeric_data, is.na(numeric_data), median_value)
-            numeric_data |> dplyr::mutate({{ gene_column }} := data[[gene_column]])
-        },
-        knn = {
-            m <- as.matrix(numeric_data)
-            m <- MsCoreUtils::impute_matrix(m, method = "knn") |> tibble::as_tibble()
-            m |> dplyr::mutate({{ gene_column }} := data[[gene_column]])
-        },
-        zero = {
-            numeric_data[is.na(numeric_data)] <- 0
-            numeric_data |> dplyr::mutate({{ gene_column }} := data[[gene_column]])
-        },
+        "knn" = impute_helper(numeric_data, "knn", gene_column, data),
+        "zero" = impute_helper(numeric_data, "zero", gene_column, data),
+        "MLE" = impute_helper(numeric_data, "MLE", gene_column, data),
+        "bpca" = impute_helper(numeric_data, "bpca", gene_column, data),
+        "RF" = impute_helper(numeric_data, "RF", gene_column, data),
+        "min" = impute_helper(numeric_data, "min", gene_column, data),
+        "MinDet" = impute_helper(numeric_data, "MinDet", gene_column, data),
+        "MinProb" = impute_helper(numeric_data, "MinProb", gene_column, data),
+        "QRILC" = impute_helper(numeric_data, "QRILC", gene_column, data),
+        "mixed" = impute_helper(numeric_data, "mixed", gene_column, data),
+        "nbavg" = impute_helper(numeric_data, "nbavg", gene_column, data),
+        "with" = impute_helper(numeric_data, "with", gene_column, data, val = 1),
         stop(glue::glue("Unsupported imputation mode: {imputation_mode}"))
     )
 
-    data |> dplyr::relocate({{ gene_column }}, .before = 1)
+
+    out_data
 }
 
-min_nonzero <- function(x) {
-    non_zero_values <- x[x != 0]
-    min(non_zero_values, na.rm = TRUE)
+impute_helper <- function(numeric_data, method, gene_column, data, ...) {
+    out <- MsCoreUtils::impute_matrix(as.matrix(numeric_data), method = method, ...)
+    tibble::as_tibble(out) |>
+        dplyr::mutate({{ gene_column }} := data[[gene_column]], .before = 1)
 }
