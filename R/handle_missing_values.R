@@ -53,3 +53,8 @@ impute_helper <- function(numeric_data, method, gene_column, data, ...) {
     tibble::as_tibble(out) |>
         dplyr::mutate({{ gene_column }} := data[[gene_column]], .before = 1)
 }
+
+min_nonzero <- function(x) {
+    non_zero_values <- x[x != 0]
+    min(non_zero_values, na.rm = TRUE)
+}
