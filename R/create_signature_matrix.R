@@ -24,9 +24,9 @@
 #' @export
 create_signature_matrix <- function(
     refsample, phenoclasses,
-    g_min = 50,
-    g_max = 150,
-    q_value = 0.3,
+    g_min = 200,
+    g_max = 400,
+    q_value = 0.01,
     replicates = 5,
     sampling = 0.5,
     fraction = 0.75,
