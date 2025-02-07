@@ -5,7 +5,8 @@
 #'
 #' @param data A data frame containing the data to be processed.
 #' @param gene_column A string specifying the name of the column containing gene identifiers. Default is "Genes".
-#' @param imputation_mode A string specifying the imputation method to use. Options are "lowest_value" or "knn". Default is "lowest_value".
+#' @param imputation_mode A string specifying the imputation method to use. Options are "lowest_value", "knn", "zero", "MLE", "bpca", "RF", "min", "MinDet", "MinProb", "QRILC", "mixed", "nbavg", or "with". Default is "lowest_value".
+#' @param ... Additional arguments passed to MsCoreUtils::impute_matrix.
 #'
 #' @return A data frame with missing values imputed.
 #'
@@ -14,7 +15,7 @@
 #' @importFrom MsCoreUtils impute_matrix
 #' @importFrom tibble as_tibble
 #' @export
-handle_missing_values <- function(data, gene_column = "Genes", imputation_mode = "lowest_value") {
+handle_missing_values <- function(data, gene_column = "Genes", imputation_mode = "lowest_value", ...) {
     data <- proteoDeconv::handle_input_data(data, gene_column)
 
     if (!gene_column %in% colnames(data)) {
@@ -29,18 +30,18 @@ handle_missing_values <- function(data, gene_column = "Genes", imputation_mode =
             numeric_data <- replace(numeric_data, is.na(numeric_data), lowest_value)
             numeric_data |> dplyr::mutate({{ gene_column }} := data[[gene_column]])
         },
-        "knn" = impute_helper(numeric_data, "knn", gene_column, data),
-        "zero" = impute_helper(numeric_data, "zero", gene_column, data),
-        "MLE" = impute_helper(numeric_data, "MLE", gene_column, data),
-        "bpca" = impute_helper(numeric_data, "bpca", gene_column, data),
-        "RF" = impute_helper(numeric_data, "RF", gene_column, data),
-        "min" = impute_helper(numeric_data, "min", gene_column, data),
-        "MinDet" = impute_helper(numeric_data, "MinDet", gene_column, data),
-        "MinProb" = impute_helper(numeric_data, "MinProb", gene_column, data),
-        "QRILC" = impute_helper(numeric_data, "QRILC", gene_column, data),
-        "mixed" = impute_helper(numeric_data, "mixed", gene_column, data),
-        "nbavg" = impute_helper(numeric_data, "nbavg", gene_column, data),
-        "with" = impute_helper(numeric_data, "with", gene_column, data, val = 1),
+        "knn" = impute_helper(numeric_data, "knn", gene_column, data, ...),
+        "zero" = impute_helper(numeric_data, "zero", gene_column, data, ...),
+        "MLE" = impute_helper(numeric_data, "MLE", gene_column, data, ...),
+        "bpca" = impute_helper(numeric_data, "bpca", gene_column, data, ...),
+        "RF" = impute_helper(numeric_data, "RF", gene_column, data, ...),
+        "min" = impute_helper(numeric_data, "min", gene_column, data, ...),
+        "MinDet" = impute_helper(numeric_data, "MinDet", gene_column, data, ...),
+        "MinProb" = impute_helper(numeric_data, "MinProb", gene_column, data, ...),
+        "QRILC" = impute_helper(numeric_data, "QRILC", gene_column, data, ...),
+        "mixed" = impute_helper(numeric_data, "mixed", gene_column, data, ...),
+        "nbavg" = impute_helper(numeric_data, "nbavg", gene_column, data, ...),
+        "with" = impute_helper(numeric_data, "with", gene_column, data, val = 1, ...),
         stop(glue::glue("Unsupported imputation mode: {imputation_mode}"))
     )
 
