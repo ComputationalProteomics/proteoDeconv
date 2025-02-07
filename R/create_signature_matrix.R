@@ -50,8 +50,9 @@ create_signature_matrix <- function(
     input_dir <- tempdir()
     output_dir <- tempdir()
 
-    refsample_file <- if (!is.null(refsample)) tempfile(tmpdir = input_dir) else NULL
-    phenoclasses_file <- if (!is.null(phenoclasses)) tempfile(tmpdir = input_dir) else NULL
+    # Changed temp file creation to include ".txt" extension
+    refsample_file <- if (!is.null(refsample)) tempfile(tmpdir = input_dir, fileext = ".txt") else NULL
+    phenoclasses_file <- if (!is.null(phenoclasses)) tempfile(tmpdir = input_dir, fileext = ".txt") else NULL
 
     if (!is.null(refsample)) readr::write_tsv(refsample, refsample_file)
     if (!is.null(phenoclasses)) readr::write_tsv(phenoclasses, phenoclasses_file, col_names = FALSE)
