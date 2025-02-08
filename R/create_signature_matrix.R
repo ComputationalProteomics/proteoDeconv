@@ -83,8 +83,9 @@ create_signature_matrix <- function(
     if (command_output != 0) {
       stop(glue::glue("CIBERSORTx failed. Error code: {command_output}."))
     }
+    pattern <- paste0(".*CIBERSORTx_", basename(refsample_file), ".*\\.txt$")
     signature_matrix_file <- grep(
-      paste0("CIBERSORTx_", basename(refsample_file), ".*\\.txt$"),
+      pattern,
       list.files(output_dir, pattern = "\\.txt$", full.names = TRUE),
       value = TRUE
     )
