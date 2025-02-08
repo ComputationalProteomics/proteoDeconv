@@ -83,16 +83,14 @@ create_signature_matrix <- function(
     if (command_output != 0) {
       stop(glue::glue("CIBERSORTx failed. Error code: {command_output}."))
     }
-    pattern <- paste0(".*CIBERSORTx_", basename(refsample_file), ".*\\.txt$")
-    signature_matrix_file <- grep(
-      pattern,
+    refsample_id <- sub("\\.txt$", "", basename(refsample_file))
+    signature_matrix_file <- grep(paste0("CIBERSORTx_", refsample_id),
       list.files(output_dir, pattern = "\\.txt$", full.names = TRUE),
-      value = TRUE
-    )
-    if (length(signature_matrix_file) == 0) {
+      value = TRUE, fixed = TRUE
+    )[1]
+    if (is.na(signature_matrix_file)) {
       stop("No signature matrix file found in the output directory.")
     }
     signature_matrix <- readr::read_tsv(signature_matrix_file, show_col_types = FALSE)
-    signature_matrix
   })
 }
