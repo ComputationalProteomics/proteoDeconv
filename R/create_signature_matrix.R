@@ -74,7 +74,7 @@ create_signature_matrix <- function(
       "--replicates {replicates} ",
       "--sampling {sampling} ",
       "--fraction {fraction} ",
-      "--single_cell {ifelse(single_cell, 'TRUE', 'FALSE')}"
+      "{ifelse(single_cell, '--single_cell TRUE', '')}"
     )
     if (verbose) {
       cat("Docker command:\n", docker_command, "\n")
