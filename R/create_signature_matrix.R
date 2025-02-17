@@ -23,6 +23,9 @@
 #' @importFrom readr write_tsv read_tsv
 #' @importFrom glue glue
 #' @importFrom withr with_tempdir
+#' @importFrom magrittr %>%
+#' @importFrom stats setNames
+#' @importFrom tibble rownames_to_column as_tibble
 #' @export
 create_signature_matrix <- function(
     refsample = NULL, phenoclasses = NULL,
@@ -94,6 +97,7 @@ create_signature_matrix <- function(
   })
 }
 
+
 #' Create Phenoclasses for Immune Cells
 #'
 #' Generates a phenotype classification matrix from immune cell data,
@@ -105,10 +109,15 @@ create_signature_matrix <- function(
 #'
 #' @param immune_cells A data frame of immune cell profiles. Must include a "Genes" column.
 #' @param mapping_rules An optional named list of regex patterns for grouping; passed to map_cell_groups.
+#' @param gene_column Character string specifying the gene column (if different from "Genes").
 #' @param verbose Logical. If TRUE, displays additional messages during processing.
 #'
 #' @return A tibble with a "cell_type" column (the groups) and columns corresponding to the original profiles.
 #'
+#' @importFrom dplyr select setdiff
+#' @importFrom stats setNames
+#' @importFrom tibble rownames_to_column as_tibble
+#' @importFrom magrittr %>%
 #' @export
 create_phenoclasses <- function(immune_cells,
                                 mapping_rules = NULL,
@@ -116,17 +125,16 @@ create_phenoclasses <- function(immune_cells,
                                 verbose = FALSE) {
   immune_cells <- handle_input_data(immune_cells, gene_column = gene_column)
 
-  data <- immune_cells %>% select(-Genes)
+  data <- immune_cells %>% dplyr::select(-Genes)
   cols <- colnames(data)
 
   group_mapped <- map_cell_groups(cols, mapping_rules, default_group = "Unknown", verbose = verbose)
-  cell_type_to_group <- setNames(group_mapped, cols)
-
+  cell_type_to_group <- stats::setNames(group_mapped, cols)
 
   valid_cols <- names(cell_type_to_group)
   valid_groups <- unique(cell_type_to_group)
 
-  valid_groups <- setdiff(valid_groups, "Unknown")
+  valid_groups <- dplyr::setdiff(valid_groups, "Unknown")
 
   phenotype_classes <- matrix(NA,
     nrow = length(valid_groups),
@@ -148,8 +156,8 @@ create_phenoclasses <- function(immune_cells,
   }
 
   phenotype_classes_df <- as.data.frame(phenotype_classes) %>%
-    rownames_to_column(var = "cell_type") %>%
-    as_tibble()
+    tibble::rownames_to_column(var = "cell_type") %>%
+    tibble::as_tibble()
 
   return(phenotype_classes_df)
 }

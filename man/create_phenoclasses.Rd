@@ -16,6 +16,8 @@ create_phenoclasses(
 
 \item{mapping_rules}{An optional named list of regex patterns for grouping; passed to map_cell_groups.}
 
+\item{gene_column}{Character string specifying the gene column (if different from "Genes").}
+
 \item{verbose}{Logical. If TRUE, displays additional messages during processing.}
 }
 \value{
