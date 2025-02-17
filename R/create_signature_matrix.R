@@ -23,7 +23,6 @@
 #' @importFrom readr write_tsv read_tsv
 #' @importFrom glue glue
 #' @importFrom withr with_tempdir
-#' @importFrom magrittr %>%
 #' @importFrom stats setNames
 #' @importFrom tibble rownames_to_column as_tibble
 #' @export
@@ -117,7 +116,6 @@ create_signature_matrix <- function(
 #' @importFrom dplyr select setdiff
 #' @importFrom stats setNames
 #' @importFrom tibble rownames_to_column as_tibble
-#' @importFrom magrittr %>%
 #' @export
 create_phenoclasses <- function(immune_cells,
                                 mapping_rules = NULL,
@@ -125,7 +123,7 @@ create_phenoclasses <- function(immune_cells,
                                 verbose = FALSE) {
   immune_cells <- handle_input_data(immune_cells, gene_column = gene_column)
 
-  data <- immune_cells %>% dplyr::select(-Genes)
+  data <- immune_cells |> dplyr::select(-Genes)
   cols <- colnames(data)
 
   group_mapped <- map_cell_groups(cols, mapping_rules, default_group = "Unknown", verbose = verbose)
@@ -155,8 +153,8 @@ create_phenoclasses <- function(immune_cells,
     }
   }
 
-  phenotype_classes_df <- as.data.frame(phenotype_classes) %>%
-    tibble::rownames_to_column(var = "cell_type") %>%
+  phenotype_classes_df <- as.data.frame(phenotype_classes) |>
+    tibble::rownames_to_column(var = "cell_type") |>
     tibble::as_tibble()
 
   return(phenotype_classes_df)

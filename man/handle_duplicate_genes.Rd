@@ -9,16 +9,19 @@ handle_duplicate_genes(data, gene_column = "Genes", duplicate_mode)
 \arguments{
 \item{data}{A data frame containing gene expression data.}
 
-\item{gene_column}{A string specifying the name of the column containing gene identifiers. Default is "Genes".}
+\item{gene_column}{A string specifying the name of the gene identifier column. Default is "Genes".}
 
-\item{duplicate_mode}{A string specifying the mode to handle duplicates. Options are "slice" and "merge".}
+\item{duplicate_mode}{A string specifying the approach to handle duplicates. Options are
+\code{"slice"} (keep the row with the maximum median value) or \code{"merge"} (merge rows by taking the median of numeric columns).}
 }
 \value{
-A data frame with duplicates handled according to the specified mode.
+A data frame with duplicate gene rows handled.
 }
 \description{
-This function handles duplicate genes in a data frame using specified modes.
+Resolves duplicate gene entries in an expression data frame using the chosen mode.
 }
 \details{
-The function handles duplicate genes by either slicing to keep the row with the maximum median value or merging duplicates by taking the median of numeric columns.
+For \code{slice} mode the function calculates the median value across all numeric columns per row,
+then retains only the row with the maximum median for duplicate gene identifiers.
+In \code{merge} mode, duplicates are grouped by the gene identifier and numeric columns are summarized by their median.
 }

@@ -26,7 +26,3 @@ A character vector with the mapped cell group for each column name.
 \description{
 Maps a character vector of column names to predefined cell group categories using regex patterns.
 }
-\examples{
-column_names <- c("Bcell_1", "T4.naive", "unknown")
-map_cell_groups(column_names, verbose = TRUE)
-}

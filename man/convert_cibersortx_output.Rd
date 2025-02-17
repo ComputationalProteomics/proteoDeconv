@@ -9,13 +9,18 @@ convert_cibersortx_output(data, file = NULL, filter = FALSE)
 \arguments{
 \item{data}{A data frame containing CIBERSORTx output.}
 
-\item{file}{A character string specifying the file name (optional).}
+\item{file}{Optional character string specifying the file name (used in messaging).}
 
-\item{filter}{A logical value indicating whether to filter rows with P-value > 0.05.}
+\item{filter}{Logical; if TRUE, rows with a \code{P-value} ≥ 0.05 are removed.}
 }
 \value{
 A data frame in long format.
 }
 \description{
-This function converts the output from CIBERSORTx into a long format.
+Converts the output from CIBERSORTx into a long format.
+}
+\details{
+The function first optionally filters the data by the CIBERSORTx
+P-value, then pivots the remaining data from wide to long and back to wide
+by the \code{Mixture} column.
 }

@@ -12,6 +12,9 @@
 #' @param blacklist Optional blacklist of cell types.
 #'
 #' @return A list containing simulated proteome data and associated cell fractions.
+#' @importFrom tibble column_to_rownames as_tibble
+#' @importFrom Matrix Matrix
+#' @importFrom SummarizedExperiment assays
 #' @export
 simulate_data <- function(data, cell_types, seed = NULL, ncells = 100,
                           filter_genes = TRUE, scenario = "random",

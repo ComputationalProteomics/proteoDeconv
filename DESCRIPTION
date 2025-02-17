@@ -4,7 +4,9 @@ Version: 0.0.0.9000
 Authors@R: 
     person("Måns", "Zamore", , "mans.zamore@immun.lth.se", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-8108-1097"))
-Description: Tools for deconvoluting proteomics data to identify and quantify cell types (e.g., immune cell types) and their functional states in complex biological samples.
+Description: Tools for deconvoluting proteomics data to identify and
+    quantify cell types (e.g., immune cell types) and their functional
+    states in complex biological samples.
 License: MIT + file LICENSE
 URL: https://github.com/ComputationalProteomics/proteoDeconv
 BugReports: https://github.com/ComputationalProteomics/proteoDeconv/issues

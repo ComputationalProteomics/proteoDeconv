@@ -1,16 +1,19 @@
 #' Handle Duplicate Genes
 #'
-#' This function handles duplicate genes in a data frame using specified modes.
+#' Resolves duplicate gene entries in an expression data frame using the chosen mode.
 #'
 #' @param data A data frame containing gene expression data.
-#' @param gene_column A string specifying the name of the column containing gene identifiers. Default is "Genes".
-#' @param duplicate_mode A string specifying the mode to handle duplicates. Options are "slice" and "merge".
+#' @param gene_column A string specifying the name of the gene identifier column. Default is "Genes".
+#' @param duplicate_mode A string specifying the approach to handle duplicates. Options are
+#'   \code{"slice"} (keep the row with the maximum median value) or \code{"merge"} (merge rows by taking the median of numeric columns).
 #'
-#' @return A data frame with duplicates handled according to the specified mode.
+#' @return A data frame with duplicate gene rows handled.
 #'
-#' @details The function handles duplicate genes by either slicing to keep the row with the maximum median value or merging duplicates by taking the median of numeric columns.
+#' @details For \code{slice} mode the function calculates the median value across all numeric columns per row,
+#' then retains only the row with the maximum median for duplicate gene identifiers.
+#' In \code{merge} mode, duplicates are grouped by the gene identifier and numeric columns are summarized by their median.
 #'
-#' @importFrom dplyr rowwise mutate slice_max distinct filter ungroup group_by summarise_all across
+#' @importFrom dplyr rowwise mutate slice_max distinct filter ungroup group_by summarise across
 #' @importFrom stats median
 #' @importFrom glue glue
 #' @export
@@ -32,7 +35,7 @@ handle_duplicate_genes <- function(data, gene_column = "Genes", duplicate_mode) 
                 dplyr::ungroup()
         },
         merge = {
-            data <- data |>
+            data |>
                 dplyr::filter(!is.na(.data[[gene_column]])) |>
                 dplyr::group_by(.data[[gene_column]]) |>
                 dplyr::summarise(across(where(is.numeric), median, na.rm = TRUE)) |>
