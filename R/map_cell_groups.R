@@ -9,9 +9,6 @@
 #'
 #' @return A character vector with the mapped cell group for each column name.
 #'
-#' @examples
-#' column_names <- c("Bcell_1", "T4.naive", "unknown")
-#' map_cell_groups(column_names, verbose = TRUE)
 #' @export
 
 map_cell_groups <- function(column_names, mapping_rules, default_group = "Unknown", verbose = FALSE) {
