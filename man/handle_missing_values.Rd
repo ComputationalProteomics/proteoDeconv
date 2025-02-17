@@ -7,7 +7,8 @@
 handle_missing_values(
   data,
   gene_column = "Genes",
-  imputation_mode = "lowest_value"
+  imputation_mode = "lowest_value",
+  ...
 )
 }
 \arguments{
@@ -15,7 +16,9 @@ handle_missing_values(
 
 \item{gene_column}{A string specifying the name of the column containing gene identifiers. Default is "Genes".}
 
-\item{imputation_mode}{A string specifying the imputation method to use. Options are "lowest_value" or "knn". Default is "lowest_value".}
+\item{imputation_mode}{A string specifying the imputation method to use. Options are "lowest_value", "knn", "zero", "MLE", "bpca", "RF", "min", "MinDet", "MinProb", "QRILC", "mixed", "nbavg", or "with". Default is "lowest_value".}
+
+\item{...}{Additional arguments passed to MsCoreUtils::impute_matrix.}
 }
 \value{
 A data frame with missing values imputed.

@@ -2,20 +2,21 @@
 % Please edit documentation in R/handle_input_data.R
 \name{handle_input_data}
 \alias{handle_input_data}
-\title{Handle Input Data}
+\title{Handle input data}
 \usage{
-handle_input_data(x, gene_column = "Genes", as_tibble = TRUE)
+handle_input_data(x, gene_column = NULL, as_tibble = TRUE)
 }
 \arguments{
-\item{x}{An input data object. Supported types are SummarizedExperiment, tibble, or data frame.}
+\item{x}{A matrix, data frame, or SummarizedExperiment object.}
 
-\item{gene_column}{A string specifying the name of the column containing gene identifiers. Default is "Genes".}
+\item{gene_column}{Optional. Name of the column containing gene identifiers.}
 
-\item{as_tibble}{A logical value indicating whether to return a tibble with the first column being Genes (TRUE) or a data frame with the Genes column as rownames (FALSE). Default is TRUE.}
+\item{as_tibble}{Logical. If FALSE, moves the gene column to row names.}
 }
 \value{
-A data frame or tibble with the input data normalized to have a "Genes" column.
+A processed data frame or tibble.
 }
 \description{
-This function handles various input data types and normalizes them into a common format with a "Genes" column.
+This function processes input data, automatically identifying the gene column
+if not specified. It supports matrices, data frames, and SummarizedExperiment objects.
 }

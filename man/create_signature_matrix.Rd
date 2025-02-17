@@ -5,48 +5,54 @@
 \title{Create Signature Matrix using CIBERSORTx}
 \usage{
 create_signature_matrix(
-  refsample,
-  phenoclasses,
-  g_min = 50,
-  g_max = 150,
-  q_value = 0.3,
+  refsample = NULL,
+  phenoclasses = NULL,
+  g_min = 200,
+  g_max = 400,
+  q_value = 0.01,
   replicates = 5,
   sampling = 0.5,
   fraction = 0.75,
   filter = FALSE,
-  verbose = TRUE,
+  verbose = FALSE,
+  QN = FALSE,
+  single_cell = FALSE,
   ...
 )
 }
 \arguments{
-\item{refsample}{A data frame containing the reference profiles (with replicates). This parameter is required.}
+\item{refsample}{A data frame containing the reference profiles (with replicates). Required.}
 
-\item{phenoclasses}{A data frame containing the cell type classes. This parameter is required.}
+\item{phenoclasses}{A data frame containing the cell type classes. Required.}
 
-\item{g_min}{Minimum number of genes per cell type in the signature matrix. Default is 50.}
+\item{g_min}{Minimum number of genes per cell type in the signature matrix. Default is 200.}
 
-\item{g_max}{Maximum number of genes per cell type in the signature matrix. Default is 150.}
+\item{g_max}{Maximum number of genes per cell type in the signature matrix. Default is 400.}
 
-\item{q_value}{Q-value threshold for differential expression. Default is 0.3.}
+\item{q_value}{Q-value threshold for differential expression. Default is 0.01.}
 
 \item{replicates}{Number of replicates to use for building the reference file. Default is 5.}
 
-\item{sampling}{Fraction of available gene expression profiles selected using random sampling. Default is 0.5.}
+\item{sampling}{Fraction of available gene expression profiles selected by random sampling. Default is 0.5.}
 
 \item{fraction}{Fraction of cells of the same identity showing evidence of expression. Default is 0.75.}
 
 \item{filter}{Logical indicating whether to remove non-hematopoietic genes. Default is FALSE.}
 
-\item{verbose}{Logical indicating whether to print detailed output. Default is TRUE.}
+\item{verbose}{Logical indicating whether to print detailed output. Default is FALSE.}
+
+\item{QN}{Logical indicating whether to run quantile normalization. Default is FALSE.}
+
+\item{single_cell}{Logical indicating whether to create signature from scRNA-Seq data. Default is FALSE.}
 
 \item{...}{Additional arguments passed to the function.}
 }
 \value{
-A data frame containing the signature matrix.
+A data frame containing the generated signature matrix.
 }
 \description{
-This function generates a signature matrix from a reference sample and phenoclasses using the CIBERSORTx tool.
+This function generates a signature matrix from a reference sample and cell type classes using the CIBERSORTx Docker tool.
 }
 \details{
-This function uses the CIBERSORTx Docker image to generate a signature matrix.
+This function uses the CIBERSORTx Docker image to construct a signature matrix based on the input reference profiles and cell type classifications.
 }
