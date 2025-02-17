@@ -28,7 +28,7 @@ handle_missing_values <- function(data, gene_column = "Genes", imputation_mode =
         "lowest_value" = {
             lowest_value <- min_nonzero(numeric_data)
             numeric_data <- replace(numeric_data, is.na(numeric_data), lowest_value)
-            numeric_data |> dplyr::mutate({{ gene_column }} := data[[gene_column]])
+            numeric_data |> dplyr::mutate({{ gene_column }} := data[[gene_column]], .before = 1)
         },
         "knn" = impute_helper(numeric_data, "knn", gene_column, data, ...),
         "zero" = impute_helper(numeric_data, "zero", gene_column, data, ...),
