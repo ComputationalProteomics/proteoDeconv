@@ -26,7 +26,8 @@ handle_scaling <- function(data, gene_column = "Genes", unlog = TRUE, tpm = TRUE
     }
 
     if (tpm) {
-        numeric_data <- numeric_data |> dplyr::mutate(across(where(is.numeric), ~ (.x / sum(.x)) * 1e+06))
+        numeric_data <- numeric_data |>
+            dplyr::mutate(across(where(is.numeric), ~ (.x / sum(.x, na.rm = TRUE)) * 1e+06))
     }
 
     result_data <- numeric_data |>
