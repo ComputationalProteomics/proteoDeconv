@@ -50,7 +50,6 @@ create_signature_matrix <- function(
     input_dir <- tempdir()
     output_dir <- tempdir()
 
-    # Changed temp file creation to include ".txt" extension
     refsample_file <- if (!is.null(refsample)) tempfile(tmpdir = input_dir, fileext = ".txt") else NULL
     phenoclasses_file <- if (!is.null(phenoclasses)) tempfile(tmpdir = input_dir, fileext = ".txt") else NULL
 
@@ -93,4 +92,64 @@ create_signature_matrix <- function(
     }
     signature_matrix <- readr::read_tsv(signature_matrix_file, show_col_types = FALSE)
   })
+}
+
+#' Create Phenoclasses for Immune Cells
+#'
+#' Generates a phenotype classification matrix from immune cell data,
+#' for use with the CIBERSORTx signature generation function.
+#' Each cell in the matrix is encoded as follows:
+#' 0 for 'Unknown' mappings,
+#' 1 if the cell type in the column matches the current group, or
+#' 2 if it does not match.
+#'
+#' @param immune_cells A data frame of immune cell profiles. Must include a "Genes" column.
+#' @param mapping_rules An optional named list of regex patterns for grouping; passed to map_cell_groups.
+#' @param verbose Logical. If TRUE, displays additional messages during processing.
+#'
+#' @return A tibble with a "cell_type" column (the groups) and columns corresponding to the original profiles.
+#'
+#' @export
+create_phenoclasses <- function(immune_cells,
+                                mapping_rules = NULL,
+                                gene_column = NULL,
+                                verbose = FALSE) {
+  immune_cells <- handle_input_data(immune_cells, gene_column = gene_column)
+
+  data <- immune_cells %>% select(-Genes)
+  cols <- colnames(data)
+
+  group_mapped <- map_cell_groups(cols, mapping_rules, default_group = "Unknown", verbose = verbose)
+  cell_type_to_group <- setNames(group_mapped, cols)
+
+
+  valid_cols <- names(cell_type_to_group)
+  valid_groups <- unique(cell_type_to_group)
+
+  valid_groups <- setdiff(valid_groups, "Unknown")
+
+  phenotype_classes <- matrix(NA,
+    nrow = length(valid_groups),
+    ncol = length(valid_cols),
+    dimnames = list(valid_groups, valid_cols)
+  )
+
+  for (group in valid_groups) {
+    for (j in seq_along(valid_cols)) {
+      current_group <- cell_type_to_group[[valid_cols[j]]]
+      if (current_group == "Unknown") {
+        phenotype_classes[group, j] <- 0
+      } else if (current_group == group) {
+        phenotype_classes[group, j] <- 1
+      } else {
+        phenotype_classes[group, j] <- 2
+      }
+    }
+  }
+
+  phenotype_classes_df <- as.data.frame(phenotype_classes) %>%
+    rownames_to_column(var = "cell_type") %>%
+    as_tibble()
+
+  return(phenotype_classes_df)
 }
