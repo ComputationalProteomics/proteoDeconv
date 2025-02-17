@@ -21,6 +21,8 @@
 #' @importFrom immunedeconv deconvolute
 #' @export
 deconvolute <- function(algorithm, data, signature_matrix = NULL, ...) {
+    data <- handle_input_data(data, "Genes")
+
     if (algorithm == "cibersortx") {
         return(deconvolute_cibersortx(data, signature_matrix, ...))
     }
@@ -29,13 +31,9 @@ deconvolute <- function(algorithm, data, signature_matrix = NULL, ...) {
         return(deconvolute_cibersort(data, signature_matrix))
     }
 
-    data <- data |> tibble::column_to_rownames("Genes")
+    data <- data |> handle_input_data(gene_column = "Genes", as_tibble = FALSE)
 
-    if (algorithm == "epic") {
-        return(deconvolute_epic(data, signature_matrix, ...))
-    }
-
-    result <- immunedeconv::deconvolute(data, algorithm)
+    result <- immunedeconv::deconvolute(data, algorithm, scale_mrna = FALSE, ...)
 }
 
 
@@ -98,8 +96,8 @@ deconvolute_cibersortx <- function(data, signature_matrix, perm = 1, rmbatch_S_m
 
         label <- uuid::UUIDgenerate(TRUE)
 
-        docker_command <- glue::glue(
-            "docker run --rm -v {input_dir}:/src/data:z -v {output_dir}:/src/outdir:z cibersortx/fractions ",
+        docker_command <- glue::glue( # TODO: remove the sudo part
+            "{if (Sys.info()[['sysname']] == 'Linux') 'sudo ' else ''}docker run --rm -v {input_dir}:/src/data:z -v {output_dir}:/src/outdir:z cibersortx/fractions ",
             "--verbose TRUE ",
             "--username {username} ",
             "--token {token} ",
@@ -133,20 +131,23 @@ deconvolute_cibersortx <- function(data, signature_matrix, perm = 1, rmbatch_S_m
     })
 }
 
+#' @export
 deconvolute_cibersort <- function(data, signature_matrix, ...) {
-    cibersort_result <- immunedeconv::deconvolute_cibersort_custom(
-        data |> tibble::column_to_rownames(colnames(data)[1]),
-        signature_matrix |> tibble::column_to_rownames(colnames(signature_matrix)[1])
-    )
+    data <- handle_input_data(data, as_tibble = FALSE)
+    signature_matrix <- handle_input_data(signature_matrix, as_tibble = FALSE)
+    cibersort_result <- immunedeconv::deconvolute_cibersort_custom(data, signature_matrix)
     tibble::as_tibble(cibersort_result |> t(), rownames = "Mixture") |> convert_cibersortx_output()
 }
 
-deconvolute_epic <- function(data, signature_matrix, signature_matrix_variance, signature_genes, default_reference = EPIC::TRef, ...) {
+#' @export
+deconvolute_epic <- function(data, signature_matrix, signature_matrix_variance, signature_genes, ...) {
+    data <- handle_input_data(data, as_tibble = FALSE)
     result <- immunedeconv::deconvolute_epic_custom(
         data,
         signature_matrix = signature_matrix,
         genes_var = signature_matrix_variance,
-        signature_genes = signature_genes
+        signature_genes = signature_genes,
+        ...
     )
     tibble::as_tibble(result, rownames = "cell_type")
 }

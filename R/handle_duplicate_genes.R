@@ -15,6 +15,7 @@
 #' @importFrom glue glue
 #' @export
 handle_duplicate_genes <- function(data, gene_column = "Genes", duplicate_mode) {
+    data <- handle_input_data(data, gene_column)
     if (!gene_column %in% colnames(data)) {
         stop(glue::glue("Column '{gene_column}' not found in the data."))
     }
@@ -31,7 +32,8 @@ handle_duplicate_genes <- function(data, gene_column = "Genes", duplicate_mode) 
                 dplyr::ungroup()
         },
         merge = {
-            data |>
+            data <- data |>
+                dplyr::filter(!is.na(.data[[gene_column]])) |>
                 dplyr::group_by(.data[[gene_column]]) |>
                 dplyr::summarise(across(where(is.numeric), median, na.rm = TRUE)) |>
                 dplyr::ungroup()

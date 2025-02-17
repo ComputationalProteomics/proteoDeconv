@@ -4,10 +4,12 @@
 \alias{update_gene_symbols}
 \title{Update Gene Symbols}
 \usage{
-update_gene_symbols(data, filepath = "", verbose = FALSE)
+update_gene_symbols(data, gene_column = NULL, filepath = "", verbose = FALSE)
 }
 \arguments{
 \item{data}{A data frame or vector containing gene symbols. If a data frame is provided, the first column is assumed to contain the gene symbols.}
+
+\item{gene_column}{A string specifying the name of the column containing gene symbols. Default is NULL. If NULL, the first column is used.}
 
 \item{filepath}{A string specifying the file path for verbose output. Default is an empty string.}
 

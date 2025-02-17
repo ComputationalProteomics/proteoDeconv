@@ -3,6 +3,7 @@
 #' This function updates gene symbols in a given dataset using a predefined gene symbols map.
 #'
 #' @param data A data frame or vector containing gene symbols. If a data frame is provided, the first column is assumed to contain the gene symbols.
+#' @param gene_column A string specifying the name of the column containing gene symbols. Default is NULL. If NULL, the first column is used.
 #' @param filepath A string specifying the file path for verbose output. Default is an empty string.
 #' @param verbose A logical value indicating whether to print detailed messages. Default is FALSE.
 #'
@@ -14,20 +15,16 @@
 #' @importFrom glue glue
 #' @importFrom HGNChelper checkGeneSymbols
 #' @export
-update_gene_symbols <- function(data, filepath = "", verbose = FALSE) {
-
+update_gene_symbols <- function(data, gene_column = NULL, filepath = "", verbose = FALSE) {
   if (!is.vector(data)) {
-    first_column_name <- colnames(data)[1]
-    data <- data |>
-      dplyr::rename(Genes = !!first_column_name)
-
-    gene_column <- data |>
-      dplyr::pull(Genes)
+    if (is.null(gene_column)) {
+      gene_column <- colnames(data)[1]
+    }
+    data <- handle_input_data(data, gene_column)
+    checked <- HGNChelper::checkGeneSymbols(data[[gene_column]], map = gene_symbols_map)
   } else {
-    gene_column <- data
+    checked <- HGNChelper::checkGeneSymbols(data, map = gene_symbols_map)
   }
-
-  checked <- HGNChelper::checkGeneSymbols(gene_column, map = gene_symbols_map)
 
   if (verbose) {
     message(glue::glue(
@@ -40,8 +37,8 @@ update_gene_symbols <- function(data, filepath = "", verbose = FALSE) {
 
   if (!is.vector(data)) {
     data <- data |>
-      dplyr::mutate(Genes = checked$Suggested.Symbol) |>
-      dplyr::filter(!is.na(Genes))
+      dplyr::mutate(!!gene_column := checked$Suggested.Symbol) |>
+      dplyr::filter(!is.na(!!sym(gene_column)))
     return(data)
   }
 
