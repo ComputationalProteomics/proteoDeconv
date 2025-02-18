@@ -177,9 +177,8 @@ deconvolute_cibersort <- function(
         cibersort_call <- rlang::call2(CIBERSORT, !!!extras)
         output <- eval(cibersort_call)
 
-        output <- tibble::as_tibble(output, rownames = "sample")
-        output <- dplyr::select(output, -c("RMSE", "P-value", "Correlation"))
-        output
+        pruned_output <- subset(output, select = -c("RMSE", "P-value", "Correlation"))
+        final_output <- t(pruned_output)
     })
 
     tibble::as_tibble(cibersort_result |> t(), rownames = "Mixture") |>
