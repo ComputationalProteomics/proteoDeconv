@@ -30,7 +30,6 @@ deconvolute <- function(algorithm, data, signature_matrix = NULL, ...) {
     }
 
     data <- data |> handle_input_data(gene_column = "Genes", as_tibble = FALSE)
-
 }
 
 
@@ -149,40 +148,39 @@ deconvolute_cibersort <- function(
     QN = FALSE,
     absolute = FALSE,
     abs_method = "sig.score",
-    ...
-) {
-  data <- handle_input_data(data, as_tibble = FALSE)
-  signature_matrix <- handle_input_data(signature_matrix, as_tibble = FALSE)
+    ...) {
+    data <- handle_input_data(data, as_tibble = FALSE)
+    signature_matrix <- handle_input_data(signature_matrix, as_tibble = FALSE)
 
-  if (!exists("CIBERSORT", mode = "function")) {
-    stop("Function 'CIBERSORT' not found. Please load the CIBERSORT.R script.")
-  }
+    if (!exists("CIBERSORT", mode = "function")) {
+        stop("Function 'CIBERSORT' not found. Please load the CIBERSORT.R script.")
+    }
 
-  cibersort_result <- withr::with_tempdir({
-    expr_file <- tempfile()
-    sig_file <- tempfile()
-    expr_tbl <- dplyr::as_tibble(data, rownames = "gene_symbol")
-    sig_tbl <- dplyr::as_tibble(signature_matrix, rownames = "gene_symbol")
-    readr::write_tsv(expr_tbl, file = expr_file)
-    readr::write_tsv(sig_tbl, file = sig_file)
+    cibersort_result <- withr::with_tempdir({
+        expr_file <- tempfile()
+        sig_file <- tempfile()
+        expr_tbl <- dplyr::as_tibble(data, rownames = "gene_symbol")
+        sig_tbl <- dplyr::as_tibble(signature_matrix, rownames = "gene_symbol")
+        readr::write_tsv(expr_tbl, file = expr_file)
+        readr::write_tsv(sig_tbl, file = sig_file)
 
-    extras <- rlang::dots_list(
-      sig_file,
-      expr_file,
-      perm = 0,
-      QN = QN,
-      absolute = absolute,
-      abs_method = abs_method,
-      ...,
-      .homonyms = "last"
-    )
-    cibersort_call <- rlang::call2(CIBERSORT, !!!extras)
-    output <- eval(cibersort_call)
+        extras <- rlang::dots_list(
+            sig_file,
+            expr_file,
+            perm = 0,
+            QN = QN,
+            absolute = absolute,
+            abs_method = abs_method,
+            ...,
+            .homonyms = "last"
+        )
+        cibersort_call <- rlang::call2(CIBERSORT, !!!extras)
+        output <- eval(cibersort_call) |> tibble::as_tibble()
 
-    output <- dplyr::select(output, -c("RMSE", "P-value", "Correlation"))
-    output
-  })
+        output <- dplyr::select(output, -c("RMSE", "P-value", "Correlation"))
+        output
+    })
 
-  tibble::as_tibble(cibersort_result |> t(), rownames = "Mixture") |>
-    convert_cibersortx_output()
+    tibble::as_tibble(cibersort_result |> t(), rownames = "Mixture") |>
+        convert_cibersortx_output()
 }
