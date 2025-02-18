@@ -143,21 +143,22 @@ deconvolute_cibersortx <- function(data, signature_matrix, perm = 1, rmbatch_S_m
 #'
 #' @return A tibble with deconvolution results.
 #' @export
-deconvolute_cibersort <- function(data,
-                                  signature_matrix,
-                                  QN = FALSE,
-                                  absolute = FALSE,
-                                  abs_method = "sig.score",
-                                  ...) {
+deconvolute_cibersort <- function(
+    data,
+    signature_matrix,
+    QN = FALSE,
+    absolute = FALSE,
+    abs_method = "sig.score",
+    ...
+) {
   data <- handle_input_data(data, as_tibble = FALSE)
   signature_matrix <- handle_input_data(signature_matrix, as_tibble = FALSE)
-  cibersort_path <- Sys.getenv("CIBERSORT_FILE", unset = "")
-  if (cibersort_path == "") {
-    stop("Environment variable 'CIBERSORT_FILE' is not defined.")
+
+  if (!exists("CIBERSORT", mode = "function")) {
+    stop("Function 'CIBERSORT' not found. Please load the CIBERSORT.R script.")
   }
 
   cibersort_result <- withr::with_tempdir({
-    source(cibersort_path)
     expr_file <- tempfile()
     sig_file <- tempfile()
     expr_tbl <- dplyr::as_tibble(data, rownames = "gene_symbol")
@@ -177,6 +178,7 @@ deconvolute_cibersort <- function(data,
     )
     cibersort_call <- rlang::call2(CIBERSORT, !!!extras)
     output <- eval(cibersort_call)
+
     output <- dplyr::select(output, -c("RMSE", "P-value", "Correlation"))
     output
   })

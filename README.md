@@ -63,10 +63,12 @@ CIBERSORTx.
 
 For running proteoDeconv with the regular CIBERSORT (not CIBERSORTx),
 you will need to download the CIBERSORT source code from the [CIBERSORTx
-website](https://cibersortx.stanford.edu). You will then need to specify
-where the CIBERSORT file is located, also in an environment variable:
+website](https://cibersortx.stanford.edu). You will then need to
+`source` this file prior to running deconvolutions with the method, e.g.
 
-    CIBERSORT_FILE = /path/to/CIBERSORT.R
+``` r
+source("/path/to/CIBERSORT.R")
+```
 
 ### Signature matrices
 
