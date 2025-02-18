@@ -45,6 +45,8 @@ pg_deconvoluted <- deconvolute("cibersortx", pg, signature)
 
 ## Prerequisites
 
+### CIBERSORTx
+
 To use proteoDeconv with CIBERSORTx, you will need to register on the
 [CIBERSORTx website](https://cibersortx.stanford.edu) and request a
 token. This token is required for accessing the CIBERSORTx functionality
@@ -57,9 +59,16 @@ as environment variables in ~/.Renviron:
 Additionally, Docker needs to be installed on the system in order to run
 CIBERSORTx.
 
+### CIBERSORT
+
 For running proteoDeconv with the regular CIBERSORT (not CIBERSORTx),
 you will need to download the CIBERSORT source code from the [CIBERSORTx
-website](https://cibersortx.stanford.edu).
+website](https://cibersortx.stanford.edu). You will then need to specify
+where the CIBERSORT file is located, also in an environment variable:
+
+    CIBERSORT_FILE = /path/to/CIBERSORT.R
+
+### Signature matrices
 
 Additionally, you can retrieve ready-made signature matrices for cell
 type deconvolution from the [Decomprolute repository on

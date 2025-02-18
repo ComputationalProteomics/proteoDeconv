@@ -52,17 +52,32 @@ pg_deconvoluted <- deconvolute("cibersortx", pg, signature)
 
 ## Prerequisites
 
-To use proteoDeconv with CIBERSORTx, you will need to register on the [CIBERSORTx website](https://cibersortx.stanford.edu) and request a token. This token is required for accessing the CIBERSORTx functionality and is free for academic users. The token and email used can be stored as environment variables in ~/.Renviron:
 
-```
-CIBERSORTX_TOKEN = your_token_here
-CIBERSORTX_EMAIL = your_email_here
-```
+### CIBERSORTx
 
-Additionally, Docker needs to be installed on the system in order to run CIBERSORTx.
+To use proteoDeconv with CIBERSORTx, you will need to register on the
+[CIBERSORTx website](https://cibersortx.stanford.edu) and request a
+token. This token is required for accessing the CIBERSORTx functionality
+and is free for academic users. The token and email used can be stored
+as environment variables in ~/.Renviron:
 
-For running proteoDeconv with the regular CIBERSORT (not CIBERSORTx), you will need to download the CIBERSORT source code from the [CIBERSORTx website](https://cibersortx.stanford.edu).
+    CIBERSORTX_TOKEN = your_token_here
+    CIBERSORTX_EMAIL = your_email_here
 
-Additionally, you can retrieve ready-made signature matrices for cell type deconvolution from the [Decomprolute repository on GitHub](https://github.com/PNNL-CompBio/decomprolute/tree/main/signature_matrices). These matrices can be used as inputs in the deconvolution process with proteoDeconv.
+Additionally, Docker needs to be installed on the system in order to run
+CIBERSORTx.
 
+### CIBERSORT
+For running proteoDeconv with the regular CIBERSORT (not CIBERSORTx),
+you will need to download the CIBERSORT source code from the [CIBERSORTx
+website](https://cibersortx.stanford.edu). You will then need to specify where
+the CIBERSORT file is located, also in an environment variable:
 
+    CIBERSORT_FILE = /path/to/CIBERSORT.R
+
+### Signature matrices
+Additionally, you can retrieve ready-made signature matrices for cell
+type deconvolution from the [Decomprolute repository on
+GitHub](https://github.com/PNNL-CompBio/decomprolute/tree/main/signature_matrices).
+These matrices can be used as inputs in the deconvolution process with
+proteoDeconv.
