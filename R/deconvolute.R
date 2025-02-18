@@ -14,11 +14,9 @@
 #'   \item \strong{"cibersortx"}: Uses the `deconvolute_cibersortx` function.
 #'   \item \strong{"cibersort"}: Uses the `deconvolute_cibersort` function.
 #'   \item \strong{"epic"}: Uses the `deconvolute_epic` function.
-#'   \item Other algorithms supported by the `immunedeconv` package.
 #' }
 #'
 #' @importFrom tibble column_to_rownames
-#' @importFrom immunedeconv deconvolute
 #' @export
 deconvolute <- function(algorithm, data, signature_matrix = NULL, ...) {
     data <- handle_input_data(data, "Genes")
@@ -33,7 +31,6 @@ deconvolute <- function(algorithm, data, signature_matrix = NULL, ...) {
 
     data <- data |> handle_input_data(gene_column = "Genes", as_tibble = FALSE)
 
-    result <- immunedeconv::deconvolute(data, algorithm, scale_mrna = FALSE, ...)
 }
 
 
@@ -134,16 +131,56 @@ deconvolute_cibersortx <- function(data, signature_matrix, perm = 1, rmbatch_S_m
 #' Deconvolute Mixture Data using CIBERSORT
 #'
 #' Applies a custom CIBERSORT deconvolution on the input data using the provided signature matrix,
-#' and transforms the output into a tibble.
+#' creating temporary input files and running the external CIBERSORT script in an isolated directory.
+#' Results are returned as a tibble after removing unneeded columns and transposing.
 #'
 #' @param data A data frame containing mixture expression data.
 #' @param signature_matrix A data frame with the signature matrix.
+#' @param QN Logical indicating whether quantile normalization is performed (default FALSE).
+#' @param absolute Logical indicating whether an absolute score is computed (default FALSE).
+#' @param abs_method Method for absolute scoring if absolute is TRUE (default "sig.score").
+#' @param ... Additional arguments passed to the CIBERSORT function.
 #'
 #' @return A tibble with deconvolution results.
 #' @export
-deconvolute_cibersort <- function(data, signature_matrix) {
-    data <- handle_input_data(data, as_tibble = FALSE)
-    signature_matrix <- handle_input_data(signature_matrix, as_tibble = FALSE)
-    cibersort_result <- immunedeconv::deconvolute_cibersort_custom(data, signature_matrix)
-    tibble::as_tibble(cibersort_result |> t(), rownames = "Mixture") |> convert_cibersortx_output()
+deconvolute_cibersort <- function(data,
+                                  signature_matrix,
+                                  QN = FALSE,
+                                  absolute = FALSE,
+                                  abs_method = "sig.score",
+                                  ...) {
+  data <- handle_input_data(data, as_tibble = FALSE)
+  signature_matrix <- handle_input_data(signature_matrix, as_tibble = FALSE)
+  cibersort_path <- Sys.getenv("CIBERSORT_FILE", unset = "")
+  if (cibersort_path == "") {
+    stop("Environment variable 'CIBERSORT_FILE' is not defined.")
+  }
+
+  cibersort_result <- withr::with_tempdir({
+    source(cibersort_path)
+    expr_file <- tempfile()
+    sig_file <- tempfile()
+    expr_tbl <- dplyr::as_tibble(data, rownames = "gene_symbol")
+    sig_tbl <- dplyr::as_tibble(signature_matrix, rownames = "gene_symbol")
+    readr::write_tsv(expr_tbl, file = expr_file)
+    readr::write_tsv(sig_tbl, file = sig_file)
+
+    extras <- rlang::dots_list(
+      sig_file,
+      expr_file,
+      perm = 0,
+      QN = QN,
+      absolute = absolute,
+      abs_method = abs_method,
+      ...,
+      .homonyms = "last"
+    )
+    cibersort_call <- rlang::call2(CIBERSORT, !!!extras)
+    output <- eval(cibersort_call)
+    output <- dplyr::select(output, -c("RMSE", "P-value", "Correlation"))
+    output
+  })
+
+  tibble::as_tibble(cibersort_result |> t(), rownames = "Mixture") |>
+    convert_cibersortx_output()
 }

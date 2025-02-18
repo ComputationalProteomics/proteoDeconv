@@ -27,6 +27,5 @@ The function supports multiple deconvolution algorithms:
 \item \strong{"cibersortx"}: Uses the \code{deconvolute_cibersortx} function.
 \item \strong{"cibersort"}: Uses the \code{deconvolute_cibersort} function.
 \item \strong{"epic"}: Uses the \code{deconvolute_epic} function.
-\item Other algorithms supported by the \code{immunedeconv} package.
 }
 }

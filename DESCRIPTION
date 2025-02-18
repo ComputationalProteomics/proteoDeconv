@@ -15,7 +15,6 @@ Imports:
     dplyr,
     glue,
     HGNChelper,
-    immunedeconv,
     impute,
     Matrix,
     memoise,
@@ -36,8 +35,7 @@ Suggests:
     BayesDeBulk,
     EPIC
 Remotes:
-    WangLab-MSSM/BayesDeBulk/BayesDeBulk,
-    omnideconv/immunedeconv
+    WangLab-MSSM/BayesDeBulk/BayesDeBulk
 Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true

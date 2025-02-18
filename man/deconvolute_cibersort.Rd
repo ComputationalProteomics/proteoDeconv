@@ -4,17 +4,33 @@
 \alias{deconvolute_cibersort}
 \title{Deconvolute Mixture Data using CIBERSORT}
 \usage{
-deconvolute_cibersort(data, signature_matrix)
+deconvolute_cibersort(
+  data,
+  signature_matrix,
+  QN = FALSE,
+  absolute = FALSE,
+  abs_method = "sig.score",
+  ...
+)
 }
 \arguments{
 \item{data}{A data frame containing mixture expression data.}
 
 \item{signature_matrix}{A data frame with the signature matrix.}
+
+\item{QN}{Logical indicating whether quantile normalization is performed (default FALSE).}
+
+\item{absolute}{Logical indicating whether an absolute score is computed (default FALSE).}
+
+\item{abs_method}{Method for absolute scoring if absolute is TRUE (default "sig.score").}
+
+\item{...}{Additional arguments passed to the CIBERSORT function.}
 }
 \value{
 A tibble with deconvolution results.
 }
 \description{
 Applies a custom CIBERSORT deconvolution on the input data using the provided signature matrix,
-and transforms the output into a tibble.
+creating temporary input files and running the external CIBERSORT script in an isolated directory.
+Results are returned as a tibble after removing unneeded columns and transposing.
 }
