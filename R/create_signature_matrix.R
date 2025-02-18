@@ -119,11 +119,11 @@ create_signature_matrix <- function(
 #' @export
 create_phenoclasses <- function(immune_cells,
                                 mapping_rules = NULL,
-                                gene_column = NULL,
+                                gene_column = "Genes",
                                 verbose = FALSE) {
   immune_cells <- handle_input_data(immune_cells, gene_column = gene_column)
 
-  data <- immune_cells |> dplyr::select(-Genes)
+  data <- data |> dplyr::select(-{{ gene_column }})
   cols <- colnames(data)
 
   group_mapped <- map_cell_groups(cols, mapping_rules, default_group = "Unknown", verbose = verbose)

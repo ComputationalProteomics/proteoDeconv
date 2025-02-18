@@ -7,7 +7,7 @@
 create_phenoclasses(
   immune_cells,
   mapping_rules = NULL,
-  gene_column = NULL,
+  gene_column = "Genes",
   verbose = FALSE
 )
 }

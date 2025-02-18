@@ -1,6 +1,6 @@
 Package: proteoDeconv
 Title: Enabling Cell-Type Deconvolution of Proteomics Data
-Version: 0.0.0.9000
+Version: 0.0.1.9000
 Authors@R: 
     person("Måns", "Zamore", email = "mans.zamore@immun.lth.se", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-8108-1097"))
@@ -22,7 +22,9 @@ Imports:
     MsCoreUtils,
     readr,
     rlang,
+    SimBu,
     stats,
+    stringr,
     SummarizedExperiment,
     tibble,
     tidyr,

@@ -131,23 +131,19 @@ deconvolute_cibersortx <- function(data, signature_matrix, perm = 1, rmbatch_S_m
     })
 }
 
+#' Deconvolute Mixture Data using CIBERSORT
+#'
+#' Applies a custom CIBERSORT deconvolution on the input data using the provided signature matrix,
+#' and transforms the output into a tibble.
+#'
+#' @param data A data frame containing mixture expression data.
+#' @param signature_matrix A data frame with the signature matrix.
+#'
+#' @return A tibble with deconvolution results.
 #' @export
-deconvolute_cibersort <- function(data, signature_matrix, ...) {
+deconvolute_cibersort <- function(data, signature_matrix) {
     data <- handle_input_data(data, as_tibble = FALSE)
     signature_matrix <- handle_input_data(signature_matrix, as_tibble = FALSE)
     cibersort_result <- immunedeconv::deconvolute_cibersort_custom(data, signature_matrix)
     tibble::as_tibble(cibersort_result |> t(), rownames = "Mixture") |> convert_cibersortx_output()
-}
-
-#' @export
-deconvolute_epic <- function(data, signature_matrix, signature_matrix_variance, signature_genes, ...) {
-    data <- handle_input_data(data, as_tibble = FALSE)
-    result <- immunedeconv::deconvolute_epic_custom(
-        data,
-        signature_matrix = signature_matrix,
-        genes_var = signature_matrix_variance,
-        signature_genes = signature_genes,
-        ...
-    )
-    tibble::as_tibble(result, rownames = "cell_type")
 }

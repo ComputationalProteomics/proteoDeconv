@@ -6,3 +6,6 @@
 ^data-raw$
 ^\.vscode$
 ^debug$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
