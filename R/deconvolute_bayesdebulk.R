@@ -85,13 +85,15 @@ transform_bayesdebulk_output <- function(bayes_cell_fractions, ...) {
 #' @importFrom dplyr mutate
 #' @importFrom tidyr pivot_longer
 #' @importFrom tibble rownames_to_column
-#' @importFrom BayesDeBulk BayesDeBulk
 #' @export
 deconvolute_bayesdebulk <- function(data,
                                     signature_matrix,
                                     n_iter = 1000,
                                     burn_in = 100,
                                     ...) {
+    if (!requireNamespace("BayesDeBulk", quietly = TRUE)) {
+      stop("Package 'BayesDeBulk' is required but not installed.")
+    }
     markers <- get_signature_markers(list(data), signature_matrix)
     bayes <- BayesDeBulk::BayesDeBulk(
         n.iter = n_iter,

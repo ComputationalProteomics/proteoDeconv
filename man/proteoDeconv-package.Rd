@@ -4,9 +4,9 @@
 \name{proteoDeconv-package}
 \alias{proteoDeconv}
 \alias{proteoDeconv-package}
-\title{proteoDeconv: Enabling Cell Type Deconvolution of Proteomics Data}
+\title{proteoDeconv: Enabling Cell-Type Deconvolution of Proteomics Data}
 \description{
-Tools for deconvoluting proteomics data to identify and quantify cell types (e.g., immune cell types) and their functional states in complex biological samples.
+Tools for deconvoluting proteomics data to identify and quantify cell types (e.g., immune cell types) in complex biological samples.
 }
 \seealso{
 Useful links:
