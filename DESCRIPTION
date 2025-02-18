@@ -36,7 +36,8 @@ Suggests:
     EPIC
 Remotes:
     WangLab-MSSM/BayesDeBulk/BayesDeBulk,
-    GfellerLab/EPIC
+    GfellerLab/EPIC,
+    omnideconv/SimBu
 Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
