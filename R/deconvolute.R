@@ -177,7 +177,8 @@ deconvolute_cibersort <- function(
         cibersort_call <- rlang::call2(CIBERSORT, !!!extras)
         output <- eval(cibersort_call)
 
-        pruned_output <- subset(output, select = -c("RMSE", "P-value", "Correlation"))
+        pruned_output <- output %>%
+            .[, !colnames(.) %in% c("RMSE", "P-value", "Correlation")]
         final_output <- t(pruned_output)
     })
 
