@@ -175,7 +175,7 @@ deconvolute_cibersort <- function(
             .homonyms = "last"
         )
         cibersort_call <- rlang::call2(CIBERSORT, !!!extras)
-        output <- eval(cibersort_call) |> tibble::as_tibble()
+        output <- eval(cibersort_call) |> tibble::as_tibble(rownames = "cell_type")
 
         output <- dplyr::select(output, -c("RMSE", "P-value", "Correlation"))
         output
