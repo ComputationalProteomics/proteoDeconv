@@ -179,9 +179,8 @@ deconvolute_cibersort <- function(
 
         pruned_output <- output %>%
             .[, !colnames(.) %in% c("RMSE", "P-value", "Correlation")]
-        final_output <- t(pruned_output)
     })
 
-    tibble::as_tibble(cibersort_result |> t(), rownames = "Mixture") |>
+    tibble::as_tibble(cibersort_result, rownames = "Mixture") |>
         convert_cibersortx_output()
 }
