@@ -48,6 +48,7 @@ deconvolute <- function(algorithm, data, signature_matrix = NULL, ...) {
 #' @param QN A logical value indicating whether to perform quantile normalization. Default is FALSE.
 #' @param absolute A logical value indicating whether to use absolute mode. Default is FALSE.
 #' @param abs_method A character string specifying the method to use for absolute mode. Default is "sig.score".
+#' @param use_sudo A logical value indicating whether to use sudo for Docker commands. Default is FALSE.
 #'
 #' @return A data frame containing the deconvolution results.
 #'
@@ -55,7 +56,7 @@ deconvolute <- function(algorithm, data, signature_matrix = NULL, ...) {
 #' This function requires the CIBERSORTx Docker image to be installed. It also requires the user to set the \code{CIBERSORTX_EMAIL} and \code{CIBERSORTX_TOKEN} environment variables with their CIBERSORTx credentials.
 #'
 #' @export
-deconvolute_cibersortx <- function(data, signature_matrix, perm = 1, rmbatch_S_mode = FALSE, source_GEPs = NULL, use_cibersortx = TRUE, rmbatch_B_mode = FALSE, QN = FALSE, absolute = FALSE, abs_method = "sig.score") {
+deconvolute_cibersortx <- function(data, signature_matrix, perm = 1, rmbatch_S_mode = FALSE, source_GEPs = NULL, use_cibersortx = TRUE, rmbatch_B_mode = FALSE, QN = FALSE, absolute = FALSE, abs_method = "sig.score", use_sudo = FALSE) {
     if (!use_cibersortx) {
         return(deconvolute_cibersort(data, signature_matrix))
     }
@@ -92,8 +93,8 @@ deconvolute_cibersortx <- function(data, signature_matrix, perm = 1, rmbatch_S_m
 
         label <- uuid::UUIDgenerate(TRUE)
 
-        docker_command <- glue::glue( # TODO: remove the sudo part
-            "{if (Sys.info()[['sysname']] == 'Linux') 'sudo ' else ''}docker run --rm -v {input_dir}:/src/data:z -v {output_dir}:/src/outdir:z cibersortx/fractions ",
+        docker_command <- glue::glue(
+            "{if (use_sudo) 'sudo ' else ''}docker run --rm -v {input_dir}:/src/data:z -v {output_dir}:/src/outdir:z cibersortx/fractions ",
             "--verbose TRUE ",
             "--username {username} ",
             "--token {token} ",
@@ -183,4 +184,24 @@ deconvolute_cibersort <- function(
 
     tibble::as_tibble(cibersort_result, rownames = "Mixture") |>
         convert_cibersortx_output()
+}
+
+convert_cibersortx_output <- function(data) {
+    extra_cols <- c("P.value", "Correlation", "RMSE", "P-value")
+
+    if (!("Mixture" %in% colnames(data))) {
+        stop("No Mixture column found")
+    }
+
+    data |>
+        dplyr::select(-tidyselect::any_of(extra_cols)) |>
+        tidyr::pivot_longer(
+            cols = -dplyr::all_of("Mixture"),
+            names_to = "cell_type",
+            values_to = "value"
+        ) |>
+        tidyr::pivot_wider(
+            names_from = "Mixture",
+            values_from = "value"
+        )
 }

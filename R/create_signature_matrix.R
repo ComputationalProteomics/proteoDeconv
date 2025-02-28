@@ -14,6 +14,7 @@
 #' @param verbose Logical indicating whether to print detailed output. Default is FALSE.
 #' @param QN Logical indicating whether to run quantile normalization. Default is FALSE.
 #' @param single_cell Logical indicating whether to create signature from scRNA-Seq data. Default is FALSE.
+#' @param use_sudo Logical indicating whether to use sudo for Docker commands. Default is FALSE.
 #' @param ... Additional arguments passed to the function.
 #'
 #' @return A data frame containing the generated signature matrix.
@@ -38,6 +39,7 @@ create_signature_matrix <- function(
     verbose = FALSE,
     QN = FALSE,
     single_cell = FALSE,
+    use_sudo = FALSE,
     ...) {
   username <- Sys.getenv("CIBERSORTX_EMAIL")
   token <- Sys.getenv("CIBERSORTX_TOKEN")
@@ -59,7 +61,7 @@ create_signature_matrix <- function(
     if (!is.null(phenoclasses)) readr::write_tsv(phenoclasses, phenoclasses_file, col_names = FALSE)
 
     docker_command <- glue::glue(
-      "{if (Sys.info()[['sysname']] == 'Linux') 'sudo ' else ''}docker run --rm -v {input_dir}:/src/data:z -v {output_dir}:/src/outdir:z cibersortx/fractions ",
+      "{if (use_sudo) 'sudo ' else ''}docker run --rm -v {input_dir}:/src/data:z -v {output_dir}:/src/outdir:z cibersortx/fractions ",
       "--verbose {ifelse(verbose, 'TRUE', 'FALSE')} ",
       "--username {username} ",
       "--token {token} ",
