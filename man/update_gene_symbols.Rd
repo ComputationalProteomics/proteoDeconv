@@ -2,25 +2,29 @@
 % Please edit documentation in R/update_gene_symbols.R
 \name{update_gene_symbols}
 \alias{update_gene_symbols}
-\title{Update Gene Symbols}
+\title{Update gene symbols in a matrix to approved HGNC nomenclature}
 \usage{
-update_gene_symbols(data, gene_column = NULL, filepath = "", verbose = FALSE)
+update_gene_symbols(data, verbose = FALSE)
 }
 \arguments{
-\item{data}{A data frame or vector containing gene symbols. If a data frame is provided, the first column is assumed to contain the gene symbols.}
+\item{data}{A numeric matrix containing gene expression or protein abundance data
+with gene identifiers as row names.}
 
-\item{gene_column}{A string specifying the name of the column containing gene symbols. Default is NULL. If NULL, the first column is used.}
-
-\item{filepath}{A string specifying the file path for verbose output. Default is an empty string.}
-
-\item{verbose}{A logical value indicating whether to print detailed messages. Default is FALSE.}
+\item{verbose}{A logical value indicating whether to print detailed messages about
+the number of approved, non-approved, and unmappable gene symbols. Default is FALSE.}
 }
 \value{
-If \code{data} is a data frame, the function returns a data frame with updated gene symbols. If \code{data} is a vector, the function returns a vector of updated gene symbols.
+A matrix with updated gene symbols as row names. Rows with unmappable symbols
+(where no suggested symbol could be found) are removed from the output.
 }
 \description{
-This function updates gene symbols in a given dataset using a predefined gene symbols map.
+This function checks and updates gene symbols in a matrix's row names to ensure they
+conform to the current approved HGNC (HUGO Gene Nomenclature Committee) standards.
+Non-standard or outdated gene symbols are replaced with their current official symbols.
 }
 \details{
-The function uses the \code{HGNChelper} package to check and update gene symbols based on a predefined gene symbols map. If \code{verbose} is TRUE, the function prints detailed messages about the number of approved, not approved, and NA gene symbols.
+The function uses the \code{HGNChelper} package to check and standardize gene symbols
+based on a predefined gene symbols map. This is important for
+ensuring consistency in gene naming across datasets and avoiding issues with outdated
+or non-standard gene symbols.
 }

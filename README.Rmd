@@ -4,7 +4,7 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-```{r, include = FALSE}
+```{r echo=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
@@ -15,71 +15,83 @@ knitr::opts_chunk$set(
 
 # proteoDeconv
 
+proteoDeconv is an R package that facilitates the deconvolution of bulk proteomic data to estimate cell type proportions. With proteoDeconv, you can preprocess your data to prepare it for deconvolution, create cell type signature matrices, and perform deconvolution using multiple algorithms.
+
 <!-- badges: start -->
-
 [![R-CMD-check](https://github.com/ComputationalProteomics/proteoDeconv/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ComputationalProteomics/proteoDeconv/actions/workflows/R-CMD-check.yaml)
-
+[![Codecov test coverage](https://codecov.io/gh/manszamore/proteoDeconv/graph/badge.svg)](https://app.codecov.io/gh/manszamore/proteoDeconv)
 <!-- badges: end -->
-
-proteoDeconv is an R package that facilitates deconvolution of bulk sample proteomic data to estimate proportions of cell types.
 
 ## Installation
 
-You can install the development version of proteoDeconv from GitHub with:
+You can install the development version of proteoDeconv from GitHub:
 
-``` r
-# install.packages("devtools")
-devtools::install_github("ComputationalProteomics/proteoDeconv")
+```r
+# install.packages("pak")
+pak::pak("ComputationalProteomics/proteoDeconv")
 ```
 
-## Usage Example
+## Usage example
 
-The following example demonstrates a basic workflow using proteoDeconv. The input file report.pg_matrix.tsv in this case is from DIA-NN, and the LM7c.txt signature matrix was downloaded from the [Decomprolute repository](https://github.com/PNNL-CompBio/decomprolute/tree/main/signature_matrices).
+Below is a brief example that demonstrates loading the provided example data and signature matrix from the package and performing deconvolution. You can learn more in `vignette("proteoDeconv")`.
 
-``` r
+```r
 library(proteoDeconv)
-pg <-
-  read_tsv("report.pg_matrix.tsv") |>
+
+mix_data_file <- system.file("extdata", "mixed_samples_matrix.rds", package = "proteoDeconv")
+mixed_samples <- readRDS(mix_data_file)
+
+# Preprocess the mix samples data using the package's pipeline
+mixed_samples_preprocessed <- mixed_samples |>
+  extract_identifiers() |>
   update_gene_symbols() |>
-  handle_gene_groups() |>
   handle_missing_values(imputation_mode = "lowest_value") |>
-  handle_duplicate_genes(duplicate_mode = "slice") |>
-  handle_scaling(unlog = FALSE, tpm = TRUE)
-  
-signature <- read_tsv("LM7c.txt")
-pg_deconvoluted <- deconvolute("cibersortx", pg, signature)
+  handle_duplicates(duplicate_mode = "slice") |>
+  convert_to_tpm()
+
+# Load an example signature matrix
+signature_file <- system.file("extdata", "cd8t_mono_signature_matrix.rds", package = "proteoDeconv")
+signature_matrix <- readRDS(signature_file)
+
+# Perform deconvolution
+results <- deconvolute(
+  algorithm = "epic",
+  data = mixed_samples_preprocessed,
+  signature = signature_matrix,
+  with_other_cells = FALSE
+)
+
+# View the deconvolution results
+print(results)
 ```
 
 ## Prerequisites
 
-
 ### CIBERSORTx
 
-To use proteoDeconv with CIBERSORTx, you will need to register on the
-[CIBERSORTx website](https://cibersortx.stanford.edu) and request a
-token. This token is required for accessing the CIBERSORTx functionality
-and is free for academic users. The token and email used can be stored
-as environment variables in ~/.Renviron:
+To use proteoDeconv with CIBERSORTx:
 
-    CIBERSORTX_TOKEN = your_token_here
-    CIBERSORTX_EMAIL = your_email_here
+- Ensure Docker is installed on your system.
+- Register and obtain a token from the [CIBERSORTx website](https://cibersortx.stanford.edu).
+- Set the token and email as environment variables in your .Renviron file (this file can be in your home directory or in your project folder):
 
-Additionally, Docker needs to be installed on the system in order to run
-CIBERSORTx.
+  ```r
+  CIBERSORTX_TOKEN=your_token_here
+  CIBERSORTX_EMAIL=your_email_here
+  ```
 
 ### CIBERSORT
-For running proteoDeconv with the regular CIBERSORT (not CIBERSORTx),
-you will need to download the CIBERSORT source code from the [CIBERSORTx
-website](https://cibersortx.stanford.edu). You will then need to `source` this
-file prior to running deconvolutions with the method, e.g.
 
-```{r eval=FALSE}
+For running proteoDeconv with the original CIBERSORT method, download the CIBERSORT source code from the [CIBERSORT website](https://cibersortx.stanford.edu) and source it before executing deconvolutions:
+
+```r
 source("/path/to/CIBERSORT.R")
 ```
 
-### Signature matrices
-Additionally, you can retrieve ready-made signature matrices for cell
-type deconvolution from the [Decomprolute repository on
-GitHub](https://github.com/PNNL-CompBio/decomprolute/tree/main/signature_matrices).
-These matrices can be used as inputs in the deconvolution process with
-proteoDeconv.
+## Further reference
+
+For a detailed walkthrough of a complete workflow, see `vignette("proteoDeconv")` or [the package website](https://computationalproteomics.github.io/proteoDeconv/).
+
+## Support
+
+For bug reports or any other inquiries, please [open an issue](https://github.com/ComputationalProteomics/proteoDeconv/issues) on our GitHub repository.

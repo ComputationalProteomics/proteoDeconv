@@ -1,4 +1,33 @@
-url: ~
+url: https://computationalproteomics.github.io/proteoDeconv/
 template:
   bootstrap: 5
+  bootswatch: flatly
 
+reference:
+- title: Data preprocessing
+  desc: Functions for handling and processing protein data.
+  contents:
+  - handle_duplicates
+  - extract_identifiers
+  - update_gene_symbols
+  - unlog2_data
+  - convert_to_tpm
+  - handle_scaling
+  - handle_missing_values
+
+- title: Signature matrix creation
+  desc: Functions for working with signature matrix creation.
+  contents:
+  - map_cell_groups
+  - create_phenoclasses
+  - create_signature_matrix
+
+- title: Deconvolution
+  desc: Functions for deconvoluting bulk data into cell type proportions.
+  contents:
+  - starts_with("deconvolute")
+
+- title: Simulation
+  desc: Function for simulating artifical mixtures.
+  contents:
+    - simulate_data

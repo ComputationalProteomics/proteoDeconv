@@ -2,22 +2,50 @@
 % Please edit documentation in R/handle_scaling.R
 \name{handle_scaling}
 \alias{handle_scaling}
-\title{Handle Scaling of Protein Data}
+\title{Handle scaling of protein abundance data}
 \usage{
-handle_scaling(data, gene_column = "Genes", unlog = TRUE, tpm = TRUE)
+handle_scaling(data, unlog = FALSE, tpm = FALSE)
 }
 \arguments{
-\item{data}{A data frame containing protein data. The first column should contain gene identifiers.}
+\item{data}{A numeric matrix containing protein abundance data with identifiers as row names
+and samples as columns.}
 
-\item{gene_column}{A string specifying the name of the column containing gene identifiers. Default is "Genes".}
+\item{unlog}{A logical value indicating whether to unlog the data (convert from log2 scale).
+Default is FALSE.}
 
-\item{unlog}{A logical value indicating whether to unlog the data (convert from log2 scale). Default is TRUE.}
-
-\item{tpm}{A logical value indicating whether to convert the data to TPM (Transcripts Per Million). Default is TRUE.}
+\item{tpm}{A logical value indicating whether to apply TPM-like normalization
+(adapting Transcripts Per Million for proteomics). Default is FALSE.}
 }
 \value{
-A data frame with the scaled protein data.
+A numeric matrix with the scaled protein abundance data according to the specified options.
 }
 \description{
-This function handles the scaling of protein data by optionally unlogging and converting to TPM (Transcripts Per Million).
+Scales protein abundance data by optionally converting from log2 scale to linear scale
+and/or applying TPM-like normalization for proteomics data comparison.
+}
+\details{
+This function combines the functionality of \code{\link{unlog2_data}} and
+\code{\link{convert_to_tpm}} to provide a flexible way to handle common scaling operations
+for proteomics data.
+}
+\examples{
+# Create log2-transformed protein abundance matrix
+log2_mat <- matrix(rnorm(12, mean = 10, sd = 2), nrow = 4, ncol = 3)
+rownames(log2_mat) <- paste0("Protein", 1:4)
+colnames(log2_mat) <- paste0("Sample", 1:3)
+
+# Convert from log2 to linear scale only
+linear_mat <- handle_scaling(log2_mat, unlog = TRUE, tpm = FALSE)
+
+# Convert from log2 to linear scale and then apply TPM-like normalization
+tpm_mat <- handle_scaling(log2_mat, unlog = TRUE, tpm = TRUE)
+
+# Apply TPM-like normalization to already linear protein abundance data
+linear_data <- matrix(abs(rnorm(12, mean = 500, sd = 200)), nrow = 4, ncol = 3)
+tpm_only <- handle_scaling(linear_data, unlog = FALSE, tpm = TRUE)
+
+}
+\seealso{
+\code{\link{unlog2_data}} for just converting from log2 scale,
+\code{\link{convert_to_tpm}} for just applying TPM-like normalization
 }

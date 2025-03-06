@@ -1,46 +1,59 @@
-#' Update Gene Symbols
+#' Update gene symbols in a matrix to approved HGNC nomenclature
 #'
-#' This function updates gene symbols in a given dataset using a predefined gene symbols map.
+#' This function checks and updates gene symbols in a matrix's row names to ensure they
+#' conform to the current approved HGNC (HUGO Gene Nomenclature Committee) standards.
+#' Non-standard or outdated gene symbols are replaced with their current official symbols.
 #'
-#' @param data A data frame or vector containing gene symbols. If a data frame is provided, the first column is assumed to contain the gene symbols.
-#' @param gene_column A string specifying the name of the column containing gene symbols. Default is NULL. If NULL, the first column is used.
-#' @param filepath A string specifying the file path for verbose output. Default is an empty string.
-#' @param verbose A logical value indicating whether to print detailed messages. Default is FALSE.
+#' @param data A numeric matrix containing gene expression or protein abundance data
+#'        with gene identifiers as row names.
+#' @param verbose A logical value indicating whether to print detailed messages about
+#'        the number of approved, non-approved, and unmappable gene symbols. Default is FALSE.
 #'
-#' @return If `data` is a data frame, the function returns a data frame with updated gene symbols. If `data` is a vector, the function returns a vector of updated gene symbols.
+#' @return A matrix with updated gene symbols as row names. Rows with unmappable symbols
+#'         (where no suggested symbol could be found) are removed from the output.
 #'
-#' @details The function uses the `HGNChelper` package to check and update gene symbols based on a predefined gene symbols map. If `verbose` is TRUE, the function prints detailed messages about the number of approved, not approved, and NA gene symbols.
+#' @details The function uses the `HGNChelper` package to check and standardize gene symbols
+#' based on a predefined gene symbols map. This is important for
+#' ensuring consistency in gene naming across datasets and avoiding issues with outdated
+#' or non-standard gene symbols.
 #'
-#' @importFrom dplyr rename pull mutate filter
-#' @importFrom glue glue
-#' @importFrom HGNChelper checkGeneSymbols
 #' @export
-update_gene_symbols <- function(data, gene_column = NULL, filepath = "", verbose = FALSE) {
-  if (!is.vector(data)) {
-    if (is.null(gene_column)) {
-      gene_column <- colnames(data)[1]
-    }
-    data <- handle_input_data(data, gene_column)
-    checked <- HGNChelper::checkGeneSymbols(data[[gene_column]], map = gene_symbols_map)
-  } else {
-    checked <- HGNChelper::checkGeneSymbols(data, map = gene_symbols_map)
+update_gene_symbols <- function(
+  data,
+  verbose = FALSE
+) {
+  if (!is.matrix(data)) {
+    stop("Input must be a matrix")
   }
 
+  if (is.null(rownames(data))) {
+    stop("Matrix must have row names as gene identifiers")
+  }
+
+  gene_symbols <- rownames(data)
+
+  checked <- suppressWarnings(HGNChelper::checkGeneSymbols(
+    gene_symbols,
+    map = gene_symbols_map
+  ))
+
   if (verbose) {
-    message(glue::glue(
-      "File: {filepath}\n",
-      "Number of approved symbols: {sum(checked$Approved, na.rm = TRUE)}\n",
-      "Number of not approved symbols: {sum(!checked$Approved, na.rm = TRUE)}\n",
-      "Number of NA in suggested symbols: {sum(is.na(checked$Suggested.Symbol))}"
+    message(paste0(
+      "Number of approved symbols: ",
+      sum(checked$Approved, na.rm = TRUE),
+      "\n",
+      "Number of not approved symbols: ",
+      sum(!checked$Approved, na.rm = TRUE),
+      "\n",
+      "Number of NA in suggested symbols: ",
+      sum(is.na(checked$Suggested.Symbol))
     ))
   }
 
-  if (!is.vector(data)) {
-    data <- data |>
-      dplyr::mutate(!!gene_column := checked$Suggested.Symbol) |>
-      dplyr::filter(!is.na(!!sym(gene_column)))
-    return(data)
-  }
+  valid_symbols <- !is.na(checked$Suggested.Symbol)
+  filtered_mat <- data[valid_symbols, , drop = FALSE]
 
-  return(checked$Suggested.Symbol)
+  rownames(filtered_mat) <- checked$Suggested.Symbol[valid_symbols]
+
+  return(filtered_mat)
 }

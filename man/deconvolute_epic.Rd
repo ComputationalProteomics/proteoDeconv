@@ -2,38 +2,59 @@
 % Please edit documentation in R/deconvolute_epic.R
 \name{deconvolute_epic}
 \alias{deconvolute_epic}
-\title{Deconvolute Bulk Data using EPIC}
+\title{Deconvolute bulk data using EPIC}
 \usage{
-deconvolute_epic(
-  preprocessed_data,
-  signature_df,
-  with_other_cells = TRUE,
-  method_label
-)
+deconvolute_epic(data, signature, with_other_cells = TRUE)
 }
 \arguments{
-\item{preprocessed_data}{A matrix or data frame of the bulk proteome data.}
+\item{data}{A numeric matrix of the bulk proteome data with gene identifiers as row names
+and samples as columns.}
 
-\item{signature_df}{A matrix or data frame of reference signature profiles.}
+\item{signature}{A numeric matrix of reference signature profiles with gene identifiers as row names
+and cell types as columns.}
 
-\item{with_other_cells}{Logical; if TRUE EPIC will include other cell types. Default is TRUE.}
-
-\item{method_label}{A character string label used to tag the output with the deconvolution method.}
+\item{with_other_cells}{Logical; if TRUE, EPIC will include an "other cells" component in the output
+to account for cell types not present in the reference. Default is TRUE.}
 }
 \value{
-A tibble in long format with columns for \code{sample}, \code{cell_type}, \code{cell_count}, and \code{method} (with additional fields as provided in \code{...}).
+A numeric matrix with samples as rows and cell types as columns, representing the estimated
+proportion of each cell type in each sample.
 }
 \description{
-Runs the EPIC algorithm on preprocessed proteomic data to estimate cell type fractions.
+Runs the EPIC algorithm on preprocessed proteomic data to estimate cell type proportions
+in mixed samples using a reference signature matrix.
 }
 \details{
-The function preprocesses both the bulk data and the signature matrix using \code{handle_scaling}
-and \code{handle_input_data}. It then runs the EPIC deconvolution method from the EPIC package and reshapes
-the resulting mRNA proportions into a tidy format.
+The function normalizes both the input data matrix and signature matrix using the
+\code{handle_scaling} function before running the EPIC deconvolution. The EPIC algorithm
+uses constrained least squares regression to estimate cell type proportions.
 }
 \examples{
 \dontrun{
-result <- deconvolute_epic(bulk_data, signature_matrix, with_other_cells = TRUE, method_label = "EPIC")
+# Load example data and signature matrix
+data_file <- system.file("extdata", "mixed_samples_matrix.rds", package = "proteoDeconv")
+mixed_samples <- readRDS(data_file)
+
+signature_file <- system.file("extdata", "cd8t_mono_signature_matrix.rds", package = "proteoDeconv")
+signature_matrix <- readRDS(signature_file)
+
+# Run EPIC deconvolution
+result <- deconvolute_epic(
+  data = mixed_samples,
+  signature = signature_matrix,
+  with_other_cells = TRUE
+)
+
+# View first few rows of the result
+head(result)
 }
 
+}
+\references{
+Racle, J. et al. (2017). Simultaneous enumeration of cancer and immune cell types
+from bulk tumor gene expression data. eLife, 6:e26476.
+}
+\seealso{
+\code{\link{handle_scaling}} for preprocessing inputs before deconvolution,
+\code{\link{deconvolute}} for a unified interface to multiple deconvolution methods.
 }

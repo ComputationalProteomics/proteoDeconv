@@ -12,6 +12,7 @@ Tools for deconvoluting proteomics data to identify and quantify cell types (e.g
 Useful links:
 \itemize{
   \item \url{https://github.com/ComputationalProteomics/proteoDeconv}
+  \item \url{https://computationalproteomics.github.io/proteoDeconv/}
   \item Report bugs at \url{https://github.com/ComputationalProteomics/proteoDeconv/issues}
 }
 

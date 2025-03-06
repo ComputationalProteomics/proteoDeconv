@@ -2,30 +2,74 @@
 % Please edit documentation in R/deconvolute.R
 \name{deconvolute}
 \alias{deconvolute}
-\title{Deconvolute Protein Data}
+\title{Deconvolute protein data using multiple algorithms}
 \usage{
-deconvolute(algorithm, data, signature_matrix = NULL, ...)
+deconvolute(algorithm, data, signature = NULL, ...)
 }
 \arguments{
-\item{algorithm}{A string specifying the deconvolution algorithm to use. Options are "cibersortx", "cibersort", "epic", and other algorithms supported by the \code{immunedeconv} package.}
+\item{algorithm}{A string specifying the deconvolution algorithm to use. Options are
+"cibersortx", "cibersort", "epic", and "bayesdebulk".}
 
-\item{data}{A data frame containing protein or gene data. The data frame should have proteins/genes as rows and samples as columns.}
+\item{data}{A numeric matrix containing protein or gene expression data with genes/proteins
+as row names and samples as columns.}
 
-\item{signature_matrix}{An optional signature matrix required by some algorithms.}
+\item{signature}{A numeric matrix containing the reference signature with genes/proteins as
+row names and cell types as columns. Required by all supported algorithms.}
 
 \item{...}{Additional arguments passed to the specific deconvolution functions.}
 }
 \value{
-A data frame with the deconvolution results.
+A numeric matrix with samples as rows and cell types as columns, representing the
+estimated proportion of each cell type in each sample.
 }
 \description{
-This function deconvolutes protein or gene expression data using various algorithms.
+This function provides a unified interface for deconvoluting protein or gene expression data
+using various algorithms, making it easy to switch between different deconvolution methods.
 }
 \details{
 The function supports multiple deconvolution algorithms:
 \itemize{
-\item \strong{"cibersortx"}: Uses the \code{deconvolute_cibersortx} function.
-\item \strong{"cibersort"}: Uses the \code{deconvolute_cibersort} function.
-\item \strong{"epic"}: Uses the \code{deconvolute_epic} function.
+\item \strong{cibersortx}: Uses Docker-based CIBERSORTx, which requires Docker installation
+and credentials (see \code{\link{deconvolute_cibersortx}}).
+\item \strong{cibersort}: Uses the R implementation of CIBERSORT, which requires sourcing
+the original CIBERSORT.R script (see \code{\link{deconvolute_cibersort}}).
+\item \strong{epic}: Uses the EPIC algorithm which performs constrained least squares regression
+(see \code{\link{deconvolute_epic}}).
+\item \strong{bayesdebulk}: Uses the BayesDeBulk Bayesian deconvolution algorithm
+(see \code{\link{deconvolute_bayesdebulk}}).
 }
+}
+\examples{
+\dontrun{
+# Load example data
+data_file <- system.file("extdata", "mixed_samples_matrix.rds", package = "proteoDeconv")
+mixed_samples <- readRDS(data_file)
+
+signature_file <- system.file("extdata", "cd8t_mono_signature_matrix.rds", package = "proteoDeconv")
+signature_matrix <- readRDS(signature_file)
+
+# Using EPIC algorithm
+epic_results <- deconvolute(
+  algorithm = "epic",
+  data = mixed_samples,
+  signature = signature_matrix,
+  with_other_cells = TRUE
+)
+
+# Using BayesDeBulk algorithm
+bayes_results <- deconvolute(
+  algorithm = "bayesdebulk",
+  data = mixed_samples,
+  signature = signature_matrix,
+  n_iter = 1000,
+  burn_in = 100
+)
+}
+
+}
+\seealso{
+\code{\link{deconvolute_cibersortx}} for the CIBERSORTx Docker implementation
+\code{\link{deconvolute_cibersort}} for the CIBERSORT R implementation
+\code{\link{deconvolute_epic}} for the EPIC algorithm
+\code{\link{deconvolute_bayesdebulk}} for the BayesDeBulk algorithm
 }

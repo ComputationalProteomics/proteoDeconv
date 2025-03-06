@@ -2,7 +2,7 @@
 % Please edit documentation in R/create_signature_matrix.R
 \name{create_signature_matrix}
 \alias{create_signature_matrix}
-\title{Create Signature Matrix using CIBERSORTx}
+\title{Create signature matrix using CIBERSORTx}
 \usage{
 create_signature_matrix(
   refsample = NULL,
@@ -17,13 +17,18 @@ create_signature_matrix(
   verbose = FALSE,
   QN = FALSE,
   single_cell = FALSE,
+  use_sudo = FALSE,
   ...
 )
 }
 \arguments{
-\item{refsample}{A data frame containing the reference profiles (with replicates). Required.}
+\item{refsample}{A numeric matrix containing reference profiles with genes as row names and samples as columns.
+This should be preprocessed data from pure cell populations.}
 
-\item{phenoclasses}{A data frame containing the cell type classes. Required.}
+\item{phenoclasses}{A numeric matrix, data frame, or tibble containing cell type classification (0/1/2).
+If provided as a matrix or base data frame, the cell types are assumed to be in the row names.
+If provided as a tibble, the cell type identifiers should be included as a column.
+This is typically created using the create_phenoclasses() function.}
 
 \item{g_min}{Minimum number of genes per cell type in the signature matrix. Default is 200.}
 
@@ -31,11 +36,11 @@ create_signature_matrix(
 
 \item{q_value}{Q-value threshold for differential expression. Default is 0.01.}
 
-\item{replicates}{Number of replicates to use for building the reference file. Default is 5.}
+\item{replicates}{Number of replicates to use for building the reference file (only relevant when single_cell=TRUE). Default is 5.}
 
-\item{sampling}{Fraction of available gene expression profiles selected by random sampling. Default is 0.5.}
+\item{sampling}{Fraction of available gene expression profiles selected by random sampling (only relevant when single_cell=TRUE). Default is 0.5.}
 
-\item{fraction}{Fraction of cells of the same identity showing evidence of expression. Default is 0.75.}
+\item{fraction}{Fraction of cells of the same identity showing evidence of expression (only relevant when single_cell=TRUE). Default is 0.75.}
 
 \item{filter}{Logical indicating whether to remove non-hematopoietic genes. Default is FALSE.}
 
@@ -45,14 +50,55 @@ create_signature_matrix(
 
 \item{single_cell}{Logical indicating whether to create signature from scRNA-Seq data. Default is FALSE.}
 
+\item{use_sudo}{Logical indicating whether to use sudo for Docker commands. Default is FALSE.}
+
 \item{...}{Additional arguments passed to the function.}
 }
 \value{
-A data frame containing the generated signature matrix.
+A numeric matrix with genes as rows and cell types as columns, representing
+the expression profile of each cell type. This signature matrix can be used
+as input for deconvolution algorithms to estimate cell type proportions
+in mixed samples.
 }
 \description{
-This function generates a signature matrix from a reference sample and cell type classes using the CIBERSORTx Docker tool.
+Generates a signature matrix from reference profiles and cell type classes
+using the CIBERSORTx Docker image.
+This signature matrix contains cell type-specific marker proteins that will be used for deconvolution.
 }
 \details{
-This function uses the CIBERSORTx Docker image to construct a signature matrix based on the input reference profiles and cell type classifications.
+This function uses the CIBERSORTx Docker image to construct a signature matrix
+based on the input reference profiles and cell type classifications. The CIBERSORTx token
+and email must be set as environment variables either in the project directory's .Renviron
+file or in the user's home directory .Renviron file.
+}
+\examples{
+\dontrun{
+# Load preprocessed pure samples data
+pure_samples <- readRDS(system.file("extdata", "pure_samples_matrix.rds",
+                                    package = "proteoDeconv"))
+
+# Create phenoclasses for the samples
+mapping_rules <- list(
+  "CD8+ T cells" = "CD8",
+  "Monocytes" = "Mono"
+)
+phenoclasses <- create_phenoclasses(
+  data = pure_samples,
+  mapping_rules = mapping_rules
+)
+
+# Create signature matrix
+signature_matrix <- create_signature_matrix(
+  refsample = pure_samples,
+  phenoclasses = phenoclasses,
+  g_min = 200,
+  g_max = 400,
+  q_value = 0.01
+)
+}
+
+}
+\seealso{
+\code{\link{create_phenoclasses}} for creating the phenoclasses input and
+\code{\link{deconvolute}} for using the signature matrix in deconvolution.
 }

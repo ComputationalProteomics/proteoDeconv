@@ -2,19 +2,26 @@
 % Please edit documentation in R/deconvolute_bayesdebulk.R
 \name{get_signature_markers}
 \alias{get_signature_markers}
-\title{Get Signature Markers}
+\title{Get signature markers for deconvolution}
 \usage{
-get_signature_markers(Y, signature_matrix)
+get_signature_markers(Y, signature_mat, method = "limma", ...)
 }
 \arguments{
-\item{Y}{A list of data matrices.}
+\item{Y}{A numeric matrix of bulk data with gene identifiers as row names.}
 
-\item{signature_matrix}{A matrix of signature marker values.}
+\item{signature_mat}{A numeric matrix of signature marker values with gene identifiers as row names
+and cell types as columns.}
+
+\item{method}{The method to use for marker selection: "limma" (default), "simple",
+or a pre-computed marker matrix.}
+
+\item{...}{Additional arguments passed to the selected marker selection function.}
 }
 \value{
-A character matrix of markers.
+A character matrix of markers with columns for cell type, comparison cell type, and gene name.
 }
 \description{
-Extracts unique signature markers from a signature matrix.
+Extracts unique signature markers from a signature matrix for use in cell type deconvolution.
+This function selects a method to identify cell type-specific markers.
 }
 \keyword{internal}

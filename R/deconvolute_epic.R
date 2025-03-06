@@ -1,55 +1,86 @@
-#' Deconvolute Bulk Data using EPIC
+#' Deconvolute bulk data using EPIC
 #'
-#' Runs the EPIC algorithm on preprocessed proteomic data to estimate cell type fractions.
+#' Runs the EPIC algorithm on preprocessed proteomic data to estimate cell type proportions
+#' in mixed samples using a reference signature matrix.
 #'
-#' @param preprocessed_data A matrix or data frame of the bulk proteome data.
-#' @param signature_df A matrix or data frame of reference signature profiles.
-#' @param with_other_cells Logical; if TRUE EPIC will include other cell types. Default is TRUE.
-#' @param method_label A character string label used to tag the output with the deconvolution method.
+#' @param data A numeric matrix of the bulk proteome data with gene identifiers as row names
+#'        and samples as columns.
+#' @param signature A numeric matrix of reference signature profiles with gene identifiers as row names
+#'        and cell types as columns.
+#' @param with_other_cells Logical; if TRUE, EPIC will include an "other cells" component in the output
+#'        to account for cell types not present in the reference. Default is TRUE.
 #'
-#' @return A tibble in long format with columns for \code{sample}, \code{cell_type}, \code{cell_count}, and \code{method} (with additional fields as provided in \code{...}).
+#' @return A numeric matrix with samples as rows and cell types as columns, representing the estimated
+#'         proportion of each cell type in each sample.
 #'
-#' @details The function preprocesses both the bulk data and the signature matrix using \code{handle_scaling}
-#' and \code{handle_input_data}. It then runs the EPIC deconvolution method from the EPIC package and reshapes
-#' the resulting mRNA proportions into a tidy format.
+#' @details The function normalizes both the input data matrix and signature matrix using the
+#'          `handle_scaling` function before running the EPIC deconvolution. The EPIC algorithm
+#'          uses constrained least squares regression to estimate cell type proportions.
 #'
 #' @examples
 #' \dontrun{
-#' result <- deconvolute_epic(bulk_data, signature_matrix, with_other_cells = TRUE, method_label = "EPIC")
+#' # Load example data and signature matrix
+#' data_file <- system.file("extdata", "mixed_samples_matrix.rds", package = "proteoDeconv")
+#' mixed_samples <- readRDS(data_file)
+#'
+#' signature_file <- system.file("extdata", "cd8t_mono_signature_matrix.rds", package = "proteoDeconv")
+#' signature_matrix <- readRDS(signature_file)
+#'
+#' # Run EPIC deconvolution
+#' result <- deconvolute_epic(
+#'   data = mixed_samples,
+#'   signature = signature_matrix,
+#'   with_other_cells = TRUE
+#' )
+#'
+#' # View first few rows of the result
+#' head(result)
 #' }
 #'
-#' @importFrom dplyr mutate
-#' @importFrom tidyr pivot_longer
-#' @importFrom tibble as_tibble
+#' @seealso \code{\link{handle_scaling}} for preprocessing inputs before deconvolution,
+#'          \code{\link{deconvolute}} for a unified interface to multiple deconvolution methods.
+#'
+#' @references Racle, J. et al. (2017). Simultaneous enumeration of cancer and immune cell types
+#'             from bulk tumor gene expression data. eLife, 6:e26476.
+#'
 #' @export
-deconvolute_epic <- function(preprocessed_data, signature_df,
-                             with_other_cells = TRUE, method_label) {
-    signature_df_epic <- handle_scaling(signature_df, tpm = TRUE, unlog = FALSE)
-    preprocessed_data_epic <- handle_scaling(preprocessed_data, tpm = TRUE, unlog = FALSE)
+deconvolute_epic <- function(
+  data,
+  signature,
+  with_other_cells = TRUE
+) {
+  if (!is.matrix(data)) {
+    stop("data must be a matrix")
+  }
+  if (!is.matrix(signature)) {
+    stop("signature must be a matrix")
+  }
+  if (is.null(rownames(data)) || is.null(rownames(signature))) {
+    stop("Both matrices must have gene identifiers as row names")
+  }
 
-    preprocessed_data <- proteoDeconv::handle_input_data(preprocessed_data, as_tibble = FALSE)
-    signature_df <- proteoDeconv::handle_input_data(signature_df, as_tibble = FALSE)
-    preprocessed_data_epic <- proteoDeconv::handle_input_data(preprocessed_data_epic, as_tibble = FALSE)
-    signature_df_epic <- proteoDeconv::handle_input_data(signature_df_epic, as_tibble = FALSE)
+  signature_mat_epic <- handle_scaling(
+    signature,
+    tpm = TRUE,
+    unlog = FALSE
+  )
 
-    epic_signature <- list(
-        refProfiles = as.matrix(signature_df_epic),
-        sigGenes = rownames(signature_df_epic)
-    )
+  preprocessed_mat_epic <- handle_scaling(
+    data,
+    tpm = TRUE,
+    unlog = FALSE
+  )
 
-    epic_res <- EPIC::EPIC(
-        preprocessed_data_epic,
-        withOtherCells = with_other_cells,
-        reference = epic_signature
-    )
-    result <- epic_res$mRNAProportions %>%
-        tibble::as_tibble(rownames = "sample") %>%
-        tidyr::pivot_longer(
-            cols = -sample,
-            names_to = "cell_type",
-            values_to = "cell_count"
-        ) %>%
-        dplyr::mutate(method = method_label)
+  epic_signature <- list(
+    refProfiles = signature_mat_epic,
+    sigGenes = rownames(signature_mat_epic)
+  )
 
-    return(result)
+  epic_res <- suppressWarnings(EPIC::EPIC(
+    preprocessed_mat_epic,
+    withOtherCells = with_other_cells,
+    reference = epic_signature
+  ))
+
+  return(epic_res$mRNAProportions)
 }

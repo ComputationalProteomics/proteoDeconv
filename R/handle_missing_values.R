@@ -1,61 +1,96 @@
-#' Handle Missing Values in a Data Frame
+#' Handle missing values
 #'
-#' This function handles missing values in a data frame by either replacing them with the lowest non-zero value
-#' or using k-nearest neighbors (KNN) imputation.
+#' Imputes missing values in an expression matrix using various methods, including simple
+#' replacement with the lowest non-zero value or more sophisticated imputation techniques
+#' via the MsCoreUtils package.
 #'
-#' @param data A data frame containing the data to be processed.
-#' @param gene_column A string specifying the name of the column containing gene identifiers. Default is "Genes".
-#' @param imputation_mode A string specifying the imputation method to use. Options are "lowest_value", "knn", "zero", "MLE", "bpca", "RF", "min", "MinDet", "MinProb", "QRILC", "mixed", "nbavg", or "with". Default is "lowest_value".
-#' @param ... Additional arguments passed to MsCoreUtils::impute_matrix.
+#' @param data A numeric matrix containing the data to be processed, with identifiers as row names
+#'        and samples as columns.
+#' @param imputation_mode A string specifying the imputation method to use:
+#'   \itemize{
+#'     \item \code{"lowest_value"} (default): Replaces NAs with the lowest non-zero value in the matrix
+#'     \item \code{"knn"}: k-nearest neighbor imputation
+#'     \item \code{"zero"}: Replace NAs with zeros
+#'     \item \code{"MLE"}: Maximum likelihood estimation
+#'     \item \code{"bpca"}: Bayesian principal component analysis
+#'     \item \code{"RF"}: Random Forest imputation
+#'     \item \code{"min"}: Replace NAs with minimum value in each column
+#'     \item \code{"MinDet"}: Deterministic minimum value imputation
+#'     \item \code{"MinProb"}: Probabilistic minimum value imputation
+#'     \item \code{"QRILC"}: Quantile regression imputation of left-censored data
+#'     \item \code{"mixed"}: Mixed imputation based on feature-wise missingness
+#'     \item \code{"nbavg"}: Impute with average of neighbors
+#'   }
+#' @param ... Additional arguments passed to \code{MsCoreUtils::impute_matrix}. See the documentation
+#'        of that function for method-specific parameters.
 #'
-#' @return A data frame with missing values imputed.
+#' @return A matrix with the same dimensions as the input, but with missing values imputed
+#'         according to the specified method.
 #'
-#' @importFrom dplyr select mutate relocate
-#' @importFrom glue glue
-#' @importFrom MsCoreUtils impute_matrix
-#' @importFrom tibble as_tibble
+#'
+#' @examples
+#' # Create example matrix with missing values
+#' mat <- matrix(c(1.2, 3.4, NA, 5.6, NA, 7.8, 9.0, 2.1, 4.3), nrow = 3, ncol = 3)
+#' rownames(mat) <- c("Protein1", "Protein2", "Protein3")
+#' colnames(mat) <- c("Sample1", "Sample2", "Sample3")
+#'
+#' # View original matrix
+#' print(mat)
+#'
+#' # Impute missing values with lowest non-zero value (default)
+#' result1 <- handle_missing_values(mat)
+#' print(result1)
+#'
+#' # Impute missing values using k-nearest neighbors
+#' \dontrun{
+#' # Requires the 'impute' package
+#' result2 <- handle_missing_values(mat, imputation_mode = "knn")
+#' print(result2)
+#' }
+#'
+#' @seealso \code{\link[MsCoreUtils]{impute_matrix}} for detailed description of the imputation methods
 #' @export
-handle_missing_values <- function(data, gene_column = "Genes", imputation_mode = "lowest_value", ...) {
-    data <- proteoDeconv::handle_input_data(data, gene_column)
 
-    if (!gene_column %in% colnames(data)) {
-        stop(glue::glue("Column '{gene_column}' not found in the data."))
-    }
+handle_missing_values <- function(
+  data,
+  imputation_mode = "lowest_value",
+  ...
+) {
+  if (!is.matrix(data)) {
+    stop("Input must be a matrix")
+  }
 
-    numeric_data <- data |> dplyr::select(-{{ gene_column }})
+  row_names <- rownames(data)
+  col_names <- colnames(data)
 
-    out_data <- switch(imputation_mode,
-        "lowest_value" = {
-            lowest_value <- min_nonzero(numeric_data)
-            numeric_data <- replace(numeric_data, is.na(numeric_data), lowest_value)
-            numeric_data |> dplyr::mutate({{ gene_column }} := data[[gene_column]], .before = 1)
-        },
-        "knn" = impute_helper(numeric_data, "knn", gene_column, data, ...),
-        "zero" = impute_helper(numeric_data, "zero", gene_column, data, ...),
-        "MLE" = impute_helper(numeric_data, "MLE", gene_column, data, ...),
-        "bpca" = impute_helper(numeric_data, "bpca", gene_column, data, ...),
-        "RF" = impute_helper(numeric_data, "RF", gene_column, data, ...),
-        "min" = impute_helper(numeric_data, "min", gene_column, data, ...),
-        "MinDet" = impute_helper(numeric_data, "MinDet", gene_column, data, ...),
-        "MinProb" = impute_helper(numeric_data, "MinProb", gene_column, data, ...),
-        "QRILC" = impute_helper(numeric_data, "QRILC", gene_column, data, ...),
-        "mixed" = impute_helper(numeric_data, "mixed", gene_column, data, ...),
-        "nbavg" = impute_helper(numeric_data, "nbavg", gene_column, data, ...),
-        "with" = impute_helper(numeric_data, "with", gene_column, data, val = 1, ...),
-        stop(glue::glue("Unsupported imputation mode: {imputation_mode}"))
-    )
+  result <- switch(
+    imputation_mode,
+    "lowest_value" = {
+      lowest_value <- min_nonzero(data)
+      data[is.na(data)] <- lowest_value
+      data
+    },
+    "knn" = MsCoreUtils::impute_matrix(data, method = "knn", ...),
+    "zero" = MsCoreUtils::impute_matrix(data, method = "zero", ...),
+    "MLE" = MsCoreUtils::impute_matrix(data, method = "MLE", ...),
+    "bpca" = MsCoreUtils::impute_matrix(data, method = "bpca", ...),
+    "RF" = MsCoreUtils::impute_matrix(data, method = "RF", ...),
+    "min" = MsCoreUtils::impute_matrix(data, method = "min", ...),
+    "MinDet" = MsCoreUtils::impute_matrix(data, method = "MinDet", ...),
+    "MinProb" = MsCoreUtils::impute_matrix(data, method = "MinProb", ...),
+    "QRILC" = MsCoreUtils::impute_matrix(data, method = "QRILC", ...),
+    "mixed" = MsCoreUtils::impute_matrix(data, method = "mixed", ...),
+    "nbavg" = MsCoreUtils::impute_matrix(data, method = "nbavg", ...),
+    stop(paste("Unsupported imputation mode:", imputation_mode))
+  )
 
+  rownames(result) <- row_names
+  colnames(result) <- col_names
 
-    out_data
-}
-
-impute_helper <- function(numeric_data, method, gene_column, data, ...) {
-    out <- MsCoreUtils::impute_matrix(as.matrix(numeric_data), method = method, ...)
-    tibble::as_tibble(out) |>
-        dplyr::mutate({{ gene_column }} := data[[gene_column]], .before = 1)
+  return(result)
 }
 
 min_nonzero <- function(x) {
-    non_zero_values <- x[x != 0]
-    min(non_zero_values, na.rm = TRUE)
+  non_zero_values <- x[x != 0]
+  min(non_zero_values, na.rm = TRUE)
 }
