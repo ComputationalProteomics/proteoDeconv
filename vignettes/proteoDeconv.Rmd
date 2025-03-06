@@ -1,0 +1,228 @@
+---
+title: "Getting Started with proteoDeconv"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with proteoDeconv}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: vignette.bib
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5
+)
+```
+
+## Introduction
+
+This vignette describes a basic workflow that can be used to run the proteoDeconv package.
+
+## Loading required packages
+
+First, let's load the necessary packages:
+
+```{r setup, message=FALSE}
+library(proteoDeconv)
+library(readr)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+```
+
+## Example data overview
+
+`proteoDeconv` includes two example datasets, which are subsets of our dataset PXD056050:
+
+1. Pure cell type samples: Proteomic measurements from isolated CD8+ T cells and monocytes.
+2. Mixed samples: Proteomic data from experimental mixtures containing 50% CD8+ T cells and 50% monocytes.
+
+Let's load these datasets:
+
+```{r}
+pure_data_file <- system.file("extdata", "pure_samples_matrix.rds", package = "proteoDeconv")
+pure_samples <- readRDS(pure_data_file)
+
+mix_data_file <- system.file("extdata", "mixed_samples_matrix.rds", package = "proteoDeconv")
+mixed_samples <- readRDS(mix_data_file)
+```
+
+Let's examine the structure of the pure samples data:
+
+```{r}
+dim(pure_samples)
+
+head(pure_samples)
+```
+
+The data matrix contains protein measurements (rows) across different samples (columns). The sample names indicate the cell type (CD8 for CD8+ T cells and Mono for monocytes).
+
+## Data preprocessing
+
+Proper preprocessing is important for accurate deconvolution. The preprocessing pipeline in `proteoDeconv` includes several important steps:
+
+```{r}
+pure_samples_preprocessed <- pure_samples |>
+  # Extract first gene group when multiple gene groups are present
+  extract_identifiers() |>
+  # Update gene symbols to current HGNC nomenclature
+  update_gene_symbols() |>
+  # Handle missing values by imputing with the lowest observed value
+  handle_missing_values(imputation_mode = "lowest_value") |>
+  # Resolve duplicate genes by keeping the row with highest median value
+  handle_duplicates(duplicate_mode = "slice") |>
+  # Scale the data (TPM-like normalization)
+  convert_to_tpm()
+
+# Apply the same preprocessing to mixed samples
+mixed_samples_preprocessed <- mixed_samples |>
+  extract_identifiers() |>
+  update_gene_symbols() |>
+  handle_missing_values(imputation_mode = "lowest_value") |>
+  handle_duplicates(duplicate_mode = "slice") |>
+  convert_to_tpm()
+```
+
+Let's examine the preprocessed data:
+
+```{r}
+head(pure_samples_preprocessed)
+```
+
+### Preprocessing options
+
+`proteoDeconv` offers several options for each preprocessing step, which have been evaluated for their impact on deconvolution performance. For further information on the options, please refer to the function reference.
+
+## Creating a signature matrix
+
+A signature matrix contains cell type-specific marker proteins that will be used for the deconvolution. Signature matrices represent the reference profiles of pure cell populations.
+
+To create one, we first need to establish which samples correspond to which cell types:
+
+```{r}
+mapping_rules <- list(
+  "CD8+ T cells" = "CD8",   # Samples containing "CD8" will be classified as CD8+ T cells
+  "Monocytes" = "Mono"      # Samples containing "Mono" will be classified as Monocytes
+)
+
+phenoclasses <- create_phenoclasses(
+  pure_samples_preprocessed,
+  mapping_rules,
+  verbose = TRUE
+)
+
+head(phenoclasses)
+```
+
+The phenoclasses matrix shows which cell type each sample represents, which is required for the signature matrix generation.
+
+Now, we can create the signature matrix using CIBERSORTx:
+
+```{r eval=FALSE}
+# Note: This requires a CIBERSORTx token to be set in .Renviron
+signature_matrix <- create_signature_matrix(
+  refsample = pure_samples_preprocessed,
+  phenoclasses = phenoclasses,
+  g_min = 200,
+  g_max = 400,
+  q_value = 0.01
+)
+```
+
+```{r echo=FALSE}
+signature_file <- system.file("extdata", "cd8t_mono_signature_matrix.rds", package = "proteoDeconv")
+signature_matrix <- readRDS(signature_file)
+```
+
+Let's examine the signature matrix:
+
+```{r}
+dim(signature_matrix)
+
+# Look at the first rows
+head(signature_matrix)
+```
+
+The signature matrix contains proteins (rows) with their expression values in each cell type (columns). These proteins were selected based on their ability to differentiate between CD8+ T cells and monocytes.
+
+## Performing deconvolution
+
+Now we can deconvolute our mixed samples to estimate their cell type composition. The `proteoDeconv` package supports multiple algorithms that have been evaluated for their performance with proteomics data. We'll use the EPIC algorithm here [@racleSimultaneousEnumerationCancer2017]:
+
+```{r}
+results <- deconvolute(
+  algorithm = "epic",
+  data = mixed_samples_preprocessed,
+  signature = signature_matrix,
+  with_other_cells = FALSE # No need to calculate other cells in this case
+)
+
+print(results)
+```
+
+The results show the estimated proportion of each cell type in each mixed sample.
+
+### Available deconvolution algorithms
+
+`proteoDeconv` supports multiple deconvolution algorithms:
+
+- **EPIC** [@racleSimultaneousEnumerationCancer2017]: A reference-based method that uses constrained least-squares regression
+- **CIBERSORT** [@newmanRobustEnumerationCell2015]: One of the first widely-used deconvolution tools, uses support vector regression (requires downloading the CIBERSORT.R script from the CIBERSORT website)
+- **CIBERSORTx** [@newmanDeterminingCellType2019]: An enhanced version of CIBERSORT that includes batch correction features (requires a token and Docker)
+- **BayesDeBulk** [@petraliaBayesDeBulkFlexibleBayesian2023]: A Bayesian approach specifically designed for proteomics deconvolution
+
+To use a different algorithm, simply change the `algorithm` parameter:
+
+```{r, eval=FALSE}
+# Example using a different algorithm
+results_cibersort <- deconvolute(
+  algorithm = "cibersort",
+  data = mixed_samples_preprocessed,
+  signature = signature_matrix
+)
+```
+
+## Formatting and visualizing results
+
+For easier visualization, let's convert the results to a tidy format:
+
+```{r}
+results_tidy <- as_tibble(results, rownames = "sample") |>
+  pivot_longer(
+    cols = -sample,
+    names_to = "cell_type",
+    values_to = "cell_fraction"
+  )
+
+head(results_tidy)
+```
+
+Now, let's create a bar chart to visualize the cell type proportions:
+
+```{r fig.height=4}
+ggplot(results_tidy, aes(x = sample, y = cell_fraction, fill = cell_type)) +
+  geom_bar(stat = "identity", position = "stack") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  labs(
+    x = "Sample",
+    y = "Estimated Proportion",
+    fill = "Cell Type"
+  )
+```
+
+## Conclusion
+
+This vignette demonstrated the basic workflow for proteomics deconvolution using the `proteoDeconv` package:
+
+1. Load and preprocess your data
+2. Create a cell type signature matrix
+3. Perform deconvolution on mixed samples
+4. Visualize and interpret the results
+
+For more advanced usage, refer to the package documentation and function reference.
+
+## References

@@ -1,0 +1,14 @@
+^proteoDeconv\.Rproj$
+^\.Rproj\.user$
+^LICENSE\.md$
+^README\.Rmd$
+^\.github$
+^data-raw$
+^\.vscode$
+^debug$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.aider\..*
+^TODO\.txt$
+^proteoDeconv\.code-workspace$
