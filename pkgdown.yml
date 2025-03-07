@@ -3,7 +3,7 @@ pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   proteoDeconv: proteoDeconv.html
-last_built: 2025-03-07T04:50Z
+last_built: 2025-03-07T05:02Z
 urls:
   reference: https://computationalproteomics.github.io/proteoDeconv/reference
   article: https://computationalproteomics.github.io/proteoDeconv/articles
