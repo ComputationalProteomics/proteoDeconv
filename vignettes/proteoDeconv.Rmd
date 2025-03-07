@@ -71,9 +71,9 @@ pure_samples_preprocessed <- pure_samples |>
   # Update gene symbols to current HGNC nomenclature
   update_gene_symbols() |>
   # Handle missing values by imputing with the lowest observed value
-  handle_missing_values(imputation_mode = "lowest_value") |>
+  handle_missing_values() |>
   # Resolve duplicate genes by keeping the row with highest median value
-  handle_duplicates(duplicate_mode = "slice") |>
+  handle_duplicates() |>
   # Scale the data (TPM-like normalization)
   convert_to_tpm()
 
@@ -81,8 +81,8 @@ pure_samples_preprocessed <- pure_samples |>
 mixed_samples_preprocessed <- mixed_samples |>
   extract_identifiers() |>
   update_gene_symbols() |>
-  handle_missing_values(imputation_mode = "lowest_value") |>
-  handle_duplicates(duplicate_mode = "slice") |>
+  handle_missing_values() |>
+  handle_duplicates() |>
   convert_to_tpm()
 ```
 
