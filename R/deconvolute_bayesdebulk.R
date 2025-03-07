@@ -8,9 +8,13 @@
 #'        and cell types as columns.
 #' @param n_iter Number of iterations for the MCMC sampling; default is 1000.
 #' @param burn_in Number of burn-in iterations to discard; default is 100.
-#' @param marker_selection The method to use for marker selection: "limma" (default), "simple",
-#'        or a pre-computed marker matrix.
-#' @param ... Additional arguments passed to marker selection functions.
+#' @param marker_selection The method to use for marker selection. Either:
+#'        \itemize{
+#'          \item "limma" (default): Uses limma's differential expression methods to identify markers
+#'          \item "simple": Uses a simpler fold-change based approach
+#'          \item A pre-computed marker matrix: Direct specification of markers to use
+#'        }
+#' @param ... Additional arguments passed to marker selection functions
 #'
 #' @return A matrix containing cell type proportions with samples as rows and cell types as columns.
 #'
@@ -37,7 +41,7 @@ deconvolute_bayesdebulk <- function(
   signature,
   n_iter = 1000,
   burn_in = 100,
-  marker_selection = "limma",
+  marker_selection = c("limma", "simple"),
   ...
 ) {
   if (!requireNamespace("BayesDeBulk", quietly = TRUE)) {
