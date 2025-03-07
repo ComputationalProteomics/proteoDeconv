@@ -12,28 +12,34 @@ create_phenoclasses(
 )
 }
 \arguments{
-\item{data}{A numeric matrix of pure cell type profiles with genes as row names and samples as columns.
-Column names should contain identifiers that can be mapped to cell types.}
+\item{data}{A numeric matrix of pure cell type profiles with genes as row
+names and samples as columns. Column names should contain identifiers that
+can be mapped to cell types.}
 
-\item{mapping_rules}{A named list where names are cell type labels and values are regular expression
-patterns used to match sample column names (e.g., list("CD8+ T cells" = "CD8", "Monocytes" = "Mono")).}
+\item{mapping_rules}{A named list where names are cell type labels and values
+are regular expression patterns used to match sample column names (e.g.,
+list("CD8+ T cells" = "CD8", "Monocytes" = "Mono")).}
 
-\item{verbose}{Logical. If TRUE, displays additional messages during processing.}
+\item{verbose}{Logical. If TRUE, displays additional messages during
+processing.}
 
-\item{return_format}{A string specifying the return format: "matrix" or "tibble" (default).}
+\item{return_format}{A string specifying the return format: "matrix" or
+"tibble" (default).}
 }
 \value{
-If return_format is "matrix", a numeric matrix with cell type groups as rows and samples as columns.
-If return_format is "tibble", a tibble with a "cell_type" column and columns for each sample.
+If return_format is "matrix", a numeric matrix with cell type groups
+as rows and samples as columns. If return_format is "tibble", a tibble with
+a "cell_type" column and columns for each sample.
 }
 \description{
-Generates a phenotype classification matrix from sample data for use in cell type
-deconvolution workflows. This matrix maps samples to their respective cell types
-using a set of mapping rules.
+Generates a phenotype classification matrix from sample data for use in cell
+type deconvolution workflows. This matrix maps samples to their respective
+cell types using a set of mapping rules.
 }
 \details{
-The function is particularly useful for preparing reference data for signature matrix
-generation using CIBERSORTx. Each cell in the output is encoded as:
+The function is particularly useful for preparing reference data for
+signature matrix generation using CIBERSORTx. Each cell in the output is
+encoded as:
 \itemize{
 \item 0 for 'Unknown' mappings
 \item 1 if the sample belongs to the cell type in that row

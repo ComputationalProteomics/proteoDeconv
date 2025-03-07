@@ -19,44 +19,57 @@ deconvolute_cibersortx(
 )
 }
 \arguments{
-\item{data}{A numeric matrix containing mixture data with genes as row names and samples as columns.}
+\item{data}{A numeric matrix containing mixture data with genes as row names
+and samples as columns.}
 
-\item{signature}{A numeric matrix containing the signature matrix with genes as row names and cell types as columns.}
+\item{signature}{A numeric matrix containing the signature matrix with genes
+as row names and cell types as columns.}
 
-\item{perm}{An integer specifying the number of permutations to be performed. Default is 1.}
+\item{perm}{An integer specifying the number of permutations to be performed.
+Default is 1.}
 
-\item{rmbatch_S_mode}{A logical value indicating whether to remove batch effects in source GEPs mode. Default is FALSE.}
+\item{rmbatch_S_mode}{A logical value indicating whether to remove batch
+effects in source GEPs mode. Default is FALSE.}
 
-\item{source_GEPs}{A matrix containing the source gene expression profiles. Required if \code{rmbatch_S_mode} is TRUE.}
+\item{source_GEPs}{A matrix containing the source gene expression profiles.
+Required if \code{rmbatch_S_mode} is TRUE.}
 
-\item{use_cibersortx}{A logical value indicating whether to use CIBERSORTx. Default is TRUE.}
+\item{use_cibersortx}{A logical value indicating whether to use CIBERSORTx.
+Default is TRUE.}
 
-\item{rmbatch_B_mode}{A logical value indicating whether to remove batch effects in bulk mode. Default is FALSE.}
+\item{rmbatch_B_mode}{A logical value indicating whether to remove batch
+effects in bulk mode. Default is FALSE.}
 
-\item{QN}{A logical value indicating whether to perform quantile normalization. Default is FALSE.}
+\item{QN}{A logical value indicating whether to perform quantile
+normalization. Default is FALSE.}
 
-\item{absolute}{A logical value indicating whether to use absolute mode. Default is FALSE.}
+\item{absolute}{A logical value indicating whether to use absolute mode.
+Default is FALSE.}
 
-\item{abs_method}{A character string specifying the method to use for absolute mode. Default is "sig.score".}
+\item{abs_method}{A character string specifying the method to use for
+absolute mode. Default is "sig.score".}
 
-\item{use_sudo}{A logical value indicating whether to use sudo for Docker commands. Default is FALSE.}
+\item{use_sudo}{A logical value indicating whether to use sudo for Docker
+commands. Default is FALSE.}
 }
 \value{
-A numeric matrix with samples as rows and cell types as columns, representing the estimated
-proportion of each cell type in each sample.
+A numeric matrix with samples as rows and cell types as columns,
+representing the estimated proportion of each cell type in each sample.
 }
 \description{
-Performs deconvolution of bulk proteome data into constituent cell types using the CIBERSORTx Docker image.
-This function handles the interaction with the Docker container and processes the results.
+Performs deconvolution of bulk proteome data into constituent cell types
+using the CIBERSORTx Docker image. This function handles the interaction with
+the Docker container and processes the results.
 }
 \details{
-This function requires the CIBERSORTx Docker image to be installed and the \code{CIBERSORTX_EMAIL}
-and \code{CIBERSORTX_TOKEN} environment variables to be set. You can get these credentials by
-registering at the CIBERSORTx website (https://cibersortx.stanford.edu/).
+This function requires the CIBERSORTx Docker image to be installed
+and the \code{CIBERSORTX_EMAIL} and \code{CIBERSORTX_TOKEN} environment
+variables to be set. You can get these credentials by registering at the
+CIBERSORTx website (https://cibersortx.stanford.edu/).
 
-The function creates temporary files for the mixture data and signature matrix, runs the
-CIBERSORTx Docker container, and processes the results. Note that absolute mode is not currently
-supported in the Docker version.
+The function creates temporary files for the mixture data and signature
+matrix, runs the CIBERSORTx Docker container, and processes the results. Note
+that absolute mode is not currently supported in the Docker version.
 }
 \examples{
 \dontrun{
@@ -82,6 +95,7 @@ result <- deconvolute_cibersortx(
 
 }
 \seealso{
-\code{\link{deconvolute_cibersort}} for using the R implementation of CIBERSORT,
-\code{\link{deconvolute}} for a unified interface to multiple deconvolution methods.
+\code{\link{deconvolute_cibersort}} for using the R implementation
+of CIBERSORT, \code{\link{deconvolute}} for a unified interface to multiple
+deconvolution methods.
 }

@@ -14,31 +14,39 @@ deconvolute_cibersort(
 )
 }
 \arguments{
-\item{data}{A numeric matrix containing mixture data with genes as row names and samples as columns.}
+\item{data}{A numeric matrix containing mixture data with genes as row names
+and samples as columns.}
 
-\item{signature}{A numeric matrix containing signature data with genes as row names and cell types as columns.}
+\item{signature}{A numeric matrix containing signature data with genes as row
+names and cell types as columns.}
 
-\item{QN}{Logical indicating whether quantile normalization is performed (default FALSE).}
+\item{QN}{Logical indicating whether quantile normalization is performed
+(default FALSE).}
 
-\item{absolute}{Logical indicating whether an absolute score is computed (default FALSE).}
+\item{absolute}{Logical indicating whether an absolute score is computed
+(default FALSE).}
 
-\item{abs_method}{Method for absolute scoring if absolute is TRUE (default "sig.score").}
+\item{abs_method}{Method for absolute scoring if absolute is TRUE (default
+"sig.score").}
 
 \item{...}{Additional arguments passed to the CIBERSORT function.}
 }
 \value{
-A numeric matrix with samples as rows and cell types as columns, representing the estimated
-proportion of each cell type in each sample. The returned matrix excludes CIBERSORT's diagnostic
-columns (RMSE, P-value, Correlation).
+A numeric matrix with samples as rows and cell types as columns,
+representing the estimated proportion of each cell type in each sample. The
+returned matrix excludes CIBERSORT's diagnostic columns (RMSE, P-value,
+Correlation).
 }
 \description{
-Applies the CIBERSORT algorithm to deconvolute bulk proteome data into constituent cell types
-using a signature matrix. The function requires the original CIBERSORT.R script to be sourced.
+Applies the CIBERSORT algorithm to deconvolute bulk proteome data into
+constituent cell types using a signature matrix. The function requires the
+original CIBERSORT.R script to be sourced.
 }
 \details{
-This function requires the original CIBERSORT.R script from the CIBERSORT website
-(https://cibersortx.stanford.edu/) to be sourced before use. It writes temporary files for
-the mixture data and signature matrix, calls the CIBERSORT function, and processes the results.
+This function requires the original CIBERSORT.R script from the
+CIBERSORT website (https://cibersortx.stanford.edu/) to be sourced before
+use. It writes temporary files for the mixture data and signature matrix,
+calls the CIBERSORT function, and processes the results.
 }
 \examples{
 \dontrun{
@@ -63,5 +71,6 @@ result <- deconvolute_cibersort(
 
 }
 \seealso{
-\code{\link{deconvolute}} for a unified interface to multiple deconvolution methods.
+\code{\link{deconvolute}} for a unified interface to multiple
+deconvolution methods.
 }

@@ -7,27 +7,29 @@
 deconvolute_epic(data, signature, with_other_cells = TRUE)
 }
 \arguments{
-\item{data}{A numeric matrix of the bulk proteome data with gene identifiers as row names
-and samples as columns.}
+\item{data}{A numeric matrix of the bulk proteome data with gene identifiers
+as row names and samples as columns.}
 
-\item{signature}{A numeric matrix of reference signature profiles with gene identifiers as row names
-and cell types as columns.}
+\item{signature}{A numeric matrix of reference signature profiles with gene
+identifiers as row names and cell types as columns.}
 
-\item{with_other_cells}{Logical; if TRUE, EPIC will include an "other cells" component in the output
-to account for cell types not present in the reference. Default is TRUE.}
+\item{with_other_cells}{Logical; if TRUE, EPIC will include an "other cells"
+component in the output to account for cell types not present in the
+reference. Default is TRUE.}
 }
 \value{
-A numeric matrix with samples as rows and cell types as columns, representing the estimated
-proportion of each cell type in each sample.
+A numeric matrix with samples as rows and cell types as columns,
+representing the estimated proportion of each cell type in each sample.
 }
 \description{
-Runs the EPIC algorithm on preprocessed proteomic data to estimate cell type proportions
-in mixed samples using a reference signature matrix.
+Runs the EPIC algorithm on preprocessed proteomic data to estimate cell type
+proportions in mixed samples using a reference signature matrix.
 }
 \details{
-The function normalizes both the input data matrix and signature matrix using the
-\code{handle_scaling} function before running the EPIC deconvolution. The EPIC algorithm
-uses constrained least squares regression to estimate cell type proportions.
+The function normalizes both the input data matrix and signature
+matrix using the \code{handle_scaling} function before running the EPIC
+deconvolution. The EPIC algorithm uses constrained least squares regression
+to estimate cell type proportions.
 }
 \examples{
 \dontrun{
@@ -51,10 +53,11 @@ head(result)
 
 }
 \references{
-Racle, J. et al. (2017). Simultaneous enumeration of cancer and immune cell types
-from bulk tumor gene expression data. eLife, 6:e26476.
+Racle, J. et al. (2017). Simultaneous enumeration of cancer and
+immune cell types from bulk tumor gene expression data. eLife, 6:e26476.
 }
 \seealso{
-\code{\link{handle_scaling}} for preprocessing inputs before deconvolution,
-\code{\link{deconvolute}} for a unified interface to multiple deconvolution methods.
+\code{\link{handle_scaling}} for preprocessing inputs before
+deconvolution, \code{\link{deconvolute}} for a unified interface to
+multiple deconvolution methods.
 }

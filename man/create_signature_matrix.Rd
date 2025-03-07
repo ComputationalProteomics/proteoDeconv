@@ -22,54 +22,68 @@ create_signature_matrix(
 )
 }
 \arguments{
-\item{refsample}{A numeric matrix containing reference profiles with genes as row names and samples as columns.
-This should be preprocessed data from pure cell populations.}
+\item{refsample}{A numeric matrix containing reference profiles with genes as
+row names and samples as columns. This should be preprocessed data from
+pure cell populations.}
 
-\item{phenoclasses}{A numeric matrix, data frame, or tibble containing cell type classification (0/1/2).
-If provided as a matrix or base data frame, the cell types are assumed to be in the row names.
-If provided as a tibble, the cell type identifiers should be included as a column.
-This is typically created using the create_phenoclasses() function.}
+\item{phenoclasses}{A numeric matrix, data frame, or tibble containing cell
+type classification (0/1/2). If provided as a matrix or base data frame,
+the cell types are assumed to be in the row names. If provided as a tibble,
+the cell type identifiers should be included as a column. This is typically
+created using the create_phenoclasses() function.}
 
-\item{g_min}{Minimum number of genes per cell type in the signature matrix. Default is 200.}
+\item{g_min}{Minimum number of genes per cell type in the signature matrix.
+Default is 200.}
 
-\item{g_max}{Maximum number of genes per cell type in the signature matrix. Default is 400.}
+\item{g_max}{Maximum number of genes per cell type in the signature matrix.
+Default is 400.}
 
-\item{q_value}{Q-value threshold for differential expression. Default is 0.01.}
+\item{q_value}{Q-value threshold for differential expression. Default is
+0.01.}
 
-\item{replicates}{Number of replicates to use for building the reference file (only relevant when single_cell=TRUE). Default is 5.}
+\item{replicates}{Number of replicates to use for building the reference file
+(only relevant when single_cell=TRUE). Default is 5.}
 
-\item{sampling}{Fraction of available gene expression profiles selected by random sampling (only relevant when single_cell=TRUE). Default is 0.5.}
+\item{sampling}{Fraction of available gene expression profiles selected by
+random sampling (only relevant when single_cell=TRUE). Default is 0.5.}
 
-\item{fraction}{Fraction of cells of the same identity showing evidence of expression (only relevant when single_cell=TRUE). Default is 0.75.}
+\item{fraction}{Fraction of cells of the same identity showing evidence of
+expression (only relevant when single_cell=TRUE). Default is 0.75.}
 
-\item{filter}{Logical indicating whether to remove non-hematopoietic genes. Default is FALSE.}
+\item{filter}{Logical indicating whether to remove non-hematopoietic genes.
+Default is FALSE.}
 
-\item{verbose}{Logical indicating whether to print detailed output. Default is FALSE.}
+\item{verbose}{Logical indicating whether to print detailed output. Default
+is FALSE.}
 
-\item{QN}{Logical indicating whether to run quantile normalization. Default is FALSE.}
+\item{QN}{Logical indicating whether to run quantile normalization. Default
+is FALSE.}
 
-\item{single_cell}{Logical indicating whether to create signature from scRNA-Seq data. Default is FALSE.}
+\item{single_cell}{Logical indicating whether to create signature from
+scRNA-Seq data. Default is FALSE.}
 
-\item{use_sudo}{Logical indicating whether to use sudo for Docker commands. Default is FALSE.}
+\item{use_sudo}{Logical indicating whether to use sudo for Docker commands.
+Default is FALSE.}
 
 \item{...}{Additional arguments passed to the function.}
 }
 \value{
-A numeric matrix with genes as rows and cell types as columns, representing
-the expression profile of each cell type. This signature matrix can be used
-as input for deconvolution algorithms to estimate cell type proportions
-in mixed samples.
+A numeric matrix with genes as rows and cell types as columns,
+representing the expression profile of each cell type. This signature
+matrix can be used as input for deconvolution algorithms to estimate cell
+type proportions in mixed samples.
 }
 \description{
 Generates a signature matrix from reference profiles and cell type classes
-using the CIBERSORTx Docker image.
-This signature matrix contains cell type-specific marker proteins that will be used for deconvolution.
+using the CIBERSORTx Docker image. This signature matrix contains cell
+type-specific marker proteins that will be used for deconvolution.
 }
 \details{
-This function uses the CIBERSORTx Docker image to construct a signature matrix
-based on the input reference profiles and cell type classifications. The CIBERSORTx token
-and email must be set as environment variables either in the project directory's .Renviron
-file or in the user's home directory .Renviron file.
+This function uses the CIBERSORTx Docker image to construct a
+signature matrix based on the input reference profiles and cell type
+classifications. The CIBERSORTx token and email must be set as environment
+variables either in the project directory's .Renviron file or in the user's
+home directory .Renviron file.
 }
 \examples{
 \dontrun{
@@ -99,6 +113,7 @@ signature_matrix <- create_signature_matrix(
 
 }
 \seealso{
-\code{\link{create_phenoclasses}} for creating the phenoclasses input and
-\code{\link{deconvolute}} for using the signature matrix in deconvolution.
+\code{\link{create_phenoclasses}} for creating the phenoclasses
+input and \code{\link{deconvolute}} for using the signature matrix in
+deconvolution.
 }

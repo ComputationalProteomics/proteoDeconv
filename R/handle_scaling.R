@@ -121,13 +121,6 @@ unlog2_data <- function(data) {
 #'
 #' @details This function applies a TPM-like normalization to proteomics data, where each protein
 #' abundance value is scaled by the total abundance in the sample and multiplied by 1 million.
-#' While TPM was originally designed for RNA-seq data (where it accounts for transcript length),
-#' this adapted version provides a similar relative scaling benefit for proteomics data by
-#' normalizing for differences in total protein abundance between samples.
-#'
-#' This normalization enables more meaningful comparisons of protein abundance levels
-#' across samples with different total detected protein amounts. The resulting values
-#' represent relative abundances where the sum for each sample equals 1 million.
 #'
 #' If your input data is log-transformed, use \code{\link{unlog2_data}} first to convert it to
 #' linear scale before applying this normalization.

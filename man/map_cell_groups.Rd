@@ -12,41 +12,46 @@ map_cell_groups(
 )
 }
 \arguments{
-\item{column_names}{A character vector of column names to be mapped to cell type groups.}
+\item{column_names}{A character vector of column names to be mapped to cell
+type groups.}
 
-\item{mapping_rules}{A named list where names are the target cell type groups and values
-are character vectors of regex patterns that identify columns belonging to each group.}
+\item{mapping_rules}{A named list where names are the target cell type groups
+and values are character vectors of regex patterns that identify columns
+belonging to each group.}
 
-\item{default_group}{A string that represents the default group name for columns not matching
-any pattern. Default is "Unknown".}
+\item{default_group}{A string that represents the default group name for
+columns not matching any pattern. Default is "Unknown".}
 
-\item{verbose}{Logical. If TRUE, prints mapping process messages showing which columns were
-mapped to which groups and which columns remained unmapped. Default is FALSE.}
+\item{verbose}{Logical. If TRUE, prints mapping process messages showing
+which columns were mapped to which groups and which columns remained
+unmapped. Default is FALSE.}
 }
 \value{
-A character vector with the same length as \code{column_names}, containing the mapped
-cell type group for each column name. Columns that don't match any pattern will be
-assigned the \code{default_group}.
+A character vector with the same length as \code{column_names},
+containing the mapped cell type group for each column name. Columns that
+don't match any pattern will be assigned the \code{default_group}.
 }
 \description{
-Maps a character vector of column names to predefined cell type categories by matching
-against regex patterns.
+Maps a character vector of column names to predefined cell type categories by
+matching against regex patterns.
 }
 \details{
-This function iterates through the \code{mapping_rules} list and attempts to match
-each column name against the regex patterns for each cell type group. The first matching group
-in the order of the list will be assigned. The function is case-insensitive by default.
+This function iterates through the \code{mapping_rules} list and
+attempts to match each column name against the regex patterns for each cell
+type group. The first matching group in the order of the list will be
+assigned. The function is case-insensitive by default.
 }
 \examples{
 # Example column names from a dataset
-cols <- c("CD8_T_cell_donor1", "cd8_tcell_donor2", "NK_cell_sample3",
-          "b_cell_healthy", "Bcell_patient", "other_cell")
+cols <- c("CD8_T_cell", "T_cell", "B_cell",
+          "NK_cell", "Monocyte", "Unknown_cell")
 
-# Define mapping rules for cell types
+# Define simple mapping rules for cell types
 mapping <- list(
-  "T_cell" = c("cd8.*t.*cell", "t.*cell"),
-  "NK_cell" = c("NK_", "natural.*killer"),
-  "B_cell" = c("b.*cell")
+  "T_cell" = c("CD8_T_cell", "T_cell"),
+  "B_cell" = c("B_cell"),
+  "NK_cell" = c("NK_cell"),
+  "Monocyte" = c("Monocyte")
 )
 
 # Map column names to cell types

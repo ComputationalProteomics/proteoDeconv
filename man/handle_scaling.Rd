@@ -7,26 +7,28 @@
 handle_scaling(data, unlog = FALSE, tpm = FALSE)
 }
 \arguments{
-\item{data}{A numeric matrix containing protein abundance data with identifiers as row names
-and samples as columns.}
+\item{data}{A numeric matrix containing protein abundance data with
+identifiers as row names and samples as columns.}
 
-\item{unlog}{A logical value indicating whether to unlog the data (convert from log2 scale).
-Default is FALSE.}
+\item{unlog}{A logical value indicating whether to unlog the data (convert
+from log2 scale). Default is FALSE.}
 
 \item{tpm}{A logical value indicating whether to apply TPM-like normalization
 (adapting Transcripts Per Million for proteomics). Default is FALSE.}
 }
 \value{
-A numeric matrix with the scaled protein abundance data according to the specified options.
+A numeric matrix with the scaled protein abundance data according to
+the specified options.
 }
 \description{
-Scales protein abundance data by optionally converting from log2 scale to linear scale
-and/or applying TPM-like normalization for proteomics data comparison.
+Scales protein abundance data by optionally converting from log2 scale to
+linear scale and/or applying TPM-like normalization for proteomics data
+comparison.
 }
 \details{
-This function combines the functionality of \code{\link{unlog2_data}} and
-\code{\link{convert_to_tpm}} to provide a flexible way to handle common scaling operations
-for proteomics data.
+This function combines the functionality of
+\code{\link{unlog2_data}} and \code{\link{convert_to_tpm}} to provide a
+flexible way to handle common scaling operations for proteomics data.
 }
 \examples{
 # Create log2-transformed protein abundance matrix

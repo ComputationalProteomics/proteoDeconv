@@ -17,20 +17,24 @@ simulate_data(
 )
 }
 \arguments{
-\item{data}{A numeric matrix containing protein abundance data with protein identifiers
-as row names and samples as columns.}
+\item{data}{A numeric matrix containing protein abundance data with protein
+identifiers as row names and samples as columns.}
 
-\item{cell_types}{A character vector indicating the cell type associated with each column
-in the input matrix. Must have the same length as the number of columns in \code{data}.}
+\item{cell_types}{A character vector indicating the cell type associated with
+each column in the input matrix. Must have the same length as the number of
+columns in \code{data}.}
 
-\item{seed}{An integer used as random seed for reproducibility. Default is NULL (no seed).}
+\item{seed}{An integer used as random seed for reproducibility. Default is
+NULL (no seed).}
 
-\item{ncells}{Integer specifying the number of cells to use for each simulated bulk sample.}
+\item{ncells}{Integer specifying the number of cells to use for each
+simulated bulk sample.}
 
-\item{nsamples}{Integer specifying the number of bulk samples to simulate. Default is 100.}
+\item{nsamples}{Integer specifying the number of bulk samples to simulate.
+Default is 100.}
 
-\item{filter_genes}{Logical; whether to filter out proteins/genes with low expression
-before simulation. Default is TRUE.}
+\item{filter_genes}{Logical; whether to filter out proteins/genes with low
+expression before simulation. Default is TRUE.}
 
 \item{scenario}{String specifying the simulation scenario:
 \itemize{
@@ -39,11 +43,12 @@ before simulation. Default is TRUE.}
 \item See SimBu documentation for additional scenarios
 }}
 
-\item{whitelist}{Optional character vector of cell types to include in the simulation.
-If provided, only these cell types will be used. Default is NULL (use all).}
+\item{whitelist}{Optional character vector of cell types to include in the
+simulation. If provided, only these cell types will be used. Default is
+NULL (use all).}
 
-\item{blacklist}{Optional character vector of cell types to exclude from the simulation.
-Default is NULL (exclude none).}
+\item{blacklist}{Optional character vector of cell types to exclude from the
+simulation. Default is NULL (exclude none).}
 }
 \value{
 A list containing two matrices:
@@ -55,11 +60,12 @@ A list containing two matrices:
 }
 }
 \description{
-This function simulates bulk proteome data by mixing bulk sample measurements.
+This function simulates bulk proteome data by mixing bulk sample
+measurements.
 }
 \details{
-This function uses the \href{https://omnideconv.org/SimBu/}{SimBu package} to generate synthetic bulk
-samples by artifically mixing samples.
+This function uses the \href{https://omnideconv.org/SimBu/}{SimBu package} to generate synthetic bulk samples
+by artifically mixing samples.
 }
 \examples{
 # Create example data

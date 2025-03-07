@@ -10,15 +10,16 @@ extract_identifiers(data, separator = ";")
 \item{data}{A numeric matrix with compound identifiers (e.g. protein/gene
 groups) as row names.}
 
-\item{separator}{A character string used to separate multiple identifiers. Default is ";".}
+\item{separator}{A character string used to separate multiple identifiers.
+Default is ";".}
 }
 \value{
-A matrix with simplified identifiers as row names, where each identifier
-is the first element from the original compound identifier.
+A matrix with simplified identifiers as row names, where each
+identifier is the first element from the original compound identifier.
 }
 \description{
-Extracts the primary identifier from compound row identifiers in a matrix
-by splitting on a separator and keeping only the first entry.
+Extracts the primary identifier from compound row identifiers in a matrix by
+splitting on a separator and keeping only the first entry.
 }
 \examples{
 # Create matrix with compound identifiers (like protein groups)

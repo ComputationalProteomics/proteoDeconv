@@ -7,8 +7,8 @@
 handle_missing_values(data, imputation_mode = "lowest_value", ...)
 }
 \arguments{
-\item{data}{A numeric matrix containing the data to be processed, with identifiers as row names
-and samples as columns.}
+\item{data}{A numeric matrix containing the data to be processed, with
+identifiers as row names and samples as columns.}
 
 \item{imputation_mode}{A string specifying the imputation method to use:
 \itemize{
@@ -26,17 +26,17 @@ and samples as columns.}
 \item \code{"nbavg"}: Impute with average of neighbors
 }}
 
-\item{...}{Additional arguments passed to \code{MsCoreUtils::impute_matrix}. See the documentation
-of that function for method-specific parameters.}
+\item{...}{Additional arguments passed to \code{MsCoreUtils::impute_matrix}.
+See the documentation of that function for method-specific parameters.}
 }
 \value{
-A matrix with the same dimensions as the input, but with missing values imputed
-according to the specified method.
+A matrix with the same dimensions as the input, but with missing
+values imputed according to the specified method.
 }
 \description{
-Imputes missing values in an expression matrix using various methods, including simple
-replacement with the lowest non-zero value or more sophisticated imputation techniques
-via the MsCoreUtils package.
+Imputes missing values in an expression matrix using various methods,
+including simple replacement with the lowest non-zero value or more
+sophisticated imputation techniques via the MsCoreUtils package.
 }
 \examples{
 # Create example matrix with missing values
@@ -60,5 +60,6 @@ print(result2)
 
 }
 \seealso{
-\code{\link[MsCoreUtils]{impute_matrix}} for detailed description of the imputation methods
+\code{\link[MsCoreUtils]{impute_matrix}} for detailed description of
+the imputation methods
 }

@@ -7,24 +7,27 @@
 deconvolute(algorithm, data, signature = NULL, ...)
 }
 \arguments{
-\item{algorithm}{A string specifying the deconvolution algorithm to use. Options are
-"cibersortx", "cibersort", "epic", and "bayesdebulk".}
+\item{algorithm}{A string specifying the deconvolution algorithm to use.
+Options are "cibersortx", "cibersort", "epic", and "bayesdebulk".}
 
-\item{data}{A numeric matrix containing protein or gene expression data with genes/proteins
-as row names and samples as columns.}
+\item{data}{A numeric matrix containing protein or gene expression data with
+genes/proteins as row names and samples as columns.}
 
-\item{signature}{A numeric matrix containing the reference signature with genes/proteins as
-row names and cell types as columns. Required by all supported algorithms.}
+\item{signature}{A numeric matrix containing the reference signature with
+genes/proteins as row names and cell types as columns. Required by all
+supported algorithms.}
 
-\item{...}{Additional arguments passed to the specific deconvolution functions.}
+\item{...}{Additional arguments passed to the specific deconvolution
+functions.}
 }
 \value{
-A numeric matrix with samples as rows and cell types as columns, representing the
-estimated proportion of each cell type in each sample.
+A numeric matrix with samples as rows and cell types as columns,
+representing the estimated proportion of each cell type in each sample.
 }
 \description{
-This function provides a unified interface for deconvoluting protein or gene expression data
-using various algorithms, making it easy to switch between different deconvolution methods.
+This function provides a unified interface for deconvoluting protein or gene
+expression data using various algorithms, making it easy to switch between
+different deconvolution methods.
 }
 \details{
 The function supports multiple deconvolution algorithms:
@@ -68,8 +71,8 @@ bayes_results <- deconvolute(
 
 }
 \seealso{
-\code{\link{deconvolute_cibersortx}} for the CIBERSORTx Docker implementation
-\code{\link{deconvolute_cibersort}} for the CIBERSORT R implementation
-\code{\link{deconvolute_epic}} for the EPIC algorithm
+\code{\link{deconvolute_cibersortx}} for the CIBERSORTx Docker
+implementation \code{\link{deconvolute_cibersort}} for the CIBERSORT R
+implementation \code{\link{deconvolute_epic}} for the EPIC algorithm
 \code{\link{deconvolute_bayesdebulk}} for the BayesDeBulk algorithm
 }

@@ -7,8 +7,8 @@
 handle_duplicates(data, duplicate_mode = "slice")
 }
 \arguments{
-\item{data}{A numeric matrix containing expression data with identifiers as row names
-and samples as columns.}
+\item{data}{A numeric matrix containing expression data with identifiers as
+row names and samples as columns.}
 
 \item{duplicate_mode}{A string specifying the approach to handle duplicates:
 \itemize{
@@ -17,11 +17,12 @@ and samples as columns.}
 }}
 }
 \value{
-A numeric matrix with unique identifiers as row names. The number of rows will be
-equal to the number of unique identifiers in the input matrix.
+A numeric matrix with unique identifiers as row names. The number of
+rows will be equal to the number of unique identifiers in the input matrix.
 }
 \description{
-Resolves duplicate row identifiers in an expression matrix using the specified method.
+Resolves duplicate row identifiers in an expression matrix using the
+specified method.
 }
 \examples{
 # Create example matrix with duplicate identifiers

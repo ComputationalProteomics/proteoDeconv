@@ -26,14 +26,15 @@
 #'
 #' @examples
 #' # Example column names from a dataset
-#' cols <- c("CD8_T_cell_donor1", "cd8_tcell_donor2", "NK_cell_sample3",
-#'           "b_cell_healthy", "Bcell_patient", "other_cell")
+#' cols <- c("CD8_T_cell", "T_cell", "B_cell",
+#'           "NK_cell", "Monocyte", "Unknown_cell")
 #'
-#' # Define mapping rules for cell types
+#' # Define simple mapping rules for cell types
 #' mapping <- list(
-#'   "T_cell" = c("cd8.*t.*cell", "t.*cell"),
-#'   "NK_cell" = c("NK_", "natural.*killer"),
-#'   "B_cell" = c("b.*cell")
+#'   "T_cell" = c("CD8_T_cell", "T_cell"),
+#'   "B_cell" = c("B_cell"),
+#'   "NK_cell" = c("NK_cell"),
+#'   "Monocyte" = c("Monocyte")
 #' )
 #'
 #' # Map column names to cell types
