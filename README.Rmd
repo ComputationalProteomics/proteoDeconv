@@ -86,7 +86,7 @@ source("/path/to/CIBERSORT.R")
 
 ## Further reference
 
-For a detailed walkthrough of a complete workflow, see `vignette("proteoDeconv")` or [the package website](https://computationalproteomics.github.io/proteoDeconv/).
+For a detailed walkthrough of a complete workflow, see the [introduction to proteoDeconv](https://computationalproteomics.github.io/proteoDeconv/articles/proteoDeconv.html) or the [function reference](https://computationalproteomics.github.io/proteoDeconv/reference/index.html).
 
 ## Support
 
