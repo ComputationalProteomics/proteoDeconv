@@ -73,11 +73,11 @@
 <span></span>
 <span><span class="co"># Preprocess data</span></span>
 <span><span class="va">mix_processed</span> <span class="op">&lt;-</span> <span class="va">mix_data</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="reference/extract_identifiers.html">extract_identifiers</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span>  <span class="co"># Extract IDs</span></span>
-<span>  <span class="fu"><a href="reference/update_gene_symbols.html">update_gene_symbols</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span>  <span class="co"># Update to current gene symbols</span></span>
-<span>  <span class="fu"><a href="reference/handle_missing_values.html">handle_missing_values</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="co"># Handle NAs</span></span>
-<span>  <span class="fu"><a href="reference/handle_duplicates.html">handle_duplicates</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="co"># Handle duplicates</span></span>
-<span>  <span class="fu"><a href="reference/convert_to_tpm.html">convert_to_tpm</a></span><span class="op">(</span><span class="op">)</span>          <span class="co"># Scale to TPM-like scale</span></span>
+<span>  <span class="fu"><a href="reference/extract_identifiers.html">extract_identifiers</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span>      <span class="co"># Extract IDs</span></span>
+<span>  <span class="fu"><a href="reference/update_gene_symbols.html">update_gene_symbols</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span>      <span class="co"># Update to current gene symbols</span></span>
+<span>  <span class="fu"><a href="reference/handle_missing_values.html">handle_missing_values</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span>    <span class="co"># Handle NAs</span></span>
+<span>  <span class="fu"><a href="reference/handle_duplicates.html">handle_duplicates</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span>        <span class="co"># Handle duplicates</span></span>
+<span>  <span class="fu"><a href="reference/convert_to_tpm.html">convert_to_tpm</a></span><span class="op">(</span><span class="op">)</span>              <span class="co"># Scale to TPM-like scale</span></span>
 <span></span>
 <span><span class="co"># Run deconvolution</span></span>
 <span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/deconvolute.html">deconvolute</a></span><span class="op">(</span></span>
