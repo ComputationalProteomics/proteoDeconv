@@ -9,7 +9,7 @@ deconvolute_bayesdebulk(
   signature,
   n_iter = 1000,
   burn_in = 100,
-  marker_selection = c("limma", "simple"),
+  marker_selection = "limma",
   ...
 )
 }
@@ -23,14 +23,10 @@ and cell types as columns.}
 
 \item{burn_in}{Number of burn-in iterations to discard; default is 100.}
 
-\item{marker_selection}{The method to use for marker selection. Either:
-\itemize{
-\item "limma" (default): Uses limma's differential expression methods to identify markers
-\item "simple": Uses a simpler fold-change based approach
-\item A pre-computed marker matrix: Direct specification of markers to use
-}}
+\item{marker_selection}{The method to use for marker selection: "limma" (default), "simple",
+or a pre-computed marker matrix.}
 
-\item{...}{Additional arguments passed to marker selection functions}
+\item{...}{Additional arguments passed to marker selection functions.}
 }
 \value{
 A matrix containing cell type proportions with samples as rows and cell types as columns.
