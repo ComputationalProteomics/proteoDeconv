@@ -94,7 +94,7 @@ head(pure_samples_preprocessed)
 
 ### Preprocessing options
 
-`proteoDeconv` offers several options for each preprocessing step, which have been evaluated for their impact on deconvolution performance. For further information on the options, please refer to the function reference.
+`proteoDeconv` offers several options for each preprocessing step, which have been evaluated for their impact on deconvolution performance. For further information on the options, please refer to the [function reference](https://computationalproteomics.github.io/proteoDeconv/reference/index.html).
 
 ## Creating a signature matrix
 
@@ -223,6 +223,6 @@ This vignette demonstrated the basic workflow for proteomics deconvolution using
 3. Perform deconvolution on mixed samples
 4. Visualize and interpret the results
 
-For more advanced usage, refer to the package documentation and function reference.
+For more advanced usage, refer to the package documentation and [function reference](https://computationalproteomics.github.io/proteoDeconv/reference/index.html).
 
 ## References
