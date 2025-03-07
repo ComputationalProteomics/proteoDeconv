@@ -1,14 +1,15 @@
 #' Extract primary identifiers from e.g. protein groups
 #'
-#' Extracts the primary identifier from compound row identifiers in a matrix
-#' by splitting on a separator and keeping only the first entry.
+#' Extracts the primary identifier from compound row identifiers in a matrix by
+#' splitting on a separator and keeping only the first entry.
 #'
 #' @param data A numeric matrix with compound identifiers (e.g. protein/gene
-#' groups) as row names.
-#' @param separator A character string used to separate multiple identifiers. Default is ";".
+#'   groups) as row names.
+#' @param separator A character string used to separate multiple identifiers.
+#'   Default is ";".
 #'
-#' @return A matrix with simplified identifiers as row names, where each identifier
-#'         is the first element from the original compound identifier.
+#' @return A matrix with simplified identifiers as row names, where each
+#'   identifier is the first element from the original compound identifier.
 #'
 #'
 #' @examples

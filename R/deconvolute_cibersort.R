@@ -1,22 +1,30 @@
 #' Deconvolute mixture data using CIBERSORT
 #'
-#' Applies the CIBERSORT algorithm to deconvolute bulk proteome data into constituent cell types
-#' using a signature matrix. The function requires the original CIBERSORT.R script to be sourced.
+#' Applies the CIBERSORT algorithm to deconvolute bulk proteome data into
+#' constituent cell types using a signature matrix. The function requires the
+#' original CIBERSORT.R script to be sourced.
 #'
-#' @param data A numeric matrix containing mixture data with genes as row names and samples as columns.
-#' @param signature A numeric matrix containing signature data with genes as row names and cell types as columns.
-#' @param QN Logical indicating whether quantile normalization is performed (default FALSE).
-#' @param absolute Logical indicating whether an absolute score is computed (default FALSE).
-#' @param abs_method Method for absolute scoring if absolute is TRUE (default "sig.score").
+#' @param data A numeric matrix containing mixture data with genes as row names
+#'   and samples as columns.
+#' @param signature A numeric matrix containing signature data with genes as row
+#'   names and cell types as columns.
+#' @param QN Logical indicating whether quantile normalization is performed
+#'   (default FALSE).
+#' @param absolute Logical indicating whether an absolute score is computed
+#'   (default FALSE).
+#' @param abs_method Method for absolute scoring if absolute is TRUE (default
+#'   "sig.score").
 #' @param ... Additional arguments passed to the CIBERSORT function.
 #'
-#' @return A numeric matrix with samples as rows and cell types as columns, representing the estimated
-#'         proportion of each cell type in each sample. The returned matrix excludes CIBERSORT's diagnostic
-#'         columns (RMSE, P-value, Correlation).
+#' @return A numeric matrix with samples as rows and cell types as columns,
+#'   representing the estimated proportion of each cell type in each sample. The
+#'   returned matrix excludes CIBERSORT's diagnostic columns (RMSE, P-value,
+#'   Correlation).
 #'
-#' @details This function requires the original CIBERSORT.R script from the CIBERSORT website
-#' (https://cibersortx.stanford.edu/) to be sourced before use. It writes temporary files for
-#' the mixture data and signature matrix, calls the CIBERSORT function, and processes the results.
+#' @details This function requires the original CIBERSORT.R script from the
+#'   CIBERSORT website (https://cibersortx.stanford.edu/) to be sourced before
+#'   use. It writes temporary files for the mixture data and signature matrix,
+#'   calls the CIBERSORT function, and processes the results.
 #'
 #' @examples
 #' \dontrun{
@@ -39,7 +47,8 @@
 #' )
 #' }
 #'
-#' @seealso \code{\link{deconvolute}} for a unified interface to multiple deconvolution methods.
+#' @seealso \code{\link{deconvolute}} for a unified interface to multiple
+#'   deconvolution methods.
 #'
 #' @export
 deconvolute_cibersort <- function(

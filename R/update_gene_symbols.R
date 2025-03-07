@@ -1,21 +1,24 @@
 #' Update gene symbols in a matrix to approved HGNC nomenclature
 #'
-#' This function checks and updates gene symbols in a matrix's row names to ensure they
-#' conform to the current approved HGNC (HUGO Gene Nomenclature Committee) standards.
-#' Non-standard or outdated gene symbols are replaced with their current official symbols.
+#' This function checks and updates gene symbols in a matrix's row names to
+#' ensure they conform to the current approved HGNC (HUGO Gene Nomenclature
+#' Committee) standards. Non-standard or outdated gene symbols are replaced with
+#' their current official symbols.
 #'
-#' @param data A numeric matrix containing gene expression or protein abundance data
-#'        with gene identifiers as row names.
-#' @param verbose A logical value indicating whether to print detailed messages about
-#'        the number of approved, non-approved, and unmappable gene symbols. Default is FALSE.
+#' @param data A numeric matrix containing gene expression or protein abundance
+#'   data with gene identifiers as row names.
+#' @param verbose A logical value indicating whether to print detailed messages
+#'   about the number of approved, non-approved, and unmappable gene symbols.
+#'   Default is FALSE.
 #'
-#' @return A matrix with updated gene symbols as row names. Rows with unmappable symbols
-#'         (where no suggested symbol could be found) are removed from the output.
+#' @return A matrix with updated gene symbols as row names. Rows with unmappable
+#'   symbols (where no suggested symbol could be found) are removed from the
+#'   output.
 #'
-#' @details The function uses the `HGNChelper` package to check and standardize gene symbols
-#' based on a predefined gene symbols map. This is important for
-#' ensuring consistency in gene naming across datasets and avoiding issues with outdated
-#' or non-standard gene symbols.
+#' @details The function uses the `HGNChelper` package to check and standardize
+#'   gene symbols based on a predefined gene symbols map. This is important for
+#'   ensuring consistency in gene naming across datasets and avoiding issues
+#'   with outdated or non-standard gene symbols.
 #'
 #' @export
 update_gene_symbols <- function(

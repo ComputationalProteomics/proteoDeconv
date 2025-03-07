@@ -1,17 +1,18 @@
 #' Handle duplicate identifiers in an expression matrix
 #'
-#' Resolves duplicate row identifiers in an expression matrix using the specified method.
+#' Resolves duplicate row identifiers in an expression matrix using the
+#' specified method.
 #'
-#' @param data A numeric matrix containing expression data with identifiers as row names
-#'        and samples as columns.
+#' @param data A numeric matrix containing expression data with identifiers as
+#'   row names and samples as columns.
 #' @param duplicate_mode A string specifying the approach to handle duplicates:
 #'   \itemize{
 #'     \item \code{"slice"}: Keep only the row with the maximum median value for each identifier (default)
 #'     \item \code{"merge"}: Merge duplicate rows by taking the column-wise median of values
 #'   }
 #'
-#' @return A numeric matrix with unique identifiers as row names. The number of rows will be
-#'         equal to the number of unique identifiers in the input matrix.
+#' @return A numeric matrix with unique identifiers as row names. The number of
+#'   rows will be equal to the number of unique identifiers in the input matrix.
 #'
 #'
 #'

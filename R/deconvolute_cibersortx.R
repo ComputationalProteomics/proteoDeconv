@@ -1,31 +1,43 @@
 #' Deconvolute using CIBERSORTx Docker image
 #'
-#' Performs deconvolution of bulk proteome data into constituent cell types using the CIBERSORTx Docker image.
-#' This function handles the interaction with the Docker container and processes the results.
+#' Performs deconvolution of bulk proteome data into constituent cell types
+#' using the CIBERSORTx Docker image. This function handles the interaction with
+#' the Docker container and processes the results.
 #'
-#' @param data A numeric matrix containing mixture data with genes as row names and samples as columns.
-#' @param signature A numeric matrix containing the signature matrix with genes as row names and cell types as columns.
-#' @param perm An integer specifying the number of permutations to be performed. Default is 1.
-#' @param rmbatch_S_mode A logical value indicating whether to remove batch effects in source GEPs mode. Default is FALSE.
-#' @param source_GEPs A matrix containing the source gene expression profiles. Required if \code{rmbatch_S_mode} is TRUE.
-#' @param use_cibersortx A logical value indicating whether to use CIBERSORTx. Default is TRUE.
-#' @param rmbatch_B_mode A logical value indicating whether to remove batch effects in bulk mode. Default is FALSE.
-#' @param QN A logical value indicating whether to perform quantile normalization. Default is FALSE.
-#' @param absolute A logical value indicating whether to use absolute mode. Default is FALSE.
-#' @param abs_method A character string specifying the method to use for absolute mode. Default is "sig.score".
-#' @param use_sudo A logical value indicating whether to use sudo for Docker commands. Default is FALSE.
+#' @param data A numeric matrix containing mixture data with genes as row names
+#'   and samples as columns.
+#' @param signature A numeric matrix containing the signature matrix with genes
+#'   as row names and cell types as columns.
+#' @param perm An integer specifying the number of permutations to be performed.
+#'   Default is 1.
+#' @param rmbatch_S_mode A logical value indicating whether to remove batch
+#'   effects in source GEPs mode. Default is FALSE.
+#' @param source_GEPs A matrix containing the source gene expression profiles.
+#'   Required if \code{rmbatch_S_mode} is TRUE.
+#' @param use_cibersortx A logical value indicating whether to use CIBERSORTx.
+#'   Default is TRUE.
+#' @param rmbatch_B_mode A logical value indicating whether to remove batch
+#'   effects in bulk mode. Default is FALSE.
+#' @param QN A logical value indicating whether to perform quantile
+#'   normalization. Default is FALSE.
+#' @param absolute A logical value indicating whether to use absolute mode.
+#'   Default is FALSE.
+#' @param abs_method A character string specifying the method to use for
+#'   absolute mode. Default is "sig.score".
+#' @param use_sudo A logical value indicating whether to use sudo for Docker
+#'   commands. Default is FALSE.
 #'
-#' @return A numeric matrix with samples as rows and cell types as columns, representing the estimated
-#'         proportion of each cell type in each sample.
+#' @return A numeric matrix with samples as rows and cell types as columns,
+#'   representing the estimated proportion of each cell type in each sample.
 #'
-#' @details
-#' This function requires the CIBERSORTx Docker image to be installed and the \code{CIBERSORTX_EMAIL}
-#' and \code{CIBERSORTX_TOKEN} environment variables to be set. You can get these credentials by
-#' registering at the CIBERSORTx website (https://cibersortx.stanford.edu/).
+#' @details This function requires the CIBERSORTx Docker image to be installed
+#' and the \code{CIBERSORTX_EMAIL} and \code{CIBERSORTX_TOKEN} environment
+#' variables to be set. You can get these credentials by registering at the
+#' CIBERSORTx website (https://cibersortx.stanford.edu/).
 #'
-#' The function creates temporary files for the mixture data and signature matrix, runs the
-#' CIBERSORTx Docker container, and processes the results. Note that absolute mode is not currently
-#' supported in the Docker version.
+#' The function creates temporary files for the mixture data and signature
+#' matrix, runs the CIBERSORTx Docker container, and processes the results. Note
+#' that absolute mode is not currently supported in the Docker version.
 #'
 #' @examples
 #' \dontrun{
@@ -49,8 +61,9 @@
 #' )
 #' }
 #'
-#' @seealso \code{\link{deconvolute_cibersort}} for using the R implementation of CIBERSORT,
-#'          \code{\link{deconvolute}} for a unified interface to multiple deconvolution methods.
+#' @seealso \code{\link{deconvolute_cibersort}} for using the R implementation
+#'   of CIBERSORT, \code{\link{deconvolute}} for a unified interface to multiple
+#'   deconvolution methods.
 #'
 #' @export
 deconvolute_cibersortx <- function(

@@ -1,37 +1,51 @@
 #' Create signature matrix using CIBERSORTx
 #'
 #' Generates a signature matrix from reference profiles and cell type classes
-#' using the CIBERSORTx Docker image.
-#' This signature matrix contains cell type-specific marker proteins that will be used for deconvolution.
+#' using the CIBERSORTx Docker image. This signature matrix contains cell
+#' type-specific marker proteins that will be used for deconvolution.
 #'
-#' @param refsample A numeric matrix containing reference profiles with genes as row names and samples as columns.
-#'        This should be preprocessed data from pure cell populations.
-#' @param phenoclasses A numeric matrix, data frame, or tibble containing cell type classification (0/1/2).
-#'        If provided as a matrix or base data frame, the cell types are assumed to be in the row names.
-#'        If provided as a tibble, the cell type identifiers should be included as a column.
-#'        This is typically created using the create_phenoclasses() function.
-#' @param g_min Minimum number of genes per cell type in the signature matrix. Default is 200.
-#' @param g_max Maximum number of genes per cell type in the signature matrix. Default is 400.
-#' @param q_value Q-value threshold for differential expression. Default is 0.01.
-#' @param replicates Number of replicates to use for building the reference file (only relevant when single_cell=TRUE). Default is 5.
-#' @param sampling Fraction of available gene expression profiles selected by random sampling (only relevant when single_cell=TRUE). Default is 0.5.
-#' @param fraction Fraction of cells of the same identity showing evidence of expression (only relevant when single_cell=TRUE). Default is 0.75.
-#' @param filter Logical indicating whether to remove non-hematopoietic genes. Default is FALSE.
-#' @param verbose Logical indicating whether to print detailed output. Default is FALSE.
-#' @param QN Logical indicating whether to run quantile normalization. Default is FALSE.
-#' @param single_cell Logical indicating whether to create signature from scRNA-Seq data. Default is FALSE.
-#' @param use_sudo Logical indicating whether to use sudo for Docker commands. Default is FALSE.
+#' @param refsample A numeric matrix containing reference profiles with genes as
+#'   row names and samples as columns. This should be preprocessed data from
+#'   pure cell populations.
+#' @param phenoclasses A numeric matrix, data frame, or tibble containing cell
+#'   type classification (0/1/2). If provided as a matrix or base data frame,
+#'   the cell types are assumed to be in the row names. If provided as a tibble,
+#'   the cell type identifiers should be included as a column. This is typically
+#'   created using the create_phenoclasses() function.
+#' @param g_min Minimum number of genes per cell type in the signature matrix.
+#'   Default is 200.
+#' @param g_max Maximum number of genes per cell type in the signature matrix.
+#'   Default is 400.
+#' @param q_value Q-value threshold for differential expression. Default is
+#'   0.01.
+#' @param replicates Number of replicates to use for building the reference file
+#'   (only relevant when single_cell=TRUE). Default is 5.
+#' @param sampling Fraction of available gene expression profiles selected by
+#'   random sampling (only relevant when single_cell=TRUE). Default is 0.5.
+#' @param fraction Fraction of cells of the same identity showing evidence of
+#'   expression (only relevant when single_cell=TRUE). Default is 0.75.
+#' @param filter Logical indicating whether to remove non-hematopoietic genes.
+#'   Default is FALSE.
+#' @param verbose Logical indicating whether to print detailed output. Default
+#'   is FALSE.
+#' @param QN Logical indicating whether to run quantile normalization. Default
+#'   is FALSE.
+#' @param single_cell Logical indicating whether to create signature from
+#'   scRNA-Seq data. Default is FALSE.
+#' @param use_sudo Logical indicating whether to use sudo for Docker commands.
+#'   Default is FALSE.
 #' @param ... Additional arguments passed to the function.
 #'
-#' @return A numeric matrix with genes as rows and cell types as columns, representing
-#'         the expression profile of each cell type. This signature matrix can be used
-#'         as input for deconvolution algorithms to estimate cell type proportions
-#'         in mixed samples.
+#' @return A numeric matrix with genes as rows and cell types as columns,
+#'   representing the expression profile of each cell type. This signature
+#'   matrix can be used as input for deconvolution algorithms to estimate cell
+#'   type proportions in mixed samples.
 #'
-#' @details This function uses the CIBERSORTx Docker image to construct a signature matrix
-#' based on the input reference profiles and cell type classifications. The CIBERSORTx token
-#' and email must be set as environment variables either in the project directory's .Renviron
-#' file or in the user's home directory .Renviron file.
+#' @details This function uses the CIBERSORTx Docker image to construct a
+#'   signature matrix based on the input reference profiles and cell type
+#'   classifications. The CIBERSORTx token and email must be set as environment
+#'   variables either in the project directory's .Renviron file or in the user's
+#'   home directory .Renviron file.
 #'
 #' @examples
 #' \dontrun{
@@ -59,8 +73,9 @@
 #' )
 #' }
 #'
-#' @seealso \code{\link{create_phenoclasses}} for creating the phenoclasses input and
-#'          \code{\link{deconvolute}} for using the signature matrix in deconvolution.
+#' @seealso \code{\link{create_phenoclasses}} for creating the phenoclasses
+#'   input and \code{\link{deconvolute}} for using the signature matrix in
+#'   deconvolution.
 #'
 #' @export
 create_signature_matrix <- function(

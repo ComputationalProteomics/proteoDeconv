@@ -1,20 +1,22 @@
 #' Handle scaling of protein abundance data
 #'
-#' Scales protein abundance data by optionally converting from log2 scale to linear scale
-#' and/or applying TPM-like normalization for proteomics data comparison.
+#' Scales protein abundance data by optionally converting from log2 scale to
+#' linear scale and/or applying TPM-like normalization for proteomics data
+#' comparison.
 #'
-#' @param data A numeric matrix containing protein abundance data with identifiers as row names
-#'        and samples as columns.
-#' @param unlog A logical value indicating whether to unlog the data (convert from log2 scale).
-#'        Default is FALSE.
+#' @param data A numeric matrix containing protein abundance data with
+#'   identifiers as row names and samples as columns.
+#' @param unlog A logical value indicating whether to unlog the data (convert
+#'   from log2 scale). Default is FALSE.
 #' @param tpm A logical value indicating whether to apply TPM-like normalization
-#'        (adapting Transcripts Per Million for proteomics). Default is FALSE.
+#'   (adapting Transcripts Per Million for proteomics). Default is FALSE.
 #'
-#' @return A numeric matrix with the scaled protein abundance data according to the specified options.
+#' @return A numeric matrix with the scaled protein abundance data according to
+#'   the specified options.
 #'
-#' @details This function combines the functionality of \code{\link{unlog2_data}} and
-#' \code{\link{convert_to_tpm}} to provide a flexible way to handle common scaling operations
-#' for proteomics data.
+#' @details This function combines the functionality of
+#'   \code{\link{unlog2_data}} and \code{\link{convert_to_tpm}} to provide a
+#'   flexible way to handle common scaling operations for proteomics data.
 #'
 #' @examples
 #' # Create log2-transformed protein abundance matrix
@@ -33,7 +35,7 @@
 #' tpm_only <- handle_scaling(linear_data, unlog = FALSE, tpm = TRUE)
 #'
 #' @seealso \code{\link{unlog2_data}} for just converting from log2 scale,
-#'          \code{\link{convert_to_tpm}} for just applying TPM-like normalization
+#'   \code{\link{convert_to_tpm}} for just applying TPM-like normalization
 #'
 #' @export
 handle_scaling <- function(

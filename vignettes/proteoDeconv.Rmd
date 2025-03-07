@@ -104,8 +104,8 @@ To create one, we first need to establish which samples correspond to which cell
 
 ```{r}
 mapping_rules <- list(
-  "CD8+ T cells" = "CD8",   # Samples containing "CD8" will be classified as CD8+ T cells
-  "Monocytes" = "Mono"      # Samples containing "Mono" will be classified as Monocytes
+  "CD8+ T cells" = "CD8", # Samples containing "CD8" will be classified as CD8+ T cells
+  "Monocytes" = "Mono" # Samples containing "Mono" will be classified as Monocytes
 )
 
 phenoclasses <- create_phenoclasses(

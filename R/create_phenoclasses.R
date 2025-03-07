@@ -1,24 +1,30 @@
 #' Create phenoclasses matrix for cell type deconvolution
 #'
-#' Generates a phenotype classification matrix from sample data for use in cell type
-#' deconvolution workflows. This matrix maps samples to their respective cell types
-#' using a set of mapping rules.
+#' Generates a phenotype classification matrix from sample data for use in cell
+#' type deconvolution workflows. This matrix maps samples to their respective
+#' cell types using a set of mapping rules.
 #'
-#' The function is particularly useful for preparing reference data for signature matrix
-#' generation using CIBERSORTx. Each cell in the output is encoded as:
+#' The function is particularly useful for preparing reference data for
+#' signature matrix generation using CIBERSORTx. Each cell in the output is
+#' encoded as:
 #' - 0 for 'Unknown' mappings
 #' - 1 if the sample belongs to the cell type in that row
 #' - 2 if the sample belongs to a different cell type
 #'
-#' @param data A numeric matrix of pure cell type profiles with genes as row names and samples as columns.
-#'        Column names should contain identifiers that can be mapped to cell types.
-#' @param mapping_rules A named list where names are cell type labels and values are regular expression
-#'        patterns used to match sample column names (e.g., list("CD8+ T cells" = "CD8", "Monocytes" = "Mono")).
-#' @param verbose Logical. If TRUE, displays additional messages during processing.
-#' @param return_format A string specifying the return format: "matrix" or "tibble" (default).
+#' @param data A numeric matrix of pure cell type profiles with genes as row
+#'   names and samples as columns. Column names should contain identifiers that
+#'   can be mapped to cell types.
+#' @param mapping_rules A named list where names are cell type labels and values
+#'   are regular expression patterns used to match sample column names (e.g.,
+#'   list("CD8+ T cells" = "CD8", "Monocytes" = "Mono")).
+#' @param verbose Logical. If TRUE, displays additional messages during
+#'   processing.
+#' @param return_format A string specifying the return format: "matrix" or
+#'   "tibble" (default).
 #'
-#' @return If return_format is "matrix", a numeric matrix with cell type groups as rows and samples as columns.
-#'         If return_format is "tibble", a tibble with a "cell_type" column and columns for each sample.
+#' @return If return_format is "matrix", a numeric matrix with cell type groups
+#'   as rows and samples as columns. If return_format is "tibble", a tibble with
+#'   a "cell_type" column and columns for each sample.
 #'
 #' @examples
 #' \dontrun{
@@ -38,7 +44,7 @@
 #' }
 #'
 #' @seealso \code{\link{create_signature_matrix}} which uses the phenoclasses
-#' matrix to generate a cell type signature matrix.
+#'   matrix to generate a cell type signature matrix.
 #'
 #' @export
 

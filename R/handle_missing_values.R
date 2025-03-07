@@ -1,11 +1,11 @@
 #' Handle missing values
 #'
-#' Imputes missing values in an expression matrix using various methods, including simple
-#' replacement with the lowest non-zero value or more sophisticated imputation techniques
-#' via the MsCoreUtils package.
+#' Imputes missing values in an expression matrix using various methods,
+#' including simple replacement with the lowest non-zero value or more
+#' sophisticated imputation techniques via the MsCoreUtils package.
 #'
-#' @param data A numeric matrix containing the data to be processed, with identifiers as row names
-#'        and samples as columns.
+#' @param data A numeric matrix containing the data to be processed, with
+#'   identifiers as row names and samples as columns.
 #' @param imputation_mode A string specifying the imputation method to use:
 #'   \itemize{
 #'     \item \code{"lowest_value"} (default): Replaces NAs with the lowest non-zero value in the matrix
@@ -21,11 +21,11 @@
 #'     \item \code{"mixed"}: Mixed imputation based on feature-wise missingness
 #'     \item \code{"nbavg"}: Impute with average of neighbors
 #'   }
-#' @param ... Additional arguments passed to \code{MsCoreUtils::impute_matrix}. See the documentation
-#'        of that function for method-specific parameters.
+#' @param ... Additional arguments passed to \code{MsCoreUtils::impute_matrix}.
+#'   See the documentation of that function for method-specific parameters.
 #'
-#' @return A matrix with the same dimensions as the input, but with missing values imputed
-#'         according to the specified method.
+#' @return A matrix with the same dimensions as the input, but with missing
+#'   values imputed according to the specified method.
 #'
 #'
 #' @examples
@@ -48,7 +48,8 @@
 #' print(result2)
 #' }
 #'
-#' @seealso \code{\link[MsCoreUtils]{impute_matrix}} for detailed description of the imputation methods
+#' @seealso \code{\link[MsCoreUtils]{impute_matrix}} for detailed description of
+#'   the imputation methods
 #' @export
 
 handle_missing_values <- function(

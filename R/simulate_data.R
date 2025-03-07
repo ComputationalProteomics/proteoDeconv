@@ -1,26 +1,32 @@
 #' Simulate artifical mixtures from bulk proteome measurements
 #'
-#' This function simulates bulk proteome data by mixing bulk sample measurements.
+#' This function simulates bulk proteome data by mixing bulk sample
+#' measurements.
 #'
-#' @param data A numeric matrix containing protein abundance data with protein identifiers
-#'        as row names and samples as columns.
-#' @param cell_types A character vector indicating the cell type associated with each column
-#'        in the input matrix. Must have the same length as the number of columns in \code{data}.
-#' @param seed An integer used as random seed for reproducibility. Default is NULL (no seed).
-#' @param ncells Integer specifying the number of cells to use for each simulated bulk sample.
-#' @param nsamples Integer specifying the number of bulk samples to simulate. Default is 100.
-#' @param filter_genes Logical; whether to filter out proteins/genes with low expression
-#'        before simulation. Default is TRUE.
+#' @param data A numeric matrix containing protein abundance data with protein
+#'   identifiers as row names and samples as columns.
+#' @param cell_types A character vector indicating the cell type associated with
+#'   each column in the input matrix. Must have the same length as the number of
+#'   columns in \code{data}.
+#' @param seed An integer used as random seed for reproducibility. Default is
+#'   NULL (no seed).
+#' @param ncells Integer specifying the number of cells to use for each
+#'   simulated bulk sample.
+#' @param nsamples Integer specifying the number of bulk samples to simulate.
+#'   Default is 100.
+#' @param filter_genes Logical; whether to filter out proteins/genes with low
+#'   expression before simulation. Default is TRUE.
 #' @param scenario String specifying the simulation scenario:
 #'        \itemize{
 #'          \item \code{"random"} (default): Random cell type proportions for each sample
 #'          \item \code{"even"}: Even proportions of all cell types
 #'          \item See SimBu documentation for additional scenarios
 #'        }
-#' @param whitelist Optional character vector of cell types to include in the simulation.
-#'        If provided, only these cell types will be used. Default is NULL (use all).
-#' @param blacklist Optional character vector of cell types to exclude from the simulation.
-#'        Default is NULL (exclude none).
+#' @param whitelist Optional character vector of cell types to include in the
+#'   simulation. If provided, only these cell types will be used. Default is
+#'   NULL (use all).
+#' @param blacklist Optional character vector of cell types to exclude from the
+#'   simulation. Default is NULL (exclude none).
 #'
 #' @return A list containing two matrices:
 #'   \itemize{
@@ -30,8 +36,9 @@
 #'           (cell types as rows, simulated samples as columns)
 #'   }
 #'
-#' @details This function uses the [SimBu package](https://omnideconv.org/SimBu/) to generate synthetic bulk
-#' samples by artifically mixing samples.
+#' @details This function uses the [SimBu
+#'   package](https://omnideconv.org/SimBu/) to generate synthetic bulk samples
+#'   by artifically mixing samples.
 #'
 #'
 #' @examples

@@ -40,11 +40,11 @@ signature <- readRDS(system.file("extdata", "cd8t_mono_signature_matrix.rds", pa
 
 # Preprocess data
 mix_processed <- mix_data |>
-  extract_identifiers() |>  # Extract IDs
-  update_gene_symbols() |>  # Update to current gene symbols
-  handle_missing_values() |> # Handle NAs
-  handle_duplicates() |> # Handle duplicates
-  convert_to_tpm()          # Scale to TPM-like scale
+  extract_identifiers() |>      # Extract IDs
+  update_gene_symbols() |>      # Update to current gene symbols
+  handle_missing_values() |>    # Handle NAs
+  handle_duplicates() |>        # Handle duplicates
+  convert_to_tpm()              # Scale to TPM-like scale
 
 # Run deconvolution
 results <- deconvolute(

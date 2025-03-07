@@ -1,21 +1,23 @@
 #' Deconvolute bulk data using EPIC
 #'
-#' Runs the EPIC algorithm on preprocessed proteomic data to estimate cell type proportions
-#' in mixed samples using a reference signature matrix.
+#' Runs the EPIC algorithm on preprocessed proteomic data to estimate cell type
+#' proportions in mixed samples using a reference signature matrix.
 #'
-#' @param data A numeric matrix of the bulk proteome data with gene identifiers as row names
-#'        and samples as columns.
-#' @param signature A numeric matrix of reference signature profiles with gene identifiers as row names
-#'        and cell types as columns.
-#' @param with_other_cells Logical; if TRUE, EPIC will include an "other cells" component in the output
-#'        to account for cell types not present in the reference. Default is TRUE.
+#' @param data A numeric matrix of the bulk proteome data with gene identifiers
+#'   as row names and samples as columns.
+#' @param signature A numeric matrix of reference signature profiles with gene
+#'   identifiers as row names and cell types as columns.
+#' @param with_other_cells Logical; if TRUE, EPIC will include an "other cells"
+#'   component in the output to account for cell types not present in the
+#'   reference. Default is TRUE.
 #'
-#' @return A numeric matrix with samples as rows and cell types as columns, representing the estimated
-#'         proportion of each cell type in each sample.
+#' @return A numeric matrix with samples as rows and cell types as columns,
+#'   representing the estimated proportion of each cell type in each sample.
 #'
-#' @details The function normalizes both the input data matrix and signature matrix using the
-#'          `handle_scaling` function before running the EPIC deconvolution. The EPIC algorithm
-#'          uses constrained least squares regression to estimate cell type proportions.
+#' @details The function normalizes both the input data matrix and signature
+#'   matrix using the `handle_scaling` function before running the EPIC
+#'   deconvolution. The EPIC algorithm uses constrained least squares regression
+#'   to estimate cell type proportions.
 #'
 #' @examples
 #' \dontrun{
@@ -37,11 +39,12 @@
 #' head(result)
 #' }
 #'
-#' @seealso \code{\link{handle_scaling}} for preprocessing inputs before deconvolution,
-#'          \code{\link{deconvolute}} for a unified interface to multiple deconvolution methods.
+#' @seealso \code{\link{handle_scaling}} for preprocessing inputs before
+#'   deconvolution, \code{\link{deconvolute}} for a unified interface to
+#'   multiple deconvolution methods.
 #'
-#' @references Racle, J. et al. (2017). Simultaneous enumeration of cancer and immune cell types
-#'             from bulk tumor gene expression data. eLife, 6:e26476.
+#' @references Racle, J. et al. (2017). Simultaneous enumeration of cancer and
+#'   immune cell types from bulk tumor gene expression data. eLife, 6:e26476.
 #'
 #' @export
 deconvolute_epic <- function(

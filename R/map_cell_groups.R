@@ -1,23 +1,27 @@
 #' Map column names to cell type groups using regex patterns
 #'
-#' Maps a character vector of column names to predefined cell type categories by matching
-#' against regex patterns.
+#' Maps a character vector of column names to predefined cell type categories by
+#' matching against regex patterns.
 #'
-#' @param column_names A character vector of column names to be mapped to cell type groups.
-#' @param mapping_rules A named list where names are the target cell type groups and values
-#'        are character vectors of regex patterns that identify columns belonging to each group.
-#' @param default_group A string that represents the default group name for columns not matching
-#'        any pattern. Default is "Unknown".
-#' @param verbose Logical. If TRUE, prints mapping process messages showing which columns were
-#'        mapped to which groups and which columns remained unmapped. Default is FALSE.
+#' @param column_names A character vector of column names to be mapped to cell
+#'   type groups.
+#' @param mapping_rules A named list where names are the target cell type groups
+#'   and values are character vectors of regex patterns that identify columns
+#'   belonging to each group.
+#' @param default_group A string that represents the default group name for
+#'   columns not matching any pattern. Default is "Unknown".
+#' @param verbose Logical. If TRUE, prints mapping process messages showing
+#'   which columns were mapped to which groups and which columns remained
+#'   unmapped. Default is FALSE.
 #'
-#' @return A character vector with the same length as \code{column_names}, containing the mapped
-#'         cell type group for each column name. Columns that don't match any pattern will be
-#'         assigned the \code{default_group}.
+#' @return A character vector with the same length as \code{column_names},
+#'   containing the mapped cell type group for each column name. Columns that
+#'   don't match any pattern will be assigned the \code{default_group}.
 #'
-#' @details This function iterates through the \code{mapping_rules} list and attempts to match
-#' each column name against the regex patterns for each cell type group. The first matching group
-#' in the order of the list will be assigned. The function is case-insensitive by default.
+#' @details This function iterates through the \code{mapping_rules} list and
+#'   attempts to match each column name against the regex patterns for each cell
+#'   type group. The first matching group in the order of the list will be
+#'   assigned. The function is case-insensitive by default.
 #'
 #'
 #' @examples
