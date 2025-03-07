@@ -34,15 +34,12 @@ signature_matrix <- as.matrix(signature_matrix_df[, -1])
 rownames(signature_matrix) <- signature_matrix_df[[1]]
 
 rename_columns <- function(colnames_vec) {
-  # Extract the meaningful part (Mix, CD8T, or Mono) and the replicate number
-  new_names <- sub(".*230516_(CD8T|Mono|Mix)-", "\\1_", colnames_vec) # Extract cell type
-  new_names <- sub("\\.mzML$", "", new_names) # Remove file extension
+  new_names <- sub(".*230516_(CD8T|Mono|Mix)-", "\\1_", colnames_vec)
+  new_names <- sub("\\.mzML$", "", new_names)
 
-  # Replace short names with full names
   new_names <- gsub("CD8T", "CD8+ T cells", new_names)
   new_names <- gsub("Mono", "Monocytes", new_names)
 
-  # Keep "Genes" column unchanged
   new_names[colnames_vec == "Genes"] <- "Genes"
 
   return(new_names)
