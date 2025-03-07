@@ -19,7 +19,7 @@ proteoDeconv is an R package that facilitates the deconvolution of bulk proteomi
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/ComputationalProteomics/proteoDeconv/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ComputationalProteomics/proteoDeconv/actions/workflows/R-CMD-check.yaml)
-[![Codecov test coverage](https://codecov.io/gh/manszamore/proteoDeconv/graph/badge.svg)](https://app.codecov.io/gh/manszamore/proteoDeconv)
+[![Codecov test coverage](https://codecov.io/gh/ComputationalProteomics/proteoDeconv/graph/badge.svg)](https://app.codecov.io/gh/ComputationalProteomics/proteoDeconv)
 <!-- badges: end -->
 
 ## Installation
@@ -38,27 +38,23 @@ Below is a brief example that demonstrates loading the provided example data and
 ```r
 library(proteoDeconv)
 
-mix_data_file <- system.file("extdata", "mixed_samples_matrix.rds", package = "proteoDeconv")
-mixed_samples <- readRDS(mix_data_file)
+# Load example data
+mix_data <- readRDS(system.file("extdata", "mixed_samples_matrix.rds", package = "proteoDeconv"))
+signature <- readRDS(system.file("extdata", "cd8t_mono_signature_matrix.rds", package = "proteoDeconv"))
 
-# Preprocess the mix samples data using the package's pipeline
-mixed_samples_preprocessed <- mixed_samples |>
-  extract_identifiers() |>
-  update_gene_symbols() |>
-  handle_missing_values(imputation_mode = "lowest_value") |>
-  handle_duplicates(duplicate_mode = "slice") |>
-  convert_to_tpm()
+# Preprocess data
+mix_processed <- mix_data |>
+  extract_identifiers() |>  # Extract IDs
+  update_gene_symbols() |>  # Update to current gene symbols
+  handle_missing_values() |> # Handle NAs
+  handle_duplicates() |> # Handle duplicates
+  convert_to_tpm()          # Scale to TPM-like scale
 
-# Load an example signature matrix
-signature_file <- system.file("extdata", "cd8t_mono_signature_matrix.rds", package = "proteoDeconv")
-signature_matrix <- readRDS(signature_file)
-
-# Perform deconvolution
+# Run deconvolution
 results <- deconvolute(
   algorithm = "epic",
-  data = mixed_samples_preprocessed,
-  signature = signature_matrix,
-  with_other_cells = FALSE
+  data = mix_processed,
+  signature = signature
 )
 
 # View the deconvolution results
