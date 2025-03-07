@@ -12,3 +12,4 @@
 ^\.aider\..*
 ^TODO\.txt$
 ^proteoDeconv\.code-workspace$
+^codecov\.yml$
