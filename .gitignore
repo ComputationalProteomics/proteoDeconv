@@ -10,3 +10,5 @@ docs
 .aider*
 inst/doc
 TODO.txt
+
+/.quarto/
