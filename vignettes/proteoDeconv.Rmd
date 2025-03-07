@@ -1,8 +1,8 @@
 ---
-title: "Getting Started with proteoDeconv"
+title: "Introduction to proteoDeconv"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Getting Started with proteoDeconv}
+  %\VignetteIndexEntry{Introduction to proteoDeconv}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 bibliography: vignette.bib
