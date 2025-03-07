@@ -62,13 +62,7 @@ to a TPM-like scale (sum of each column equals 1 million).</p>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>This function applies a TPM-like normalization to proteomics data, where each protein
-abundance value is scaled by the total abundance in the sample and multiplied by 1 million.
-While TPM was originally designed for RNA-seq data (where it accounts for transcript length),
-this adapted version provides a similar relative scaling benefit for proteomics data by
-normalizing for differences in total protein abundance between samples.</p>
-<p>This normalization enables more meaningful comparisons of protein abundance levels
-across samples with different total detected protein amounts. The resulting values
-represent relative abundances where the sum for each sample equals 1 million.</p>
+abundance value is scaled by the total abundance in the sample and multiplied by 1 million.</p>
 <p>If your input data is log-transformed, use <code><a href="unlog2_data.html">unlog2_data</a></code> first to convert it to
 linear scale before applying this normalization.</p>
     </div>
