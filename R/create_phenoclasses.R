@@ -2,7 +2,7 @@
 #'
 #' Generates a phenotype classification matrix from sample data for use in cell
 #' type deconvolution workflows. This matrix maps samples to their respective
-#' cell types using a set of mapping rules.
+#' cell types.
 #'
 #' The function is particularly useful for preparing reference data for
 #' signature matrix generation using CIBERSORTx. Each cell in the output is
@@ -14,9 +14,11 @@
 #' @param data A numeric matrix of pure cell type profiles with genes as row
 #'   names and samples as columns. Column names should contain identifiers that
 #'   can be mapped to cell types.
-#' @param mapping_rules A named list where names are cell type labels and values
-#'   are regular expression patterns used to match sample column names (e.g.,
-#'   list("CD8+ T cells" = "CD8", "Monocytes" = "Mono")).
+#' @param mapping_rules Either: 1. A named list where names are cell type labels
+#'   and values are regular expression patterns used to match sample column
+#'   names (e.g., list("CD8+ T cells" = "CD8", "Monocytes" = "Mono")), OR 2. A
+#'   character vector with the same length and order as colnames(data), directly
+#'   specifying the cell type for each sample.
 #' @param verbose Logical. If TRUE, displays additional messages during
 #'   processing.
 #' @param return_format A string specifying the return format: "matrix" or
@@ -28,6 +30,7 @@
 #'
 #' @examples
 #' \dontrun{
+#' # Example using a named list of regex patterns
 #' pure_samples <- readRDS(system.file("extdata", "pure_samples_matrix.rds",
 #'                                      package = "proteoDeconv"))
 #'
@@ -36,9 +39,17 @@
 #'   "Monocytes" = "Mono"
 #' )
 #'
-#' phenoclasses <- create_phenoclasses(
+#' phenoclasses1 <- create_phenoclasses(
 #'   data = pure_samples,
 #'   mapping_rules = mapping_rules,
+#'   verbose = TRUE
+#' )
+#'
+#' # Example using a character vector of direct cell type assignments
+#' cell_types <- c("CD8+ T cells", "CD8+ T cells", "Monocytes", "Monocytes", "Unknown")
+#' phenoclasses2 <- create_phenoclasses(
+#'   data = pure_samples,
+#'   mapping_rules = cell_types,
 #'   verbose = TRUE
 #' )
 #' }
@@ -47,7 +58,6 @@
 #'   matrix to generate a cell type signature matrix.
 #'
 #' @export
-
 create_phenoclasses <- function(
   data,
   mapping_rules,
@@ -57,7 +67,7 @@ create_phenoclasses <- function(
   return_format <- match.arg(return_format)
 
   if (!is.matrix(data)) {
-    stop("immune_cells_mat must be a matrix")
+    stop("data must be a matrix")
   }
 
   cols <- colnames(data)
@@ -65,18 +75,41 @@ create_phenoclasses <- function(
     stop("Matrix must have column names representing sample IDs")
   }
 
-  group_mapped <- map_cell_groups(
-    cols,
-    mapping_rules,
-    default_group = "Unknown",
-    verbose = verbose
-  )
-  cell_type_to_group <- stats::setNames(group_mapped, cols)
+  if (is.list(mapping_rules)) {
+    if (verbose) {
+      message("Using regex-based mapping rules")
+    }
+    group_mapped <- map_cell_groups(
+      cols,
+      mapping_rules,
+      default_group = "Unknown",
+      verbose = verbose
+    )
+    cell_type_to_group <- stats::setNames(group_mapped, cols)
+  } else if (is.character(mapping_rules)) {
+    if (length(mapping_rules) != length(cols)) {
+      stop(
+        "When providing a character vector, its length must match the number of columns in the data matrix"
+      )
+    }
+    if (verbose) {
+      message("Using direct cell type assignments")
+    }
+    cell_type_to_group <- stats::setNames(mapping_rules, cols)
+  } else {
+    stop(
+      "mapping_rules must be either a named list of regex patterns or a character vector of cell type assignments"
+    )
+  }
 
   valid_cols <- names(cell_type_to_group)
   valid_groups <- unique(cell_type_to_group)
 
   valid_groups <- setdiff(valid_groups, "Unknown")
+
+  if (length(valid_groups) == 0) {
+    stop("No valid cell types found after mapping. Check your mapping_rules.")
+  }
 
   phenotype_classes <- matrix(
     NA,
