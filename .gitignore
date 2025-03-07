@@ -5,6 +5,7 @@
 .DS_Store
 .quarto
 .vscode
+*.code-workspace
 docs
 .aider*
 inst/doc
