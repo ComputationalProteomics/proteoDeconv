@@ -138,9 +138,9 @@ important steps:</p>
 <span>  <span class="co"># Update gene symbols to current HGNC nomenclature</span></span>
 <span>  <span class="fu"><a href="../reference/update_gene_symbols.html">update_gene_symbols</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="co"># Handle missing values by imputing with the lowest observed value</span></span>
-<span>  <span class="fu"><a href="../reference/handle_missing_values.html">handle_missing_values</a></span><span class="op">(</span>imputation_mode <span class="op">=</span> <span class="st">"lowest_value"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/handle_missing_values.html">handle_missing_values</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="co"># Resolve duplicate genes by keeping the row with highest median value</span></span>
-<span>  <span class="fu"><a href="../reference/handle_duplicates.html">handle_duplicates</a></span><span class="op">(</span>duplicate_mode <span class="op">=</span> <span class="st">"slice"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/handle_duplicates.html">handle_duplicates</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="co"># Scale the data (TPM-like normalization)</span></span>
 <span>  <span class="fu"><a href="../reference/convert_to_tpm.html">convert_to_tpm</a></span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
@@ -148,8 +148,8 @@ important steps:</p>
 <span><span class="va">mixed_samples_preprocessed</span> <span class="op">&lt;-</span> <span class="va">mixed_samples</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/extract_identifiers.html">extract_identifiers</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/update_gene_symbols.html">update_gene_symbols</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/handle_missing_values.html">handle_missing_values</a></span><span class="op">(</span>imputation_mode <span class="op">=</span> <span class="st">"lowest_value"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="../reference/handle_duplicates.html">handle_duplicates</a></span><span class="op">(</span>duplicate_mode <span class="op">=</span> <span class="st">"slice"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/handle_missing_values.html">handle_missing_values</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="../reference/handle_duplicates.html">handle_duplicates</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/convert_to_tpm.html">convert_to_tpm</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>Let’s examine the preprocessed data:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">

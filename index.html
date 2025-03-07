@@ -67,27 +67,23 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ComputationalProteomics/proteoDeconv" class="external-link">proteoDeconv</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">mix_data_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"mixed_samples_matrix.rds"</span>, package <span class="op">=</span> <span class="st">"proteoDeconv"</span><span class="op">)</span></span>
-<span><span class="va">mixed_samples</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="va">mix_data_file</span><span class="op">)</span></span>
+<span><span class="co"># Load example data</span></span>
+<span><span class="va">mix_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"mixed_samples_matrix.rds"</span>, package <span class="op">=</span> <span class="st">"proteoDeconv"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">signature</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"cd8t_mono_signature_matrix.rds"</span>, package <span class="op">=</span> <span class="st">"proteoDeconv"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Preprocess the mix samples data using the package's pipeline</span></span>
-<span><span class="va">mixed_samples_preprocessed</span> <span class="op">&lt;-</span> <span class="va">mixed_samples</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="reference/extract_identifiers.html">extract_identifiers</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="reference/update_gene_symbols.html">update_gene_symbols</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="reference/handle_missing_values.html">handle_missing_values</a></span><span class="op">(</span>imputation_mode <span class="op">=</span> <span class="st">"lowest_value"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="reference/handle_duplicates.html">handle_duplicates</a></span><span class="op">(</span>duplicate_mode <span class="op">=</span> <span class="st">"slice"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="reference/convert_to_tpm.html">convert_to_tpm</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co"># Preprocess data</span></span>
+<span><span class="va">mix_processed</span> <span class="op">&lt;-</span> <span class="va">mix_data</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="reference/extract_identifiers.html">extract_identifiers</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span>  <span class="co"># Extract IDs</span></span>
+<span>  <span class="fu"><a href="reference/update_gene_symbols.html">update_gene_symbols</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span>  <span class="co"># Update to current gene symbols</span></span>
+<span>  <span class="fu"><a href="reference/handle_missing_values.html">handle_missing_values</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="co"># Handle NAs</span></span>
+<span>  <span class="fu"><a href="reference/handle_duplicates.html">handle_duplicates</a></span><span class="op">(</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="co"># Handle duplicates</span></span>
+<span>  <span class="fu"><a href="reference/convert_to_tpm.html">convert_to_tpm</a></span><span class="op">(</span><span class="op">)</span>          <span class="co"># Scale to TPM-like scale</span></span>
 <span></span>
-<span><span class="co"># Load an example signature matrix</span></span>
-<span><span class="va">signature_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"cd8t_mono_signature_matrix.rds"</span>, package <span class="op">=</span> <span class="st">"proteoDeconv"</span><span class="op">)</span></span>
-<span><span class="va">signature_matrix</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="va">signature_file</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Perform deconvolution</span></span>
+<span><span class="co"># Run deconvolution</span></span>
 <span><span class="va">results</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/deconvolute.html">deconvolute</a></span><span class="op">(</span></span>
 <span>  algorithm <span class="op">=</span> <span class="st">"epic"</span>,</span>
-<span>  data <span class="op">=</span> <span class="va">mixed_samples_preprocessed</span>,</span>
-<span>  signature <span class="op">=</span> <span class="va">signature_matrix</span>,</span>
-<span>  with_other_cells <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  data <span class="op">=</span> <span class="va">mix_processed</span>,</span>
+<span>  signature <span class="op">=</span> <span class="va">signature</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># View the deconvolution results</span></span>
@@ -165,7 +161,7 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://github.com/ComputationalProteomics/proteoDeconv/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/ComputationalProteomics/proteoDeconv/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
-<li><a href="https://app.codecov.io/gh/manszamore/proteoDeconv" class="external-link"><img src="https://codecov.io/gh/manszamore/proteoDeconv/graph/badge.svg" alt="Codecov test coverage"></a></li>
+<li><a href="https://app.codecov.io/gh/ComputationalProteomics/proteoDeconv" class="external-link"><img src="https://codecov.io/gh/ComputationalProteomics/proteoDeconv/graph/badge.svg" alt="Codecov test coverage"></a></li>
 </ul>
 </div>
 
