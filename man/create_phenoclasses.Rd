@@ -16,9 +16,11 @@ create_phenoclasses(
 names and samples as columns. Column names should contain identifiers that
 can be mapped to cell types.}
 
-\item{mapping_rules}{A named list where names are cell type labels and values
-are regular expression patterns used to match sample column names (e.g.,
-list("CD8+ T cells" = "CD8", "Monocytes" = "Mono")).}
+\item{mapping_rules}{Either: 1. A named list where names are cell type labels
+and values are regular expression patterns used to match sample column
+names (e.g., list("CD8+ T cells" = "CD8", "Monocytes" = "Mono")), OR 2. A
+character vector with the same length and order as colnames(data), directly
+specifying the cell type for each sample.}
 
 \item{verbose}{Logical. If TRUE, displays additional messages during
 processing.}
@@ -34,7 +36,7 @@ a "cell_type" column and columns for each sample.
 \description{
 Generates a phenotype classification matrix from sample data for use in cell
 type deconvolution workflows. This matrix maps samples to their respective
-cell types using a set of mapping rules.
+cell types.
 }
 \details{
 The function is particularly useful for preparing reference data for
@@ -48,6 +50,7 @@ encoded as:
 }
 \examples{
 \dontrun{
+# Example using a named list of regex patterns
 pure_samples <- readRDS(system.file("extdata", "pure_samples_matrix.rds",
                                      package = "proteoDeconv"))
 
@@ -56,9 +59,17 @@ mapping_rules <- list(
   "Monocytes" = "Mono"
 )
 
-phenoclasses <- create_phenoclasses(
+phenoclasses1 <- create_phenoclasses(
   data = pure_samples,
   mapping_rules = mapping_rules,
+  verbose = TRUE
+)
+
+# Example using a character vector of direct cell type assignments
+cell_types <- c("CD8+ T cells", "CD8+ T cells", "Monocytes", "Monocytes", "Unknown")
+phenoclasses2 <- create_phenoclasses(
+  data = pure_samples,
+  mapping_rules = cell_types,
   verbose = TRUE
 )
 }
