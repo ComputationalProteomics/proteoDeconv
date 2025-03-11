@@ -14,8 +14,6 @@
 #'   effects in source GEPs mode. Default is FALSE.
 #' @param source_GEPs A matrix containing the source gene expression profiles.
 #'   Required if \code{rmbatch_S_mode} is TRUE.
-#' @param use_cibersortx A logical value indicating whether to use CIBERSORTx.
-#'   Default is TRUE.
 #' @param rmbatch_B_mode A logical value indicating whether to remove batch
 #'   effects in bulk mode. Default is FALSE.
 #' @param QN A logical value indicating whether to perform quantile
@@ -72,7 +70,6 @@ deconvolute_cibersortx <- function(
   perm = 1,
   rmbatch_S_mode = FALSE,
   source_GEPs = NULL,
-  use_cibersortx = TRUE,
   rmbatch_B_mode = FALSE,
   QN = FALSE,
   absolute = FALSE,
