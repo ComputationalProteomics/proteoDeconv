@@ -117,7 +117,11 @@ create_signature_matrix <- function(
 
   refsample_df <- NULL
   if (!is.null(refsample)) {
-    refsample_df <- tibble::as_tibble(refsample, rownames = "Genes")
+    genes <- rownames(refsample)
+    refsample_df <- cbind(
+      Genes = genes,
+      as.data.frame(refsample, check.names = FALSE)
+    )
   }
 
   phenoclasses_df <- NULL
@@ -157,7 +161,17 @@ create_signature_matrix <- function(
       NULL
     }
 
-    if (!is.null(refsample_df)) readr::write_tsv(refsample_df, refsample_file)
+    if (!is.null(refsample_df)) {
+      utils::write.table(
+        refsample_df,
+        refsample_file,
+        sep = "\t",
+        row.names = FALSE,
+        col.names = TRUE,
+        quote = FALSE
+      )
+    }
+
     if (!is.null(phenoclasses_df)) {
       utils::write.table(
         phenoclasses_df,
