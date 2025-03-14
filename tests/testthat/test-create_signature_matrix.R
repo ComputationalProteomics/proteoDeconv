@@ -160,3 +160,53 @@ test_that("create_signature_matrix matches reference workflow", {
 
   expect_true(all(rownames(signature_matrix) %in% rownames(processed_samples)))
 })
+
+test_that("create_signature_matrix works with single-cell data", {
+  skip_if_not(
+    Sys.getenv("CIBERSORTX_EMAIL") != "" &&
+      Sys.getenv("CIBERSORTX_TOKEN") != "" &&
+      system("docker --version", ignore.stderr = TRUE) == 0,
+    "Skipping test - Docker or CIBERSORTx credentials not available"
+  )
+
+  pure_data_file <- system.file(
+    "extdata",
+    "pure_samples_matrix.rds",
+    package = "proteoDeconv"
+  )
+  skip_if(pure_data_file == "", "Test data not available")
+
+  pure_samples <- readRDS(pure_data_file)
+  if (is.data.frame(pure_samples)) {
+    gene_col <- which(sapply(pure_samples, is.character))[1]
+    genes <- pure_samples[[gene_col]]
+    mat_data <- as.matrix(pure_samples[, -gene_col])
+    rownames(mat_data) <- genes
+    pure_samples <- mat_data
+  }
+
+  processed_samples <- pure_samples |>
+    extract_identifiers() |>
+    handle_missing_values(imputation_mode = "lowest_value") |>
+    handle_duplicates(duplicate_mode = "slice") |>
+    handle_scaling(unlog = FALSE, tpm = TRUE)
+  colnames(processed_samples) <- sub("_\\d+$", "", colnames(processed_samples))
+  result <- create_signature_matrix(
+    refsample = processed_samples,
+    phenoclasses = NULL,
+    g_min = 5,
+    g_max = 10,
+    q_value = 0.3,
+    replicates = 3,
+    sampling = 0.5,
+    fraction = 0.75,
+    verbose = TRUE,
+    single_cell = TRUE
+  )
+
+  expect_true(is.matrix(result))
+  expect_true(nrow(result) > 0)
+  expect_true(ncol(result) > 0)
+
+  expect_true(ncol(result) >= 1, "Should detect at least one cell type")
+})
