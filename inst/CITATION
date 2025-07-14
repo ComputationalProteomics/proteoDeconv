@@ -1,0 +1,11 @@
+bibentry(
+  bibtype  = "Article",
+  title    = "Considerations and Software for Successful Immune Cell Deconvolution Using Proteomics Data",
+  author   = "Måns Zamore, Sergio Mosquim Junior, Sebastian L. Andree, Can Altunbulakli, Malin Lindstedt, and Fredrik Levander",
+  journal  = "Journal of Proteome Research",
+  year     = "2025",
+  volume   = "",
+  number   = "",
+  pages    = "",
+  doi      = "10.1021/acs.jproteome.4c00868"
+)
