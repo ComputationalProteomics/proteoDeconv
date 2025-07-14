@@ -18,11 +18,23 @@ coverage](https://codecov.io/gh/ComputationalProteomics/proteoDeconv/graph/badge
 
 ## Installation
 
-You can install the development version of proteoDeconv from GitHub:
+You can install the development version of proteoDeconv from either
+GitHub or R-universe:
+
+### Install from GitHub:
 
 ``` r
 # install.packages("pak")
 pak::pak("ComputationalProteomics/proteoDeconv")
+```
+
+### Install from R-universe:
+
+``` r
+install.packages("proteoDeconv", repos = c(
+  "https://computationalproteomics.r-universe.dev",
+  "https://cloud.r-project.org"
+))
 ```
 
 ## Usage example
@@ -101,3 +113,12 @@ reference](https://computationalproteomics.github.io/proteoDeconv/reference/inde
 For bug reports or any other inquiries, please [open an
 issue](https://github.com/ComputationalProteomics/proteoDeconv/issues)
 on our GitHub repository.
+
+## Citation
+
+Please cite our work if you use proteoDeconv in your research:
+
+Zamore, M., Mosquim Junior, S., Andree, S. L., Altunbulakli, C.,
+Lindstedt, M., & Levander, F. (2025). Considerations and Software for
+Successful Immune Cell Deconvolution Using Proteomics Data. *Journal of
+Proteome Research*. <https://doi.org/10.1021/acs.jproteome.4c00868>
