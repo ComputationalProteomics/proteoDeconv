@@ -55,16 +55,29 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the development version of proteoDeconv from GitHub:</p>
+<p>You can install the development version of proteoDeconv from either GitHub or R-universe:</p>
+<div class="section level3">
+<h3 id="install-from-github">Install from GitHub:<a class="anchor" aria-label="anchor" href="#install-from-github"></a>
+</h3>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"ComputationalProteomics/proteoDeconv"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="install-from-r-universe">Install from R-universe:<a class="anchor" aria-label="anchor" href="#install-from-r-universe"></a>
+</h3>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"proteoDeconv"</span>, repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  <span class="st">"https://computationalproteomics.r-universe.dev"</span>,</span>
+<span>  <span class="st">"https://cloud.r-project.org"</span></span>
+<span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="usage-example">Usage example<a class="anchor" aria-label="anchor" href="#usage-example"></a>
 </h2>
 <p>Below is a brief example that demonstrates loading the provided example data and signature matrix from the package and performing deconvolution. You can learn more in <code><a href="articles/proteoDeconv.html">vignette("proteoDeconv")</a></code>.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ComputationalProteomics/proteoDeconv" class="external-link">proteoDeconv</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Load example data</span></span>
@@ -101,7 +114,7 @@
 <li><p>Register and obtain a token from the <a href="https://cibersortx.stanford.edu" class="external-link">CIBERSORTx website</a>.</p></li>
 <li>
 <p>Set the token and email as environment variables in your .Renviron file (this file can be in your home directory or in your project folder):</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">CIBERSORTX_TOKEN</span><span class="op">=</span><span class="va">your_token_here</span></span>
 <span><span class="va">CIBERSORTX_EMAIL</span><span class="op">=</span><span class="va">your_email_here</span></span></code></pre></div>
 </li>
@@ -111,7 +124,7 @@
 <h3 id="cibersort">CIBERSORT<a class="anchor" aria-label="anchor" href="#cibersort"></a>
 </h3>
 <p>For running proteoDeconv with the original CIBERSORT method, download the CIBERSORT source code from the <a href="https://cibersortx.stanford.edu" class="external-link">CIBERSORT website</a> and source it before executing deconvolutions:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/source.html" class="external-link">source</a></span><span class="op">(</span><span class="st">"/path/to/CIBERSORT.R"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
@@ -124,6 +137,12 @@
 <h2 id="support">Support<a class="anchor" aria-label="anchor" href="#support"></a>
 </h2>
 <p>For bug reports or any other inquiries, please <a href="https://github.com/ComputationalProteomics/proteoDeconv/issues" class="external-link">open an issue</a> on our GitHub repository.</p>
+</div>
+<div class="section level2">
+<h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
+</h2>
+<p>Please cite our work if you use proteoDeconv in your research:</p>
+<p>Zamore, M., Mosquim Junior, S., Andree, S. L., Altunbulakli, C., Lindstedt, M., &amp; Levander, F. (2025). Considerations and Software for Successful Immune Cell Deconvolution Using Proteomics Data. <em>Journal of Proteome Research</em>. <a href="https://doi.org/10.1021/acs.jproteome.4c00868" class="external-link uri">https://doi.org/10.1021/acs.jproteome.4c00868</a></p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">
