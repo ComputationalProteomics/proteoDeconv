@@ -127,6 +127,9 @@ test_that("deconvolute_cibersortx passes container-visible file paths to Docker"
   )
 
   testthat::local_mocked_bindings(
+    write_tsv = function(x, file, ...) {
+      invisible(file)
+    },
     read_tsv = function(file, show_col_types = FALSE, ...) {
       tibble::tibble(Mixture = "Sample1", CellType = 0.75)
     },

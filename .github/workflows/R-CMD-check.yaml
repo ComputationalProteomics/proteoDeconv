@@ -35,7 +35,7 @@ jobs:
       R_KEEP_PKG_SOURCE: yes
       CIBERSORTX_EMAIL: ${{ secrets.CIBERSORTX_EMAIL }}
       CIBERSORTX_TOKEN: ${{ secrets.CIBERSORTX_TOKEN }}
-      RUN_CIBERSORTX_LIVE: ${{ matrix.config.r == 'release' && ((github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')) || (github.event_name == 'workflow_dispatch' && inputs.run_cibersortx_live && (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'))) && 'true' || 'false' }}
+      RUN_CIBERSORTX_LIVE: ${{ matrix.config.os == 'ubuntu-latest' && matrix.config.r == 'release' && ((github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')) || (github.event_name == 'workflow_dispatch' && inputs.run_cibersortx_live && (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'))) && 'true' || 'false' }}
 
     steps:
       - uses: actions/checkout@v3
