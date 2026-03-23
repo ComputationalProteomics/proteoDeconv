@@ -90,7 +90,7 @@ deconvolute_cibersortx <- function(
     )
   }
 
-  if (system("docker --version", intern = TRUE, ignore.stderr = TRUE) == 127) {
+  if (!docker_is_available()) {
     stop("Docker is not installed or not running.")
   }
 
@@ -112,8 +112,11 @@ deconvolute_cibersortx <- function(
   }
 
   withr::with_tempdir({
-    input_dir <- tempdir()
-    output_dir <- tempdir()
+    input_dir <- file.path(tempdir(), "input")
+    output_dir <- file.path(tempdir(), "output")
+
+    dir.create(input_dir, recursive = TRUE, showWarnings = FALSE)
+    dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
 
     input_data_file <- tempfile(tmpdir = input_dir)
     signature_file <- tempfile(tmpdir = input_dir)
@@ -129,25 +132,35 @@ deconvolute_cibersortx <- function(
 
     label <- uuid::UUIDgenerate(TRUE)
 
-    docker_command <- glue::glue(
-      "{if (use_sudo) 'sudo ' else ''}docker run --rm -v {input_dir}:/src/data:z -v {output_dir}:/src/outdir:z cibersortx/fractions ",
-      "--verbose TRUE ",
-      "--username {username} ",
-      "--token {token} ",
-      "--mixture {input_data_file} ",
-      "--sigmatrix {signature_file} ",
-      "--perm {perm} ",
-      "--label {label} ",
-      "--rmbatchBmode {ifelse(rmbatch_B_mode, 'TRUE', 'FALSE')} ",
-      "--rmbatchSmode {ifelse(rmbatch_S_mode, 'TRUE', 'FALSE')} ",
-      "--sourceGEPs {source_GEPs_file %||% signature_file} ",
-      "--QN {ifelse(QN, 'TRUE', 'FALSE')} ",
-      "--absolute {ifelse(absolute, 'TRUE', 'FALSE')} ",
-      "--abs_method {abs_method} "
+    docker_args <- build_docker_run_args(
+      image = "cibersortx/fractions",
+      mounts = c(
+        docker_mount_spec(input_dir, "/src/data"),
+        docker_mount_spec(output_dir, "/src/outdir")
+      ),
+      args = c(
+        "--verbose", "TRUE",
+        "--username", username,
+        "--token", token,
+        "--mixture", docker_container_path(input_data_file, "/src/data"),
+        "--sigmatrix", docker_container_path(signature_file, "/src/data"),
+        "--perm", as.character(perm),
+        "--label", label,
+        "--rmbatchBmode", toupper(as.character(rmbatch_B_mode)),
+        "--rmbatchSmode", toupper(as.character(rmbatch_S_mode)),
+        "--sourceGEPs",
+        docker_container_path(source_GEPs_file %||% signature_file, "/src/data"),
+        "--QN", toupper(as.character(QN)),
+        "--absolute", toupper(as.character(absolute)),
+        "--abs_method", abs_method
+      )
     )
-    message("Docker command:\n", docker_command, "\n")
 
-    command_output <- system(docker_command)
+    command_output <- run_docker_command(
+      docker_args,
+      use_sudo = use_sudo,
+      verbose = FALSE
+    )
 
     if (command_output != 0) {
       stop(glue::glue("CIBERSORTx failed. Error code: {command_output}"))
