@@ -3,6 +3,7 @@ skip_if_no_cibersortx_live <- function(message) {
 
   skip_if_not(
     identical(Sys.getenv("RUN_CIBERSORTX_LIVE"), "true") &&
+      identical(Sys.info()[["sysname"]], "Linux") &&
       Sys.getenv("CIBERSORTX_EMAIL") != "" &&
       Sys.getenv("CIBERSORTX_TOKEN") != "" &&
       docker_is_available(),
