@@ -5,6 +5,12 @@ on:
     branches: [main, master]
   pull_request:
     branches: [main, master]
+  workflow_dispatch:
+    inputs:
+      run_cibersortx_live:
+        required: false
+        default: false
+        type: boolean
 
 name: R-CMD-check
 
@@ -27,6 +33,9 @@ jobs:
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
+      CIBERSORTX_EMAIL: ${{ secrets.CIBERSORTX_EMAIL }}
+      CIBERSORTX_TOKEN: ${{ secrets.CIBERSORTX_TOKEN }}
+      RUN_CIBERSORTX_LIVE: ${{ matrix.config.r == 'release' && ((github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')) || (github.event_name == 'workflow_dispatch' && inputs.run_cibersortx_live && (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'))) && 'true' || 'false' }}
 
     steps:
       - uses: actions/checkout@v3

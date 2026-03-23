@@ -111,7 +111,7 @@ create_signature_matrix <- function(
     )
   }
 
-  if (system("docker --version", intern = TRUE, ignore.stderr = TRUE) == 127) {
+  if (!docker_is_available()) {
     stop("Docker is not installed or not running.")
   }
 
@@ -147,8 +147,11 @@ create_signature_matrix <- function(
   }
 
   withr::with_tempdir({
-    input_dir <- tempdir()
-    output_dir <- tempdir()
+    input_dir <- file.path(tempdir(), "input")
+    output_dir <- file.path(tempdir(), "output")
+
+    dir.create(input_dir, recursive = TRUE, showWarnings = FALSE)
+    dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
 
     refsample_file <- if (!is.null(refsample_df)) {
       tempfile(tmpdir = input_dir, fileext = ".txt")
@@ -183,31 +186,44 @@ create_signature_matrix <- function(
       )
     }
 
-    docker_command <- glue::glue(
-      "{if (use_sudo) 'sudo ' else ''}docker run --rm -v {input_dir}:/src/data:z -v {output_dir}:/src/outdir:z cibersortx/fractions ",
-      "--verbose {ifelse(verbose, 'TRUE', 'FALSE')} ",
-      "--username {username} ",
-      "--token {token} ",
-      "{if (!is.null(refsample_file)) paste('--refsample', refsample_file) else ''} ",
-      "{if (!is.null(phenoclasses_file)) paste('--phenoclasses', phenoclasses_file) else ''} ",
-      "--G.min {g_min} ",
-      "--G.max {g_max} ",
-      "--q.value {q_value} ",
-      "--filter {ifelse(filter, 'TRUE', 'FALSE')} ",
-      "--QN {ifelse(QN, 'TRUE', 'FALSE')} ",
-      "--k.max 999 ",
-      "--remake FALSE ",
-      "--replicates {replicates} ",
-      "--sampling {sampling} ",
-      "--fraction {fraction} ",
-      "{ifelse(single_cell, '--single_cell TRUE', '')}"
+    docker_args <- build_docker_run_args(
+      image = "cibersortx/fractions",
+      mounts = c(
+        docker_mount_spec(input_dir, "/src/data"),
+        docker_mount_spec(output_dir, "/src/outdir")
+      ),
+      args = c(
+        "--verbose", toupper(as.character(verbose)),
+        "--username", username,
+        "--token", token,
+        if (!is.null(refsample_file)) {
+          c("--refsample", docker_container_path(refsample_file, "/src/data"))
+        },
+        if (!is.null(phenoclasses_file)) {
+          c(
+            "--phenoclasses",
+            docker_container_path(phenoclasses_file, "/src/data")
+          )
+        },
+        "--G.min", as.character(g_min),
+        "--G.max", as.character(g_max),
+        "--q.value", as.character(q_value),
+        "--filter", toupper(as.character(filter)),
+        "--QN", toupper(as.character(QN)),
+        "--k.max", "999",
+        "--remake", "FALSE",
+        "--replicates", as.character(replicates),
+        "--sampling", as.character(sampling),
+        "--fraction", as.character(fraction),
+        if (single_cell) c("--single_cell", "TRUE")
+      )
     )
 
-    if (verbose) {
-      cat("Docker command:\n", docker_command, "\n")
-    }
-
-    command_output <- system(docker_command)
+    command_output <- run_docker_command(
+      docker_args,
+      use_sudo = use_sudo,
+      verbose = verbose
+    )
     if (command_output != 0) {
       stop(glue::glue("CIBERSORTx failed. Error code: {command_output}."))
     }

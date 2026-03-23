@@ -264,6 +264,32 @@ test_that("deconvolute CIBERSORTx fails appropriately when environment variables
   if (old_token != "") Sys.setenv(CIBERSORTX_TOKEN = old_token)
 })
 
+test_that("deconvolute CIBERSORTx works with live credentials", {
+  skip_if_no_cibersortx_live(
+    "Skipping test - live CIBERSORTx test is not enabled"
+  )
+
+  mixed_samples <- load_test_mixed_samples()
+  signature_matrix <- load_test_signature_matrix()
+
+  preprocessed_samples <- mixed_samples |>
+    extract_identifiers() |>
+    update_gene_symbols(verbose = FALSE) |>
+    handle_missing_values(imputation_mode = "lowest_value") |>
+    handle_duplicates(duplicate_mode = "slice") |>
+    handle_scaling(unlog = FALSE, tpm = TRUE)
+
+  result <- deconvolute_cibersortx(
+    data = preprocessed_samples,
+    signature = signature_matrix
+  )
+
+  expect_true(is.matrix(result))
+  expect_gt(nrow(result), 0)
+  expect_gt(ncol(result), 0)
+  expect_true(any(colnames(signature_matrix) %in% colnames(result)))
+})
+
 test_that("deconvolute errors on invalid algorithm", {
   bulk_matrix <- matrix(
     c(1, 2, 3, 4),

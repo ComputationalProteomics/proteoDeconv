@@ -38,28 +38,11 @@ test_that("create_signature_matrix checks for credentials", {
 })
 
 test_that("create_signature_matrix works with real data", {
-  skip_if_not(
-    Sys.getenv("CIBERSORTX_EMAIL") != "" &&
-      Sys.getenv("CIBERSORTX_TOKEN") != "" &&
-      system("docker --version", ignore.stderr = TRUE) == 0,
-    "Skipping test - Docker or CIBERSORTx credentials not available"
+  skip_if_no_cibersortx_live(
+    "Skipping test - live CIBERSORTx test is not enabled"
   )
 
-  pure_data_file <- system.file(
-    "extdata",
-    "pure_samples_matrix.rds",
-    package = "proteoDeconv"
-  )
-  skip_if(pure_data_file == "", "Test data not available")
-
-  pure_samples <- readRDS(pure_data_file)
-  if (is.data.frame(pure_samples)) {
-    gene_col <- which(sapply(pure_samples, is.character))[1]
-    genes <- pure_samples[[gene_col]]
-    mat_data <- as.matrix(pure_samples[, -gene_col])
-    rownames(mat_data) <- genes
-    pure_samples <- mat_data
-  }
+  pure_samples <- load_test_pure_samples()
 
   processed_samples <- pure_samples |>
     extract_identifiers() |>
@@ -67,15 +50,12 @@ test_that("create_signature_matrix works with real data", {
     handle_duplicates(duplicate_mode = "slice") |>
     handle_scaling(unlog = FALSE, tpm = TRUE)
 
-  mapping_rules <- list(
-    "CD8+ T cells" = "CD8",
-    "Monocytes" = "Mono"
-  )
+  mapping_rules <- cibersortx_test_mapping_rules()
 
   phenoclasses <- create_phenoclasses(
     data = processed_samples,
     mapping_rules = mapping_rules,
-    verbose = TRUE
+    verbose = FALSE
   )
 
   expected_cell_types <- names(mapping_rules)
@@ -89,7 +69,7 @@ test_that("create_signature_matrix works with real data", {
     replicates = 1,
     sampling = 1.0,
     fraction = 0.5,
-    verbose = TRUE
+    verbose = FALSE
   )
 
   expect_true(is.matrix(result))
@@ -100,28 +80,11 @@ test_that("create_signature_matrix works with real data", {
 })
 
 test_that("create_signature_matrix matches reference workflow", {
-  skip_if_not(
-    Sys.getenv("CIBERSORTX_EMAIL") != "" &&
-      Sys.getenv("CIBERSORTX_TOKEN") != "" &&
-      system("docker --version", ignore.stderr = TRUE) == 0,
-    "Skipping full workflow test - prerequisites not met"
+  skip_if_no_cibersortx_live(
+    "Skipping full workflow test - live CIBERSORTx test is not enabled"
   )
 
-  pure_data_file <- system.file(
-    "extdata",
-    "pure_samples_matrix.rds",
-    package = "proteoDeconv"
-  )
-  skip_if(pure_data_file == "", "Test data not available")
-
-  pure_samples <- readRDS(pure_data_file)
-  if (is.data.frame(pure_samples)) {
-    gene_col <- which(sapply(pure_samples, is.character))[1]
-    genes <- pure_samples[[gene_col]]
-    mat_data <- as.matrix(pure_samples[, -gene_col])
-    rownames(mat_data) <- genes
-    pure_samples <- mat_data
-  }
+  pure_samples <- load_test_pure_samples()
 
   processed_samples <- pure_samples |>
     extract_identifiers() |>
@@ -130,15 +93,12 @@ test_that("create_signature_matrix matches reference workflow", {
     handle_duplicates(duplicate_mode = "slice") |>
     handle_scaling(unlog = FALSE, tpm = TRUE)
 
-  mapping_rules <- list(
-    "CD8+ T cells" = "CD8",
-    "Monocytes" = "Mono"
-  )
+  mapping_rules <- cibersortx_test_mapping_rules()
 
   phenoclasses <- create_phenoclasses(
     data = processed_samples,
     mapping_rules = mapping_rules,
-    verbose = TRUE
+    verbose = FALSE
   )
 
   signature_matrix <- create_signature_matrix(
@@ -148,7 +108,7 @@ test_that("create_signature_matrix matches reference workflow", {
     g_max = 20,
     q_value = 0.2,
     replicates = 1,
-    verbose = TRUE
+    verbose = FALSE
   )
 
   expect_true(is.matrix(signature_matrix))
@@ -162,28 +122,11 @@ test_that("create_signature_matrix matches reference workflow", {
 })
 
 test_that("create_signature_matrix works with single-cell data", {
-  skip_if_not(
-    Sys.getenv("CIBERSORTX_EMAIL") != "" &&
-      Sys.getenv("CIBERSORTX_TOKEN") != "" &&
-      system("docker --version", ignore.stderr = TRUE) == 0,
-    "Skipping test - Docker or CIBERSORTx credentials not available"
+  skip_if_no_cibersortx_live(
+    "Skipping test - live CIBERSORTx test is not enabled"
   )
 
-  pure_data_file <- system.file(
-    "extdata",
-    "pure_samples_matrix.rds",
-    package = "proteoDeconv"
-  )
-  skip_if(pure_data_file == "", "Test data not available")
-
-  pure_samples <- readRDS(pure_data_file)
-  if (is.data.frame(pure_samples)) {
-    gene_col <- which(sapply(pure_samples, is.character))[1]
-    genes <- pure_samples[[gene_col]]
-    mat_data <- as.matrix(pure_samples[, -gene_col])
-    rownames(mat_data) <- genes
-    pure_samples <- mat_data
-  }
+  pure_samples <- load_test_pure_samples()
 
   processed_samples <- pure_samples |>
     extract_identifiers() |>
@@ -200,7 +143,7 @@ test_that("create_signature_matrix works with single-cell data", {
     replicates = 3,
     sampling = 0.5,
     fraction = 0.75,
-    verbose = TRUE,
+    verbose = FALSE,
     single_cell = TRUE
   )
 
