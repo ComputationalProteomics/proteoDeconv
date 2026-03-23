@@ -34,6 +34,26 @@ test_that("docker helpers redact sensitive arguments in logged commands", {
   )
 })
 
+test_that("docker helpers redact sensitive values in command output", {
+  redact_docker_output <- getFromNamespace("redact_docker_output", "proteoDeconv")
+
+  withr::local_envvar(c(
+    CIBERSORTX_EMAIL = "author@example.org",
+    CIBERSORTX_TOKEN = "super-secret-token"
+  ))
+
+  expect_equal(
+    redact_docker_output(c(
+      "[Options] username: author@example.org",
+      "[Options] token: super-secret-token"
+    )),
+    c(
+      "[Options] username: <redacted>",
+      "[Options] token: <redacted>"
+    )
+  )
+})
+
 test_that("create_signature_matrix passes container-visible file paths to Docker", {
   captured_args <- NULL
   tempfile_counter <- 0L

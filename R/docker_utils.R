@@ -22,6 +22,16 @@ redact_docker_args <- function(args) {
   args
 }
 
+redact_docker_output <- function(text) {
+  secrets <- Sys.getenv(c("CIBERSORTX_EMAIL", "CIBERSORTX_TOKEN"), unset = "")
+
+  for (secret in secrets[nzchar(secrets)]) {
+    text <- gsub(secret, "<redacted>", text, fixed = TRUE)
+  }
+
+  text
+}
+
 docker_mount_spec <- function(host_dir, container_dir) {
   selinux_suffix <- if (identical(Sys.info()[["sysname"]], "Linux")) ":z" else ""
 
@@ -40,6 +50,10 @@ build_docker_run_args <- function(image, mounts = character(), args = character(
 run_docker_command <- function(args, use_sudo = FALSE, verbose = FALSE) {
   command <- if (use_sudo) "sudo" else "docker"
   system_args <- if (use_sudo) c("docker", args) else args
+  stdout_file <- tempfile()
+  stderr_file <- tempfile()
+
+  on.exit(unlink(c(stdout_file, stderr_file), force = TRUE), add = TRUE)
 
   if (verbose) {
     message(
@@ -49,5 +63,23 @@ run_docker_command <- function(args, use_sudo = FALSE, verbose = FALSE) {
     )
   }
 
-  system2(command, system_args)
+  command_output <- system2(
+    command,
+    system_args,
+    stdout = stdout_file,
+    stderr = stderr_file
+  )
+
+  if (verbose || !identical(as.integer(command_output), 0L)) {
+    output <- c(
+      readLines(stdout_file, warn = FALSE),
+      readLines(stderr_file, warn = FALSE)
+    )
+
+    if (length(output) > 0) {
+      message(paste(redact_docker_output(output), collapse = "\n"))
+    }
+  }
+
+  command_output
 }

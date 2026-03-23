@@ -130,7 +130,7 @@ deconvolute_cibersortx <- function(
     readr::write_tsv(data_tibble, input_data_file)
     readr::write_tsv(sig_tibble, signature_file)
 
-    label <- uuid::UUIDgenerate(TRUE)
+    label <- basename(tempfile(pattern = "cibersortx_", tmpdir = output_dir))
 
     docker_args <- build_docker_run_args(
       image = "cibersortx/fractions",
