@@ -1,9 +1,11 @@
 docker_is_available <- function() {
-  status <- suppressWarnings(
-    system2("docker", "--version", stdout = FALSE, stderr = FALSE)
-  )
-
-  identical(as.integer(status), 0L)
+  tryCatch({
+    output <- suppressWarnings(
+      system2("docker", "--version", stdout = TRUE, stderr = TRUE)
+    )
+    status <- attr(output, "status")
+    is.null(status) || identical(as.integer(status), 0L)
+  }, error = function(e) FALSE)
 }
 
 docker_host_path <- function(path) {

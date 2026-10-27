@@ -31,10 +31,9 @@ pak::pak("ComputationalProteomics/proteoDeconv")
 ### Install from R-universe:
 
 ``` r
-install.packages("proteoDeconv", repos = c(
-  "https://computationalproteomics.r-universe.dev",
-  "https://cloud.r-project.org"
-))
+# install.packages("BiocManager")
+BiocManager::install("proteoDeconv",
+  site_repository = "https://computationalproteomics.r-universe.dev")
 ```
 
 ## Usage example
@@ -59,6 +58,7 @@ mix_processed <- mix_data |>
   convert_to_tpm()              # Scale to TPM-like scale
 
 # Run deconvolution
+# pak::pak("GfellerLab/EPIC")
 results <- deconvolute(
   algorithm = "epic",
   data = mix_processed,

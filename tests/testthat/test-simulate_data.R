@@ -17,6 +17,7 @@ test_that("simulate_data validates input correctly", {
 })
 
 test_that("simulate_data produces expected output structure", {
+  skip_if_not_installed("SimBu")
   data <- matrix(
     c(100, 200, 300, 400, 500, 600, 700, 800, 900),
     nrow = 3,
@@ -43,6 +44,7 @@ test_that("simulate_data produces expected output structure", {
 })
 
 test_that("simulate_data creates requested number of samples", {
+  skip_if_not_installed("SimBu")
   data <- matrix(
     c(1000, 2000, 3000, 4000),
     nrow = 2,
@@ -61,6 +63,7 @@ test_that("simulate_data creates requested number of samples", {
 })
 
 test_that("simulate_data results are reproducible with seed", {
+  skip_if_not_installed("SimBu")
   data <- matrix(
     c(1000, 2000, 3000, 4000),
     nrow = 2,
@@ -80,6 +83,7 @@ test_that("simulate_data results are reproducible with seed", {
 })
 
 test_that("simulate_data respects whitelist and blacklist", {
+  skip_if_not_installed("SimBu")
   data <- matrix(
     c(100, 200, 300, 400, 500, 600, 700, 800),
     nrow = 2,
@@ -105,4 +109,15 @@ test_that("simulate_data respects whitelist and blacklist", {
   expect_false(any(
     c("TypeC", "TypeD") %in% colnames(result_white$cell_fractions)
   ))
+})
+
+test_that("simulate_data requires SimBu", {
+  testthat::local_mocked_bindings(
+    requireNamespace = function(...) FALSE,
+    .package = "base"
+  )
+  data <- matrix(1, dimnames = list("Gene1", "Sample1"))
+  expect_error(
+    simulate_data(data, "TypeA"), 'BiocManager::install("SimBu")', fixed = TRUE
+  )
 })

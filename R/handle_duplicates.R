@@ -71,7 +71,7 @@ handle_duplicates <- function(data, duplicate_mode = "slice") {
           result[i, ] <- data[rows, ]
         } else {
           medians <- apply(data[rows, , drop = FALSE], 1, function(row) {
-            if (all(is.na(row))) -Inf else median(row, na.rm = TRUE)
+            if (all(is.na(row))) -Inf else stats::median(row, na.rm = TRUE)
           })
           best_row <- rows[which.max(medians)]
           result[i, ] <- data[best_row, ]
@@ -89,7 +89,7 @@ handle_duplicates <- function(data, duplicate_mode = "slice") {
           result[i, ] <- apply(
             data[rows, , drop = FALSE],
             2,
-            median,
+            stats::median,
             na.rm = TRUE
           )
         }

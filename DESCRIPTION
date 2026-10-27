@@ -1,6 +1,6 @@
 Package: proteoDeconv
 Title: Enabling Cell-Type Deconvolution of Proteomics Data
-Version: 0.1.2
+Version: 0.1.3
 Authors@R:
     person("Måns", "Zamore", email = "mans.zamore@immun.lth.se", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-8108-1097"))
@@ -20,7 +20,6 @@ Imports:
     MsCoreUtils,
     readr,
     rlang,
-    SimBu,
     stats,
     stringr,
     SummarizedExperiment,
@@ -36,11 +35,11 @@ Suggests:
     knitr,
     rmarkdown,
     limma,
-    ggplot2
+    ggplot2,
+    SimBu
 Remotes:
     WangLab-MSSM/BayesDeBulk/BayesDeBulk,
-    GfellerLab/EPIC,
-    omnideconv/SimBu
+    GfellerLab/EPIC
 Config/testthat/edition: 3
 Encoding: UTF-8
 SystemRequirements: Docker

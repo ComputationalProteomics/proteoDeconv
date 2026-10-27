@@ -66,6 +66,7 @@ measurements.
 \details{
 This function uses the \href{https://omnideconv.org/SimBu/}{SimBu package} to generate synthetic bulk samples
 by artifically mixing samples.
+Install SimBu with \code{BiocManager::install("SimBu")}.
 }
 \examples{
 # Create example data

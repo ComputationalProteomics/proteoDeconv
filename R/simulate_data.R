@@ -39,6 +39,7 @@
 #' @details This function uses the [SimBu
 #'   package](https://omnideconv.org/SimBu/) to generate synthetic bulk samples
 #'   by artifically mixing samples.
+#'   Install SimBu with `BiocManager::install("SimBu")`.
 #'
 #'
 #' @examples
@@ -89,6 +90,10 @@ simulate_data <- function(
     stop(
       "Length of cell_types must match the number of samples (columns) in the matrix."
     )
+  }
+
+  if (!requireNamespace("SimBu", quietly = TRUE)) {
+    stop('Install SimBu with BiocManager::install("SimBu").', call. = FALSE)
   }
 
   annotation <- data.frame(

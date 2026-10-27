@@ -48,6 +48,13 @@ jobs:
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
+      - name: Check Docker detection on Windows
+        if: runner.os == 'Windows'
+        shell: Rscript {0}
+        run: |
+          source("R/docker_utils.R")
+          stopifnot(nzchar(Sys.which("docker")), docker_is_available())
+
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rcmdcheck

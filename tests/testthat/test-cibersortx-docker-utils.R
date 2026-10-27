@@ -66,7 +66,7 @@ test_that("create_signature_matrix passes container-visible file paths to Docker
   testthat::local_mocked_bindings(
     system2 = function(command, args, ...) {
       if (identical(command, "docker") && identical(args, "--version")) {
-        return(0L)
+        return("Docker version")
       }
 
       captured_args <<- args
@@ -130,7 +130,7 @@ test_that("deconvolute_cibersortx passes container-visible file paths to Docker"
   testthat::local_mocked_bindings(
     system2 = function(command, args, ...) {
       if (identical(command, "docker") && identical(args, "--version")) {
-        return(0L)
+        return("Docker version")
       }
 
       captured_args <<- args
@@ -182,4 +182,24 @@ test_that("deconvolute_cibersortx passes container-visible file paths to Docker"
   expect_match(source_geps_arg, "^/src/data/")
   expect_false(grepl(tempdir(), mixture_arg, fixed = TRUE))
   expect_false(grepl(tempdir(), signature_arg, fixed = TRUE))
+})
+
+test_that("docker availability handles success and failure", {
+  docker_is_available <- getFromNamespace("docker_is_available", "proteoDeconv")
+  testthat::local_mocked_bindings(
+    system2 = function(...) {
+      if (inherits(output, "error")) stop(output)
+      output
+    },
+    .package = "base"
+  )
+
+  output <- "Docker version"
+  expect_true(docker_is_available())
+  output <- character()
+  expect_true(docker_is_available())
+  output <- structure("command failed", status = 1L)
+  expect_false(docker_is_available())
+  output <- simpleError("command not found")
+  expect_false(docker_is_available())
 })
