@@ -86,7 +86,8 @@ A list containing two matrices:
 ## Details
 
 This function uses the [SimBu package](https://omnideconv.org/SimBu/) to
-generate synthetic bulk samples by artifically mixing samples.
+generate synthetic bulk samples by artifically mixing samples. Install
+SimBu with `BiocManager::install("SimBu")`.
 
 ## Examples
 

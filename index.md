@@ -14,6 +14,7 @@ GitHub or R-universe:
 ### Install from GitHub:
 
 ``` r
+
 # install.packages("pak")
 pak::pak("ComputationalProteomics/proteoDeconv")
 ```
@@ -21,10 +22,10 @@ pak::pak("ComputationalProteomics/proteoDeconv")
 ### Install from R-universe:
 
 ``` r
-install.packages("proteoDeconv", repos = c(
-  "https://computationalproteomics.r-universe.dev",
-  "https://cloud.r-project.org"
-))
+
+# install.packages("BiocManager")
+BiocManager::install("proteoDeconv",
+  site_repository = "https://computationalproteomics.r-universe.dev")
 ```
 
 ## Usage example
@@ -35,6 +36,7 @@ You can learn more in
 [`vignette("proteoDeconv")`](https://computationalproteomics.github.io/proteoDeconv/articles/proteoDeconv.md).
 
 ``` r
+
 library(proteoDeconv)
 
 # Load example data
@@ -50,6 +52,7 @@ mix_processed <- mix_data |>
   convert_to_tpm()              # Scale to TPM-like scale
 
 # Run deconvolution
+# pak::pak("GfellerLab/EPIC")
 results <- deconvolute(
   algorithm = "epic",
   data = mix_processed,
@@ -76,6 +79,7 @@ To use proteoDeconv with CIBERSORTx:
   folder):
 
   ``` r
+
   CIBERSORTX_TOKEN=your_token_here
   CIBERSORTX_EMAIL=your_email_here
   ```
@@ -88,6 +92,7 @@ website](https://cibersortx.stanford.edu) and source it before executing
 deconvolutions:
 
 ``` r
+
 source("/path/to/CIBERSORT.R")
 ```
 

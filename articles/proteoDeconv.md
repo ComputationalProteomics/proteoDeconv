@@ -10,6 +10,7 @@ proteoDeconv package.
 First, let’s load the necessary packages:
 
 ``` r
+
 library(proteoDeconv)
 library(readr)
 library(dplyr)
@@ -30,6 +31,7 @@ dataset PXD056050:
 Let’s load these datasets:
 
 ``` r
+
 pure_data_file <- system.file("extdata", "pure_samples_matrix.rds", package = "proteoDeconv")
 pure_samples <- readRDS(pure_data_file)
 
@@ -40,6 +42,7 @@ mixed_samples <- readRDS(mix_data_file)
 Let’s examine the structure of the pure samples data:
 
 ``` r
+
 dim(pure_samples)
 #> [1] 3317    8
 
@@ -78,6 +81,7 @@ preprocessing pipeline in `proteoDeconv` includes several important
 steps:
 
 ``` r
+
 pure_samples_preprocessed <- pure_samples |>
   # Extract first gene group when multiple gene groups are present
   extract_identifiers() |>
@@ -102,6 +106,7 @@ mixed_samples_preprocessed <- mixed_samples |>
 Let’s examine the preprocessed data:
 
 ``` r
+
 head(pure_samples_preprocessed)
 #>             CD8+ T cells_1 CD8+ T cells_2 CD8+ T cells_3 CD8+ T cells_5
 #> IGKV3-15        0.08027906    19.66485501      8.2758047     22.9537904
@@ -136,6 +141,7 @@ To create one, we first need to establish which samples correspond to
 which cell types:
 
 ``` r
+
 mapping_rules <- list(
   "CD8+ T cells" = "CD8", # Samples containing "CD8" will be classified as CD8+ T cells
   "Monocytes" = "Mono" # Samples containing "Mono" will be classified as Monocytes
@@ -166,6 +172,7 @@ which is required for the signature matrix generation.
 Now, we can create the signature matrix using CIBERSORTx:
 
 ``` r
+
 # Note: This requires a CIBERSORTx token to be set in .Renviron
 signature_matrix <- create_signature_matrix(
   refsample = pure_samples_preprocessed,
@@ -179,6 +186,7 @@ signature_matrix <- create_signature_matrix(
 Let’s examine the signature matrix:
 
 ``` r
+
 dim(signature_matrix)
 #> [1] 426   2
 
@@ -205,6 +213,7 @@ that have been evaluated for their performance with proteomics data.
 We’ll use the EPIC algorithm here (Racle et al. 2017):
 
 ``` r
+
 results <- deconvolute(
   algorithm = "epic",
   data = mixed_samples_preprocessed,
@@ -240,6 +249,7 @@ mixed sample.
 To use a different algorithm, simply change the `algorithm` parameter:
 
 ``` r
+
 # Example using a different algorithm
 results_cibersort <- deconvolute(
   algorithm = "cibersort",
@@ -253,6 +263,7 @@ results_cibersort <- deconvolute(
 For easier visualization, let’s convert the results to a tidy format:
 
 ``` r
+
 results_tidy <- as_tibble(results, rownames = "sample") |>
   pivot_longer(
     cols = -sample,
@@ -275,6 +286,7 @@ head(results_tidy)
 Now, let’s create a bar chart to visualize the cell type proportions:
 
 ``` r
+
 ggplot(results_tidy, aes(x = sample, y = cell_fraction, fill = cell_type)) +
   geom_bar(stat = "identity", position = "stack") +
   theme_minimal() +
@@ -304,24 +316,20 @@ reference](https://computationalproteomics.github.io/proteoDeconv/reference/inde
 
 ## References
 
-Newman, Aaron M., Chih Long Liu, Michael R. Green, Andrew J. Gentles,
-Weiguo Feng, Yue Xu, Chuong D. Hoang, Maximilian Diehn, and Ash A.
-Alizadeh. 2015. “Robust Enumeration of Cell Subsets from Tissue
-Expression Profiles.” *Nature Methods* 12 (5): 453–57.
-<https://doi.org/10.1038/nmeth.3337>.
+Newman, Aaron M., Chih Long Liu, Michael R. Green, et al. 2015. “Robust
+Enumeration of Cell Subsets from Tissue Expression Profiles.” *Nature
+Methods* 12 (5): 453–57. <https://doi.org/10.1038/nmeth.3337>.
 
-Newman, Aaron M., Chloé B. Steen, Chih Long Liu, Andrew J. Gentles,
-Aadel A. Chaudhuri, Florian Scherer, Michael S. Khodadoust, et al. 2019.
+Newman, Aaron M., Chloé B. Steen, Chih Long Liu, et al. 2019.
 “Determining Cell Type Abundance and Expression from Bulk Tissues with
 Digital Cytometry.” *Nature Biotechnology* 37 (7): 773–82.
 <https://doi.org/10.1038/s41587-019-0114-2>.
 
-Petralia, Francesca, Azra Krek, Anna P. Calinawan, Daniel Charytonowicz,
-Robert Sebra, Song Feng, Sara Gosline, et al. 2023. “BayesDeBulk: A
-Flexible Bayesian Algorithm for the Deconvolution of Bulk Tumor Data.”
-bioRxiv. <https://doi.org/10.1101/2021.06.25.449763>.
+Petralia, Francesca, Azra Krek, Anna P. Calinawan, et al. 2023.
+*BayesDeBulk: A Flexible Bayesian Algorithm for the Deconvolution of
+Bulk Tumor Data*. bioRxiv. <https://doi.org/10.1101/2021.06.25.449763>.
 
 Racle, Julien, Kaat de Jonge, Petra Baumgaertner, Daniel E Speiser, and
 David Gfeller. 2017. “Simultaneous Enumeration of Cancer and Immune Cell
-Types from Bulk Tumor Gene Expression Data.” Edited by Alfonso Valencia.
-*eLife* 6 (November): e26476. <https://doi.org/10.7554/eLife.26476>.
+Types from Bulk Tumor Gene Expression Data.” *eLife* 6 (November):
+e26476. <https://doi.org/10.7554/eLife.26476>.

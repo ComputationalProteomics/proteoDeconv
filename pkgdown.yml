@@ -1,9 +1,9 @@
-pandoc: 3.1.11
-pkgdown: 2.2.0
+pandoc: 3.8.3
+pkgdown: 2.2.1
 pkgdown_sha: ~
 articles:
   proteoDeconv: proteoDeconv.html
-last_built: 2026-03-23T18:16Z
+last_built: 2026-10-27T07:29Z
 urls:
   reference: https://computationalproteomics.github.io/proteoDeconv/reference
   article: https://computationalproteomics.github.io/proteoDeconv/articles
